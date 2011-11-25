@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.2.0
+ * @version   1.2.1
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweelix
