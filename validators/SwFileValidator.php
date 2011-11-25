@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  validators
  * @package   Sweeml.validators
@@ -49,7 +49,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  validators
  * @package   Sweeml.validators
@@ -64,7 +64,7 @@ class SwFileValidator extends CFileValidator {
 	 * @param string $attribute the attribute being validated
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	protected function validateAttribute($object, $attribute) {
 		if($this->maxFiles > 1) {
@@ -99,7 +99,7 @@ class SwFileValidator extends CFileValidator {
 	 * @param CUploadedFile $file      uploaded file passed to check against a set of rules
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	protected function validateFile($object, $attribute, $file) {
 		if(null===$file)

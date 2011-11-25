@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweelix
@@ -57,7 +57,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweelix
@@ -77,7 +77,7 @@ class SwUploadedFile extends CComponent {
 	 * Define the path where files will be temporary saved
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function getTargetPath() {
 		if(self::$_targetPath === null) {
@@ -95,7 +95,7 @@ class SwUploadedFile extends CComponent {
 	 * @param string $attribute the attribute name. Tabular file uploading is supported.
 	 * 
 	 * @return SwUploadedFile the instance of the uploaded file.
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function getInstance($model, $attribute) {
 		$results = self::getInstances($model, $attribute);
@@ -128,7 +128,7 @@ class SwUploadedFile extends CComponent {
 	 * @param string $attribute the attribute name.
 	 * 
 	 * @return array array of SwUploadedFile objects.
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function getInstances($model, $attribute) {
 		$infos = array();
@@ -257,7 +257,7 @@ class SwUploadedFile extends CComponent {
 	 * This method is mainly used by test scripts to set up a fixture.
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function reset() {
 		self::$_files=null;
@@ -274,7 +274,7 @@ class SwUploadedFile extends CComponent {
 	 * @param integer $size      the actual size of the uploaded file in bytes
 	 * 
 	 * @return SwUploadedFile
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function __construct($name,$tempName,$extension,$size) {
 		$this->_name=$name;
@@ -302,7 +302,7 @@ class SwUploadedFile extends CComponent {
 	 * @param boolean $deleteTempFile whether to delete the temporary file after saving.
 	 * 
 	 * @return boolean
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function saveAs($file,$deleteTempFile=true)	{
 		if($deleteTempFile) {
@@ -320,7 +320,7 @@ class SwUploadedFile extends CComponent {
 	 * Delete temporary file
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function delete() {
 		if(file_exists($this->_tempName) == true) {

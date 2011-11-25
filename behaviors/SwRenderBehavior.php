@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -56,7 +56,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -72,7 +72,7 @@ class SwRenderBehavior extends CBehavior {
 	 * @param CController $owner the component that this behavior is to be attached to.
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function attach($owner) {
 		if($owner instanceof CController) {
@@ -92,7 +92,7 @@ class SwRenderBehavior extends CBehavior {
 	 * @param boolean $terminate whether to terminate the current application after calling this method
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function redirectJs($url, $timer=null, $terminate=true) {
 		$redirectJs = Sweeml::raiseRedirect($url, $timer);
@@ -109,7 +109,7 @@ class SwRenderBehavior extends CBehavior {
 	 * @param boolean $terminate whether to terminate the current application after calling this method
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function renderJs($script, $terminate=true) {
 		header('Content-Type: application/javascript');
@@ -125,7 +125,7 @@ class SwRenderBehavior extends CBehavior {
 	 * @param boolean $terminate whether to terminate the current application after calling this method
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function renderJson($data, $httpCode=200, $terminate=true) {
 		header('Content-Type: application/json');

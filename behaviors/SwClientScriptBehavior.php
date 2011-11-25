@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -52,7 +52,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -74,7 +74,7 @@ class SwClientScriptBehavior extends CBehavior {
 	 * @param CClientScript $owner the component that this behavior is to be attached to.
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function attach($owner) {
 		if($owner instanceof CClientScript) {
@@ -88,7 +88,7 @@ class SwClientScriptBehavior extends CBehavior {
 	 * Publish assets to allow script and css appending
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function getSweelixAssetUrl() {
 		if($this->_assetUrl === null) {

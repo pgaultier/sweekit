@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -59,7 +59,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -75,7 +75,7 @@ class SwAjaxBehavior extends CBehavior {
 	 * @param CController $owner the component that this behavior is to be attached to.
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function attach($owner) {
 		if($owner instanceof CHttpRequest) {
@@ -90,7 +90,7 @@ class SwAjaxBehavior extends CBehavior {
 	 * by q desc
 	 * 
 	 * @return array
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function getAcceptedTypes() {
 		if($this->_supportedTypes === null) {
@@ -120,7 +120,7 @@ class SwAjaxBehavior extends CBehavior {
 	 * @param boolean $isAjax do we need an ajax request
 	 * 
 	 * @return boolean
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function getIsJsRequest($isAjax = true) {
 		if(
@@ -140,7 +140,7 @@ class SwAjaxBehavior extends CBehavior {
 	 * @param boolean $isAjax do we need an ajax request
 	 * 
 	 * @return boolean
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function getIsJsonRequest($isAjax = true) {
 		if(

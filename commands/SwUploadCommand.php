@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  commands
  * @package   Sweeml.commands
@@ -22,7 +22,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  commands
  * @package   Sweeml.commands
@@ -37,7 +37,7 @@ class SwUploadCommand extends CConsoleCommand {
 	 * @param $args mixed unused yet, only for compat purpose
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
     public function run($args) {
 		try {
@@ -56,7 +56,7 @@ class SwUploadCommand extends CConsoleCommand {
      * @param string $path temporary path
      * 
      * @return integer
-     * @since  1.1
+     * @since  1.1.0
      */
     private function _checkDirectoriesRecursive($path) {
 		$res = scandir($path);

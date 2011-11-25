@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  filters
  * @package   Sweeml.filters
@@ -37,7 +37,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  filters
  * @package   Sweeml.filters
@@ -51,7 +51,7 @@ class SwProtocolFilter extends CFilter {
 	 * @param string $mode requested mode : can be http/https
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function setMode($mode) {
 		$mode = strtolower($mode);
@@ -69,7 +69,7 @@ class SwProtocolFilter extends CFilter {
 	 * Get wanted http(s) mode
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function getIsSecureConnection() {
 		return $this->_secure;
@@ -79,7 +79,7 @@ class SwProtocolFilter extends CFilter {
 	 * Check if we want to force the mode
 	 * 
 	 * @return boolean
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public function getIsForcedMode() {
 		return ($this->_secure !== null);
@@ -92,7 +92,7 @@ class SwProtocolFilter extends CFilter {
 	 * @param CFitlerChain $filterChain the filter chain that the filter is on.
 	 * 
 	 * @return boolean
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	protected function preFilter($filterChain) {
 		if($this->isForcedMode === true) {
@@ -117,7 +117,7 @@ class SwProtocolFilter extends CFilter {
 	 * @param CFilterChain $filterChain the filter chain that the filter is on.
 	 *
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	protected function postFilter($filterChain) {
 		// logic being applied after the action is executed

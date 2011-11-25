@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -55,7 +55,7 @@ Yii::import('ext.sweekit.validators.SwFileValidator');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.1
+ * @version   1.2.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -104,7 +104,7 @@ class Sweeml extends CHtml {
 	 * @param array  $htmlOptions html options 
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function asyncFileUpload($name, $htmlOptions=array(), $value=null) {
 		if($value === null) {
@@ -127,7 +127,7 @@ class Sweeml extends CHtml {
 	 * @param array  $htmlOptions html options 
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function activeAsyncFileUpload($model, $attribute, $htmlOptions=array()) {
 		self::resolveNameID($model,$attribute,$htmlOptions);
@@ -175,7 +175,7 @@ class Sweeml extends CHtml {
 	 * @param array $attachedEvents events attached to the asyncfile element
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	protected static function renderAsyncFileUpload($values, $htmlOptions, $config, $attachedEvents) {
 		if(is_array($values) == true) {
@@ -225,7 +225,7 @@ class Sweeml extends CHtml {
 	 * @param array &$htmlOptions htmlOptions used
 	 * 
 	 * @return array
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	protected static function prepareAsyncFileUpload(&$htmlOptions) {
 		$config = array(
@@ -309,7 +309,7 @@ class Sweeml extends CHtml {
 	 * @param array  $shadowBoxOptions options to pass to shadowbox as described in documentation
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseOpenShadowbox($url='#', $shadowBoxOptions=array()) {
 		Yii::app()->getClientScript()->registerSweelixScript('shadowbox');
@@ -328,7 +328,7 @@ class Sweeml extends CHtml {
 	 * @param string $eventName name of the event to raise. Usefull if multiple events are available
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseCloseShadowbox() {
 		Yii::app()->getClientScript()->registerSweelixScript('shadowbox');
@@ -342,7 +342,7 @@ class Sweeml extends CHtml {
 	 * @param integer $timer delay in second before executing redirect
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseRedirect($url, $timer=null) {
 		if($timer !== null) {
@@ -358,7 +358,7 @@ class Sweeml extends CHtml {
 	 * @param array $url url in yii format
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseRedirectUrl($url) {
 		return 'javascript:'.self::raiseRedirect($url);
@@ -372,7 +372,7 @@ class Sweeml extends CHtml {
 	 * @param array  $shadowBoxOptions options to pass to shadowbox as described in documentation
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseOpenShadowboxUrl($url='#', $shadowBoxOptions=array()) {
 		return 'javascript:'.self::raiseOpenShadowbox($url, $shadowBoxOptions);
@@ -383,7 +383,7 @@ class Sweeml extends CHtml {
 	 * using raiseevents
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseCloseShadowboxUrl() {
 		return 'javascript:'.self::raiseCloseShadowbox();
@@ -397,7 +397,7 @@ class Sweeml extends CHtml {
 	 * @param string $context    context if needed, else will be in global context
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseEvent($eventName, $parameters=array(), $context=null) {
 		Yii::app()->getClientScript()->registerSweelixScript('callback');
@@ -437,7 +437,7 @@ class Sweeml extends CHtml {
 	 * @param string $mode   replacement mode can be replace or update
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseAjaxRefresh($target, $url, $data=null, $mode=null) {
 		Yii::app()->getClientScript()->registerSweelixScript('ajax');
@@ -452,7 +452,7 @@ class Sweeml extends CHtml {
 	 * @param string $mode   replacement mode can be replace or update
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseAjaxRefreshUrl($target, $url, $data=null, $mode=null) {
 		return 'javascript:'.self::raiseAjaxRefresh($target, $url, $data, $mode);
@@ -466,7 +466,7 @@ class Sweeml extends CHtml {
 	 * @param string $context    context if needed, else will be in global context
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function raiseEventUrl($eventName, $parameters=array(), $context=null) {
 		return 'javascript:'.self::raiseEvent($eventName, $parameters, $context);
@@ -480,7 +480,7 @@ class Sweeml extends CHtml {
 	 * @param string $context    context if needed, else will be in global context
 	 * 
 	 * @return string
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function registerEventScript($eventName, $action, $context=null) {
 		Yii::app()->getClientScript()->registerSweelixScript('callback');
@@ -498,7 +498,7 @@ class Sweeml extends CHtml {
 	 * @param string $context   context if needed, else will be in registered in global context
 	 * 
 	 * @return void
-	 * @since  1.1
+	 * @since  1.1.0
 	 */
 	public static function registerEvent($eventName, $action, $context=null) {
 		$js = self::registerEventScript($eventName, $action, $context);
