@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.2.1
+ * @version   1.4.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -52,7 +52,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2011 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.2.1
+ * @version   1.4.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
