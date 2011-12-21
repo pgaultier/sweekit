@@ -96,8 +96,13 @@ class SwRenderBehavior extends CBehavior {
 	 */
 	public function redirectJs($url, $timer=null, $terminate=true) {
 		$redirectJs = Sweeml::raiseRedirect($url, $timer);
-		Yii::app()->getClientScript()->registerScript('redirect', $redirectJs, CClientScript::POS_READY);
-		$this->getOwner()->renderText(' ');
+		if(Yii::app()->getRequest()->getIsAjaxRequest() === true) {
+			header('Content-Type: application/javascript');
+			echo $redirectJs;
+		} else {
+			Yii::app()->getClientScript()->registerScript('redirect', $redirectJs, CClientScript::POS_READY);
+			$this->getOwner()->renderText(' ');
+		}
 		if($terminate === true) {		
 			Yii::app()->end();
 		}
