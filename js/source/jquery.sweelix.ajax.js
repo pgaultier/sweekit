@@ -215,9 +215,9 @@
 						uploader['getDeleteUrl'] = function() {
 							return (!!config.urlDelete)?config.urlDelete:null;
 						};
-						uploader['getZoneText'] = function() {
+						uploader['getZoneText'] = function() {
 							return (!!config.dropText)?config.dropText:null;
-						}
+						};
 						uploader['getMultiSelection'] = function() {
 							return baseConfig.multi_selection;
 						};
