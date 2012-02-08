@@ -82,14 +82,14 @@ class SwProtocolFilter extends CFilter {
 	 * @since  1.1.0
 	 */
 	public function getIsForcedMode() {
-		return ($this->_secure !== null);
+		return CPropertyValue::ensureBoolean($this->_secure !== null);
 	}
 	
 	/**
 	 * Performs the pre-action filtering.
 	 * @see CFilter::preFilter()
 	 * 
-	 * @param CFitlerChain $filterChain the filter chain that the filter is on.
+	 * @param CFilterChain $filterChain the filter chain that the filter is on.
 	 * 
 	 * @return boolean
 	 * @since  1.1.0
