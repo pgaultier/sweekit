@@ -17,8 +17,8 @@
 /**
  * Class SwRenderBehavior
  * 
- * This behavior implement two methods in the
- * controller which will be uses heavily @see Sweeml
+ * This behavior implements two methods in the
+ * controller which will be used heavily @see Sweeml
  * 
  * <code>
  * 	...

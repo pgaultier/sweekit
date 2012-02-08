@@ -17,8 +17,8 @@
 /**
  * Class SwAjaxBehavior
  * 
- * This behavior implement two methods in the
- * request which will be uses heavily @see Sweeml
+ * This behavior implements two methods in the
+ * request which will be used heavily @see Sweeml
  * 
  * <code>
  * 	...
@@ -114,7 +114,7 @@ class SwAjaxBehavior extends CBehavior {
 	}
 	
 	/**
-	 * Check if the ajax request accept js
+	 * Check if the ajax request accepts js
 	 * response
 	 * 
 	 * @param boolean $isAjax do we need an ajax request
@@ -134,7 +134,7 @@ class SwAjaxBehavior extends CBehavior {
 	}
 
 	/**
-	 * Check if the ajax request accept json
+	 * Check if the ajax request accepts json
 	 * response
 	 * 
 	 * @param boolean $isAjax do we need an ajax request
