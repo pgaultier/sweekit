@@ -73,7 +73,7 @@ class Sweeml extends CHtml {
 	 *  	// ... // all classic html options
 	 *  	'config' => array(
 	 *  		'runtimes' => 'html5, html4', // can be : html5, html4, flash, browserplus, gears, silverlight
-	 *  		'dropElement' => 'xxxidxxx_zone', // drop zone for drag and drop
+	 *  		'dropElement' => 'id_zone', // String with the ID of the element that you want to be able to drop files into this is only used by some runtimes that support it
 	 *  		'ui' => false, // display default ui system (override events, ...)
 	 *  		'multiSelection' => false, // allow multifile upload
 	 *  		'url' => '...', // default upload url for temporary upload
