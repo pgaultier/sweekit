@@ -425,7 +425,7 @@ class Sweeml extends CHtml {
 	 */
 	public static function ajaxSubmitHandlerScript($target) {
 		Yii::app()->getClientScript()->registerSweelixScript('ajax');
-		return 'jQuery(\''.$target.'\').ajaxSubmitHandler();';;
+		return 'jQuery(\''.$target.'\').ajaxSubmitHandler();';
 	}
 
 	/**
