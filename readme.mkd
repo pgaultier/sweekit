@@ -41,8 +41,10 @@ Register an event in the widget using Sweeml
     <?php Sweeml::registerEvent('updateCart', "function(data){jQuery('#cart.nb').html(data+' products');}"); ?>
     <div id="cart">0 product</div>
 ````
+
 Whereever the cart is updated you can raise an event.
-````
+
+````php
     <script type="text/javascript">
         function refreshCart() {
             // perform ajax call to refresh info
@@ -61,7 +63,8 @@ Whereever the cart is updated you can raise an event.
 ### Multi file upload
 
 The basic model 
-````
+
+````php
     <?php 
     class MyFile extends CFormModel {
         public $thefile;
@@ -74,8 +77,10 @@ The basic model
         }
     }
 ````
+
 The controller
-````
+
+````php
     <?php 
     class UploadController extends CController {
         /**
@@ -109,8 +114,10 @@ The controller
         }
     }
 ````
+
 The view
-````
+
+````php
     <?php echo Sweeml::activeAsyncFileUpload($file, 'thefile',array(
         'config' => array(
             'runtimes' => 'html5, flash',
@@ -131,3 +138,5 @@ The view
     
     <?php echo Sweeml::htmlButton('submit', array('type' => 'submit', 'id' => 'submitButton')); ?>
 ````
+
+
