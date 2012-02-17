@@ -3,6 +3,43 @@
 This toolkit was written to ease javascript access during our developments.
 In order to not create conflict, Sweekit classes are prefixed with _Sw_
 
+## Samples - because it's always easier to understand what can be done
+
+### Callback system
+
+As an example, you have created an online shop and in several places, the cart is updated.
+If in the header there is a widget which shows the number of products, this widget 
+should be updated when the cart is updated.
+
+Using the callback system you can : 
+
+Register an event in the widget using Sweeml
+
+    <?php Sweeml::registerEvent('updateCart', "function(data){jQuery('#cart.nb').html(data+' products');}"); ?>
+    <div id="cart">0 product</div>
+
+Whereever the cart is updated you can raise an event.
+
+    <script type="text/javascript">
+        function refreshCart() {
+            // perform ajax call to refresh info
+            jQuery.ajax({
+                url : 'http://targeturl',
+                success : function(nbOfProducts) {
+                    // nbOfProducts is an integer with the number of products in cart
+                    <?php echo Sweeml::raiseEvent('updateCart', nbOfProducts); ?>
+                }
+            });
+        }
+    </script>
+    <a href="#" onclick="refreshCart()">refresh cart</a>
+    
+### All in one
+
+
+
+
+
 ## Sweeml
 
 Sweeml override the original CHtml helpers and add several functionnalities
@@ -40,10 +77,20 @@ Parameters
 * $action (string) action to execute when event is raised, this is pure javascript code
 * $context (string) context if needed, else will be in registered in global context
 
-#### Ajax oriented method
+### Ajax helpers 
+
+#### Ajax request using callback system
 
 Produce an ajax call to $url and perform the update/replace
-of the target
+of the target element if content-type is text/html. If the content-type is application/javascript
+the returned js code is executed.
+
+This system raise also two jQuery events on the target : 
+
+* beforeAjax : raised just before ajax is submited.
+* afterAjax : raised after ajax request (and replace/update) if the call was successfull
+
+This is usefull to prepare data or rebind events when the dom has been replaced.
 
 This method produce a javascript string
 ````(string) raiseAjaxRefresh($target, $url, $data=null, $mode=null);````
@@ -56,6 +103,38 @@ Parameters
 * $url (mixed) url in Yii supported format
 * $data (mixed) data to pass
 * $mode (enum) replacement mode can be replace or update
+
+#### Ajax forms using callback system
+
+This script intercept form posting, perform the post in ajax and update/replace or execute
+the javavscript depending on the content-type
+
+This method produce a javascript script which should be executed to enable form ajaxify
+````(string) ajaxSubmitHandlerScript($target);````
+This method produce a javascript which is automatically registered and ajaxify the form(s)
+````ajaxSubmitHandler($target);````
+
+Parameters
+
+* $target (string) the target element - form(s) to ajaxify
+
+An easier way to ajaxify the forms using this system is to use the all
+in one tag generator.
+
+replace the classic 
+````(string) beginForm($action='',$method='post',$htmlOptions=array());````
+with
+````(string) beginAjaxForm($action='',$method='post',$htmlOptions=array());````
+
+And the form will be automagically ajaxified
+
+Parameters
+
+* $action (mixed) action
+* $method (string) method
+* $htmlOptions (array) html options
+
+### Javascript helper
 
 #### Redirect system
 
@@ -72,35 +151,6 @@ Parameters
 * $url (mixed) url in Yii format
 * $timer (integer) delay in second before executing redirect
 
-#### Sample
-
-As an example, you have created an online shop and in several places, the cart is updated.
-If in the header there is a widget which shows the number of products, this widget 
-should be updated when the cart is updated.
-
-Using the callback system you can : 
-
-Register an event in the widget using Sweeml
-
-    <?php Sweeml::registerEvent('updateCart', "function(data){jQuery('#cart.nb').html(data+' products');}"); ?>
-    <div id="cart">0 product</div>
-
-Whereever the cart is updated you can raise an event.
-
-    <script type="text/javascript">
-        function refreshCart() {
-            // perform ajax call to refresh info
-            jQuery.ajax({
-                url : 'http://targeturl',
-                success : function(nbOfProducts) {
-                    // nbOfProducts is an integer with the number of products in cart
-                    <?php echo Sweeml::raiseEvent('updateCart', nbOfProducts); ?>
-                }
-            });
-        }
-    </script>
-    <a href="#" onclick="refreshCart()">refresh cart</a>
-    
 ### Shadowbox system - aka easy lightbox system
 
 #### Opening shadowbox
@@ -125,3 +175,18 @@ This method produce a javascript string
 ````(string) raiseCloseShadowbox();````
 This method produce a javascript string which can be used directly as an url
 ````(string) raiseCloseShadowboxUrl();````
+
+### File upload using plupload
+
+The methods
+
+* ````(string) activeAsyncFileUpload($model, $attribute, $htmlOptions=array()) ;````
+* ````(string) asyncFileUpload($name, $htmlOptions=array(), $value=null);````
+
+This methods should work like the original ones.
+The difference is that they register js, css and everything to allow multi fileuploads with drag'n'drop
+and fancy features. See method doc clock for all options
+
+    <?php echo Sweeml::activeAsyncFileUpload($myModel, 'uploadField', $options); ?>
+
+

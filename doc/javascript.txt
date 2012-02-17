@@ -1,0 +1,260 @@
+## Javascript functions
+
+Package dependancies are automatically resolved.
+
+### sweelix
+
+Core package, this package define the base namespace jQuery.sweelix and
+a basic module system.
+
+No usefull function is exported
+
+### debug - depends on sweelix
+
+Debugging package for js. This is a simple console wrapper. Once module
+is inited, following methods are added to the jQuery.sweelix object :
+
+log, debug, info, warn, error, assert, dir, trace, count, group, groupEnd
+
+    // .. js code
+    jQuery.sweelix.log('Loging info in the console');
+    // .. js code
+
+If the debug is activated, the console will display the string "Loging info in the console".
+If debug is deactivated, the console will remain empty
+
+In order to be able to use the debug module you have to add SwClientScriptBehavior
+and configure it
+
+1. Configure application to enable debugging
+
+    // App config code
+    'clientScript' => array(
+        'behaviors' => array(
+            'sweelixClientScript' => array(
+                'class' => 'ext.sweekit.behaviors.SwClientScriptBehavior',
+                'config' => array(
+                    'debug' => array(
+                        'debug' => true, // default false - (de)activate debug
+                        'method' => 'log', // default 'log' - default console method used when logging
+                        'fallback' => false, // default false - if console is not available use alerts
+                    ),
+                )
+            ),
+        ),
+    ),    
+
+2. Use debugging functions in the code
+
+    // View code
+    // register debug module
+    <?php Yii::app()->clientScript->registerSweelixScript('debug'); ?>
+    // perform some debugging
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery.sweelix.log('Document is ready, starting js');
+            // ... js code
+        });
+    </script>
+
+### callback - depends on debug and sweelix
+
+Callback system. This system allow the developer to register and raise 
+events
+
+In order to be able to use the debug module you have to add SwClientScriptBehavior
+and configure it
+
+1. Configure application to enable debugging and callback
+
+    // App config code
+    'clientScript' => array(
+        'behaviors' => array(
+            'sweelixClientScript' => array(
+                'class' => 'ext.sweekit.behaviors.SwClientScriptBehavior',
+                'config' => array(
+                    'debug' => array(
+                        'debug' => true, // default false - (de)activate debug
+                        'method' => 'log', // default 'log' - default console method used when logging
+                        'fallback' => false, // default false - if console is not available use alerts
+                    ),
+                    'callback' => array(
+                        'globalCblName' => 'swlx', // default 'swlx' - default namespace of registered events
+                        'top' => true, // default true - if true, event are always re-routed to top window
+                    ),
+                )
+            ),
+        ),
+    ),    
+
+2. Use callback functions in the code
+
+    // View code
+    // register callback module
+    <?php Yii::app()->clientScript->registerSweelixScript('callback'); ?>
+    // perform some regisration
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery.sweelix.register('myRegisteredEvent', function(params){ alert('my event was raised with myParam value : '+params.myParam); });
+            // ... js code
+        });
+    </script>
+    // ...
+    <a href="#" onclick="jQuery.sweelix.raise('myRegisteredEvent', {'myParam':2})">Raise the event</a>
+
+
+### ajax - depends on callback, debug and sweelix
+
+Ajax system allow the developper to perform easy ajax requests
+
+1. Configure application to enable debugging, callback and ajax
+
+    // App config code
+    'clientScript' => array(
+        'behaviors' => array(
+            'sweelixClientScript' => array(
+                'class' => 'ext.sweekit.behaviors.SwClientScriptBehavior',
+                'config' => array(
+                    'debug' => array(
+                        'debug' => true, // default false - (de)activate debug
+                        'method' => 'log', // default 'log' - default console method used when logging
+                        'fallback' => false, // default false - if console is not available use alerts
+                    ),
+                    'callback' => array(
+                        'globalCblName' => 'swlx', // default 'swlx' - default namespace of registered events
+                        'top' => true, // default true - if true, event are always re-routed to top window
+                    ),
+                    // ajax module has no configuration vars
+                )
+            ),
+        ),
+    ),
+    //...     
+
+2. Use ajax functions in the code (view)
+
+    // View code
+    /**
+     * "Pure" js code
+     */
+    // register ajax module
+    <?php Yii::app()->clientScript->registerSweelixScript('ajax'); ?>
+    // perform some regisration
+    <script type="text/javascript">
+        var parameters ={
+            'targetUrl' : 'http://www.myurl.com?r=site/cool',
+            'data' : {}, // data to post
+            'mode' : '', // can be replace or empty
+            'targetSelector' : '#myDiv'
+        };
+    </script>
+    // ...
+    <a href="#" onclick="jQuery.sweelix.raise('ajaxRefreshHandler', parameters)">Raise the event</a>
+    // ...
+    <div id="#myDiv">
+        This div should be updated
+    </div>
+
+    /**
+     * Sweeml code
+     */
+    <?php echo CHtml::link('Raise the event','#', array(
+    	'onclick'=> Sweeml::raiseAjaxRefresh('#myDiv', array('site/cool')), 
+    )); ?>
+    // ...
+    <div id="#myDiv">
+        This div should be updated
+    </div>
+     
+
+3. Respond to call in controller
+
+    // Controller code
+    public function actionCool() {
+        // ... controller code
+        if(Yii::app()->getRequest()->getIsAjaxRequest() === true) {
+            // render partial html
+            $this->renderPartial('_htmlPartialView');
+        } else {
+            // render full html
+            $this->render('htmlFullView');
+        }
+    }
+
+### shadowbox - depends on callback, debug and sweelix
+
+Shadowbox system allow easy lightbox management
+
+1. Configure application to enable debugging, and callback
+
+    // App config code
+    'clientScript' => array(
+        'behaviors' => array(
+            'sweelixClientScript' => array(
+                'class' => 'ext.sweekit.behaviors.SwClientScriptBehavior',
+                'config' => array(
+                    'debug' => array(
+                        'debug' => true, // default false - (de)activate debug
+                        'method' => 'log', // default 'log' - default console method used when logging
+                        'fallback' => false, // default false - if console is not available use alerts
+                    ),
+                    'callback' => array(
+                        'globalCblName' => 'swlx', // default 'swlx' - default namespace of registered events
+                        'top' => true, // default true - if true, event are always re-routed to top window
+                    ),
+                )
+            ),
+        ),
+    ),
+    //...     
+
+2. Use shadowbox functions in the code (view)
+
+    // View code
+    /**
+     * "Pure" js code
+     */
+    // register ajax module
+    <?php Yii::app()->clientScript->registerSweelixScript('shadowbox'); ?>
+    // perform some regisration
+    <script type="text/javascript">
+        var parameters ={
+            content: 'http://www.example.com/?r=site/lb',
+            player: "iframe",
+            title: "Lightbox",
+            height: 350,
+            width: 350
+        };
+    </script>
+    // ...
+    <a href="javascript:void(0);" onclick="jQuery.sweelix.raise('shadowboxOpen', parameters)">Open the shadowbox</a>
+    // ...
+    <a href="javascript:void(0);" onclick="jQuery.sweelix.raise('shadowboxClose')">Close shadowbox</a>
+    
+    /**
+     * Sweeml code
+     */
+    <?php echo CHtml::link('Open the shadowbox','#', array(
+    	'onclick'=> Sweeml::raiseOpenShadowbox(array('site/lb'), array(
+    	    'title' => 'Lightbox',
+    	    'height' => 350,
+    	    'width' => 350,
+    	)), 
+    )); ?>
+    <?php echo CHtml::link('Close shadowbox','#', array(
+    	'onclick'=> Sweeml::raiseCloseShadowbox(), 
+    )); ?>
+    
+    // ...
+    // or using js in url 
+    <?php echo CHtml::link('Open the shadowbox',
+            Sweeml::raiseOpenShadowboxUrl(array('site/lb'), array(
+    	        'title' => 'Lightbox',
+                'height' => 350,
+                'width' => 350,
+    	    )) 
+    ); ?>
+    <?php echo CHtml::link('Close shadowbox',Sweeml::raiseCloseShadowboxUrl()); ?>
+    
+
+
