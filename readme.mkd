@@ -37,11 +37,12 @@ Using the callback system you can :
 
 Register an event in the widget using Sweeml
 
+````php
     <?php Sweeml::registerEvent('updateCart', "function(data){jQuery('#cart.nb').html(data+' products');}"); ?>
     <div id="cart">0 product</div>
-
+````
 Whereever the cart is updated you can raise an event.
-
+````
     <script type="text/javascript">
         function refreshCart() {
             // perform ajax call to refresh info
@@ -55,12 +56,12 @@ Whereever the cart is updated you can raise an event.
         }
     </script>
     <a href="#" onclick="refreshCart()">refresh cart</a>
-    
+````
 
 ### Multi file upload
 
 The basic model 
-
+````
     <?php 
     class MyFile extends CFormModel {
         public $thefile;
@@ -72,9 +73,9 @@ The basic model
             );
         }
     }
-
+````
 The controller
-
+````
     <?php 
     class UploadController extends CController {
         /**
@@ -107,9 +108,9 @@ The controller
             $this->render('index', array('file' => $file));
         }
     }
-
+````
 The view
-
+````
     <?php echo Sweeml::activeAsyncFileUpload($file, 'thefile',array(
         'config' => array(
             'runtimes' => 'html5, flash',
@@ -129,4 +130,4 @@ The view
     )); ?>
     
     <?php echo Sweeml::htmlButton('submit', array('type' => 'submit', 'id' => 'submitButton')); ?>
-
+````
