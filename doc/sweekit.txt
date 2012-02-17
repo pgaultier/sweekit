@@ -1,0 +1,127 @@
+# Sweekit - aka Sweelix toolkit
+
+This toolkit was written to ease javascript access during our developments.
+In order to not create conflict, Sweekit classes are prefixed with _Sw_
+
+## Sweeml
+
+Sweeml override the original CHtml helpers and add several functionnalities
+
+### Callback system - aka event management
+
+The callback system allow the developper to register (js) events in the page -- some kind of listeners.
+In other places, the developer can raise an event.
+This can be seen as some loose coupling. An other advantage of the callback system is
+that even if the callback was raised in an iframe, the callback get caught in the main window.
+In other word, the raised event is re-routed to the main window. This is usefull when 
+iframe (for lightboxes, ...) are used.
+
+#### Generic callback method
+
+This method produce a javascript string
+````(string) raiseEvent($eventName, $parameters=array(), $context=null);````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseEventUrl($eventName, $parameters=array(), $context=null);````
+
+Parameters
+
+* $eventName (string) name of the event to raise
+* $parameters (array) parameters to pass to the event manager
+* $context (string) context if needed, else will be in global context
+
+This method register directly the event using the clientScript
+````(string) registerEvent($eventName, $action, $context=null);````
+This method produce a javascript string
+````(string) registerEventScript($eventName, $action, $context=null);````
+
+Parameters
+
+* $eventName (string) name of the event to register
+* $action (string) action to execute when event is raised, this is pure javascript code
+* $context (string) context if needed, else will be in registered in global context
+
+#### Ajax oriented method
+
+Produce an ajax call to $url and perform the update/replace
+of the target
+
+This method produce a javascript string
+````(string) raiseAjaxRefresh($target, $url, $data=null, $mode=null);````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseAjaxRefreshUrl($target, $url, $data=null, $mode=null);````
+
+Parameters
+
+* $target (string) target element
+* $url (mixed) url in Yii supported format
+* $data (mixed) data to pass
+* $mode (enum) replacement mode can be replace or update
+
+#### Redirect system
+
+Usefull when we need to redirect the main window from an iframe. We don't need
+to know in advance if we are in an iframe or not.
+
+This method produce a javascript string
+````(string) raiseRedirect($url, $timer=null);````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseRedirectUrl($url, $timer=null);````
+
+Parameters
+
+* $url (mixed) url in Yii format
+* $timer (integer) delay in second before executing redirect
+
+#### Sample
+
+As an example, you have created an online shop and in several places, the cart is updated.
+If in the header there is a widget which shows the number of products, this widget 
+should be updated when the cart is updated.
+
+Using the callback system you can : 
+
+Register an event in the widget using Sweeml
+
+    <?php Sweeml::registerEvent('updateCart', "function(data){jQuery('#cart.nb').html(data+' products');}"); ?>
+    <div id="cart">0 product</div>
+
+Whereever the cart is updated you can raise an event.
+
+    <script type="text/javascript">
+        function refreshCart() {
+            // perform ajax call to refresh info
+            jQuery.ajax({
+                url : 'http://targeturl',
+                success : function(nbOfProducts) {
+                    // nbOfProducts is an integer with the number of products in cart
+                    <?php echo Sweeml::raiseEvent('updateCart', nbOfProducts); ?>
+                }
+            });
+        }
+    </script>
+    <a href="#" onclick="refreshCart()">refresh cart</a>
+    
+### Shadowbox system - aka easy lightbox system
+
+#### Opening shadowbox
+
+This method register all js and css needed to open a shadowbox and open it
+
+This method produce a javascript string
+````(string) raiseOpenShadowbox($url='#', $shadowBoxOptions=array());````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseOpenShadowboxUrl($url='#', $shadowBoxOptions=array());````
+
+Parameters
+
+* $url (mixed) url to open in the shadowbox, information will be normalized
+* $shadowBoxOptions (array) options to pass to shadowbox as described in documentation
+
+#### Closing shadowbox
+
+This method close current shadowbox
+
+This method produce a javascript string
+````(string) raiseCloseShadowbox();````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseCloseShadowboxUrl();````
