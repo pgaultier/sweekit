@@ -1,0 +1,132 @@
+# Sweekit - aka Sweelix toolkit
+
+The toolkit is under new BSD License except for 3rdParty elements which are under their own
+licenses.
+
+3rd party tools used in the toolkit are 
+
+* http://www.shadowbox-js.com - Shadowbox, dual license http://www.shadowbox-js.com/LICENSE
+* http://www.plupload.com/ - PLupload, dual license http://www.plupload.com/license.php
+
+
+This toolkit was written to ease javascript access during our developments.
+In order to not create conflict, Sweekit classes are prefixed with _Sw_
+
+A short explain is available in the doc directory.
+
+Available features :
+
+* javascript - see doc/sweekit.mkd and doc.javascript.mkd
+* helpers - Sweeml (extends CHtml) - see doc/sweekit.mkd
+* behaviors - SwAjaxBehavior, SwClientScriptBehavior, SwRenderBehavior - see doc/behaviors.mkd
+* filters - SwProtocolFilter - see doc/filters.mkd
+* validators - SwFileValidator (for plupload)
+* actions - SwDeleteAction, SwUploadAction (for plupload)
+* commands - SwUploadCommand (to purge plupload temporary directory)
+* web - SwUploadedFile (Retrieve files uploaded with plupload)
+
+## Samples - because it's always easier to understand what can be done
+
+### Callback system
+
+As an example, you have created an online shop and in several places, the cart is updated.
+If in the header there is a widget which shows the number of products, this widget 
+should be updated when the cart is updated.
+
+Using the callback system you can : 
+
+Register an event in the widget using Sweeml
+
+    <?php Sweeml::registerEvent('updateCart', "function(data){jQuery('#cart.nb').html(data+' products');}"); ?>
+    <div id="cart">0 product</div>
+
+Whereever the cart is updated you can raise an event.
+
+    <script type="text/javascript">
+        function refreshCart() {
+            // perform ajax call to refresh info
+            jQuery.ajax({
+                url : 'http://targeturl',
+                success : function(nbOfProducts) {
+                    // nbOfProducts is an integer with the number of products in cart
+                    <?php echo Sweeml::raiseEvent('updateCart', nbOfProducts); ?>
+                }
+            });
+        }
+    </script>
+    <a href="#" onclick="refreshCart()">refresh cart</a>
+    
+
+### Multi file upload
+
+The basic model 
+
+    <?php 
+    class MyFile extends CFormModel {
+        public $thefile;
+        public function rules() {
+            // NOTE: you should only define rules for those attributes that
+            // will receive user inputs.
+            return array(
+                array('thefile', 'SwFileValidator', 'maxFiles' => 2, 'allowEmpty' => true),
+            );
+        }
+    }
+
+The controller
+
+    <?php 
+    class UploadController extends CController {
+        /**
+         * Attach generic actions to handle async uploads
+         *
+         * @return array
+         */
+        public function actions() {
+            return array(
+                'asyncUpload' => 'ext.sweekit.actions.SwUploadAction',
+                'asyncDelete' => 'ext.sweekit.actions.SwDeleteAction',
+            );
+        }
+     
+        /**
+         * initial action
+         *
+         * @return void
+         */
+        public function actionIndex() {
+            $file = new MyFile();
+            if(isset($_POST['MyFile']) == true) {
+                // get uploaded files
+                $realFiles = SwUploadedFile::getInstances($file, 'thefile');
+                foreach($realFiles as $realFile) {
+                    // save uploaded files
+                    $realFile->saveAs('files/'.$realFile->getName());
+                }
+            }
+            $this->render('index', array('file' => $file));
+        }
+    }
+
+The view
+
+    <?php echo Sweeml::activeAsyncFileUpload($file, 'thefile',array(
+        'config' => array(
+            'runtimes' => 'html5, flash',
+            'auto' => true,
+            'ui' => true,
+            'maxFileSize' => '512mb',
+            'multiSelection' => true,
+        ),
+        'events'=>array(
+            'beforeUpload' => 'js:function(up, file){ 
+                $(\'#submitButton\').attr(\'disabled\', \'disabled\'); 
+            }',
+            'uploadComplete' => 'js:function(up, files){
+                $(\'#submitButton\').removeAttr(\'disabled\'); 
+            }',
+        )
+    )); ?>
+    
+    <?php echo Sweeml::htmlButton('submit', array('type' => 'submit', 'id' => 'submitButton')); ?>
+

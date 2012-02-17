@@ -1,0 +1,123 @@
+## Behaviors
+
+### SwClientScriptBehavior
+
+SwClientScriptBehavior add sweelix js package management. This behavior
+is used in Sweeml to register Sweelix Javascript (and Styles) packages like
+the original ````registerCoreScript()```` method
+
+Available packages are
+
+* sweelix // base js module management
+* debug // debug module, 
+* callback // callback module
+* ajax // ajax module (should be used with SwRenderBehavior)
+* shadowbox // shadowbox module
+* plupload (and derivatives) // multi upload module
+
+Attach the behavior to the clientScript component
+
+    'clientScript' => array(
+        'behaviors' => array(
+            'sweelixClientScript' => array(
+                'class' => 'ext.sweekit.behaviors.SwClientScriptBehavior',
+            ),
+        ),
+    ),
+
+Use it in your controller or view
+
+    // ... controller code
+    class MyController extends CController {
+        // ...
+        public function actionTest() {
+            // Register sweelix debug script
+            Yii::app()->clientScript->registerSweelixScript('debug');
+            // ...
+        }
+        // ...
+    }
+
+
+### SwAjaxBehavior
+
+SwAjaxBehavior add the following methods to CHttpRequest :
+
+```` (bool) $res = Yii::app()->getRequest()->getIsJsRequest($isAjax=true)````
+Check if we should return javascript content
+
+```` (bool) $res = Yii::app()->getRequest()->getIsJsonRequest($isAjax=true)````
+Check if we should return json content
+
+Example :
+
+Attach the behavior to the request component
+
+    'request' => array(
+        'behaviors' => array(
+            'sweelixAjax' => array(
+                'class' => 'ext.sweekit.behaviors.SwAjaxBehavior',
+            ),
+        ),
+    ),
+    ///... 
+
+
+Use it in your controller
+
+    // ... controller code
+    if(Yii::app()->getRequest()->getIsJsRequest() === true) {
+        // render javascript which will be executed by the borwser
+        // see below SwRenderBehavior
+        $this->renderJs('alert("Request was performed as expected");');
+    } elseif(Yii::app()->getRequest()->getIsAjaxRequest() === true) {
+        // render partial html
+        $this->renderPartial('_htmlPartialView');
+    } else {
+        // render full html
+        $this->render('htmlFullView');
+    }
+
+### SwRenderBehavior
+
+SwRenderBehavior should be used with SwAjaxBehavior. SwRenderBehavior add
+the following methods to CController : 
+
+```` $this->redirectJs($url, $timer=null, $terminate=true)````
+Redirect to $url using javascript. Usefull when the ajax call should initiate
+a redirect.
+
+```` $this->renderJs($script, $terminate=true)````
+Render javascript using correct headers
+
+```` $this->renderJson($data, $httpCode=200, $terminate=true)````
+Render data as Json string with correct headers
+
+Example :
+
+Attach the behavior to the controller
+
+    class MyController extends CController {
+        // ...
+        public function behaviors() {
+            return array(
+                'sweelixRendering' => array(
+                    'class' => 'ext.sweekit.behaviors.SwRenderBehavior',
+                ),
+            );
+        }
+        // ...
+    }
+
+Use it in your code
+
+    class MyController extends CController {
+        // ...
+        public function actionTest() {
+            if(Yii::app()->request->isAjaxRequest == true) {
+                // this will raise an event using sweelix callback in order to open a shadowbox
+                $this->renderJs('alert("direct js rendering")');
+            }
+        }
+        // ...
+    }

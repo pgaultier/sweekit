@@ -1,0 +1,150 @@
+## Sweeml
+
+Sweeml override the original CHtml helpers and add several functionnalities
+
+### Callback system - aka event management
+
+The callback system allow the developper to register (js) events in the page -- some kind of listeners.
+In other places, the developer can raise an event.
+This can be seen as some loose coupling. An other advantage of the callback system is
+that even if the callback was raised in an iframe, the callback get caught in the main window.
+In other word, the raised event is re-routed to the main window. This is usefull when 
+iframe (for lightboxes, ...) are used.
+
+#### Generic callback method
+
+This method produce a javascript string
+````(string) raiseEvent($eventName, $parameters=array(), $context=null);````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseEventUrl($eventName, $parameters=array(), $context=null);````
+
+Parameters
+
+* $eventName (string) name of the event to raise
+* $parameters (array) parameters to pass to the event manager
+* $context (string) context if needed, else will be in global context
+
+This method register directly the event using the clientScript
+````(string) registerEvent($eventName, $action, $context=null);````
+This method produce a javascript string
+````(string) registerEventScript($eventName, $action, $context=null);````
+
+Parameters
+
+* $eventName (string) name of the event to register
+* $action (string) action to execute when event is raised, this is pure javascript code
+* $context (string) context if needed, else will be in registered in global context
+
+### Ajax helpers 
+
+#### Ajax request using callback system
+
+Produce an ajax call to $url and perform the update/replace
+of the target element if content-type is text/html. If the content-type is application/javascript
+the returned js code is executed.
+
+This system raise also two jQuery events on the target : 
+
+* beforeAjax : raised just before ajax is submited.
+* afterAjax : raised after ajax request (and replace/update) if the call was successfull
+
+This is usefull to prepare data or rebind events when the dom has been replaced.
+
+This method produce a javascript string
+````(string) raiseAjaxRefresh($target, $url, $data=null, $mode=null);````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseAjaxRefreshUrl($target, $url, $data=null, $mode=null);````
+
+Parameters
+
+* $target (string) target element
+* $url (mixed) url in Yii supported format
+* $data (mixed) data to pass
+* $mode (enum) replacement mode can be replace or update
+
+#### Ajax forms using callback system
+
+This script intercept form posting, perform the post in ajax and update/replace or execute
+the javavscript depending on the content-type
+
+This method produce a javascript script which should be executed to enable form ajaxify
+````(string) ajaxSubmitHandlerScript($target);````
+This method produce a javascript which is automatically registered and ajaxify the form(s)
+````ajaxSubmitHandler($target);````
+
+Parameters
+
+* $target (string) the target element - form(s) to ajaxify
+
+An easier way to ajaxify the forms using this system is to use the all
+in one tag generator.
+
+replace the classic 
+````(string) beginForm($action='',$method='post',$htmlOptions=array());````
+with
+````(string) beginAjaxForm($action='',$method='post',$htmlOptions=array());````
+
+And the form will be automagically ajaxified
+
+Parameters
+
+* $action (mixed) action
+* $method (string) method
+* $htmlOptions (array) html options
+
+### Javascript helper
+
+#### Redirect system
+
+Usefull when we need to redirect the main window from an iframe. We don't need
+to know in advance if we are in an iframe or not.
+
+This method produce a javascript string
+````(string) raiseRedirect($url, $timer=null);````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseRedirectUrl($url, $timer=null);````
+
+Parameters
+
+* $url (mixed) url in Yii format
+* $timer (integer) delay in second before executing redirect
+
+### Shadowbox system - aka easy lightbox system
+
+#### Opening shadowbox
+
+This method register all js and css needed to open a shadowbox and open it
+
+This method produce a javascript string
+````(string) raiseOpenShadowbox($url='#', $shadowBoxOptions=array());````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseOpenShadowboxUrl($url='#', $shadowBoxOptions=array());````
+
+Parameters
+
+* $url (mixed) url to open in the shadowbox, information will be normalized
+* $shadowBoxOptions (array) options to pass to shadowbox as described in documentation
+
+#### Closing shadowbox
+
+This method close current shadowbox
+
+This method produce a javascript string
+````(string) raiseCloseShadowbox();````
+This method produce a javascript string which can be used directly as an url
+````(string) raiseCloseShadowboxUrl();````
+
+### File upload using plupload
+
+The methods
+
+* ````(string) activeAsyncFileUpload($model, $attribute, $htmlOptions=array()) ;````
+* ````(string) asyncFileUpload($name, $htmlOptions=array(), $value=null);````
+
+This methods should work like the original ones.
+The difference is that they register js, css and everything to allow multi fileuploads with drag'n'drop
+and fancy features. See method doc clock for all options
+
+    <?php echo Sweeml::activeAsyncFileUpload($myModel, 'uploadField', $options); ?>
+
+
