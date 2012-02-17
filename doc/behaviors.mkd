@@ -17,6 +17,7 @@ Available packages are
 
 Attach the behavior to the clientScript component
 
+````php
     'clientScript' => array(
         'behaviors' => array(
             'sweelixClientScript' => array(
@@ -24,9 +25,11 @@ Attach the behavior to the clientScript component
             ),
         ),
     ),
+````
 
 Use it in your controller or view
 
+````php
     // ... controller code
     class MyController extends CController {
         // ...
@@ -37,6 +40,7 @@ Use it in your controller or view
         }
         // ...
     }
+````
 
 
 ### SwAjaxBehavior
@@ -53,6 +57,7 @@ Example :
 
 Attach the behavior to the request component
 
+````php
     'request' => array(
         'behaviors' => array(
             'sweelixAjax' => array(
@@ -61,10 +66,12 @@ Attach the behavior to the request component
         ),
     ),
     ///... 
+````
 
 
 Use it in your controller
 
+````php
     // ... controller code
     if(Yii::app()->getRequest()->getIsJsRequest() === true) {
         // render javascript which will be executed by the borwser
@@ -77,6 +84,7 @@ Use it in your controller
         // render full html
         $this->render('htmlFullView');
     }
+````
 
 ### SwRenderBehavior
 
@@ -97,6 +105,7 @@ Example :
 
 Attach the behavior to the controller
 
+````php
     class MyController extends CController {
         // ...
         public function behaviors() {
@@ -108,9 +117,11 @@ Attach the behavior to the controller
         }
         // ...
     }
+````
 
 Use it in your code
 
+````php
     class MyController extends CController {
         // ...
         public function actionTest() {
@@ -121,3 +132,5 @@ Use it in your code
         }
         // ...
     }
+````
+

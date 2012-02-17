@@ -16,9 +16,11 @@ is inited, following methods are added to the jQuery.sweelix object :
 
 log, debug, info, warn, error, assert, dir, trace, count, group, groupEnd
 
+````javascript
     // .. js code
     jQuery.sweelix.log('Loging info in the console');
     // .. js code
+````
 
 If the debug is activated, the console will display the string "Loging info in the console".
 If debug is deactivated, the console will remain empty
@@ -28,6 +30,7 @@ and configure it
 
 1. Configure application to enable debugging
 
+````php
     // App config code
     'clientScript' => array(
         'behaviors' => array(
@@ -43,9 +46,11 @@ and configure it
             ),
         ),
     ),    
+````
 
 2. Use debugging functions in the code
 
+````php
     // View code
     // register debug module
     <?php Yii::app()->clientScript->registerSweelixScript('debug'); ?>
@@ -56,6 +61,7 @@ and configure it
             // ... js code
         });
     </script>
+````
 
 ### callback - depends on debug and sweelix
 
@@ -67,6 +73,7 @@ and configure it
 
 1. Configure application to enable debugging and callback
 
+````php
     // App config code
     'clientScript' => array(
         'behaviors' => array(
@@ -86,9 +93,11 @@ and configure it
             ),
         ),
     ),    
+````
 
 2. Use callback functions in the code
 
+````php
     // View code
     // register callback module
     <?php Yii::app()->clientScript->registerSweelixScript('callback'); ?>
@@ -101,6 +110,7 @@ and configure it
     </script>
     // ...
     <a href="#" onclick="jQuery.sweelix.raise('myRegisteredEvent', {'myParam':2})">Raise the event</a>
+````
 
 
 ### ajax - depends on callback, debug and sweelix
@@ -109,6 +119,7 @@ Ajax system allow the developper to perform easy ajax requests
 
 1. Configure application to enable debugging, callback and ajax
 
+````php
     // App config code
     'clientScript' => array(
         'behaviors' => array(
@@ -130,9 +141,11 @@ Ajax system allow the developper to perform easy ajax requests
         ),
     ),
     //...     
+````
 
 2. Use ajax functions in the code (view)
 
+````javascript
     // View code
     /**
      * "Pure" js code
@@ -154,7 +167,9 @@ Ajax system allow the developper to perform easy ajax requests
     <div id="#myDiv">
         This div should be updated
     </div>
+````
 
+````php
     /**
      * Sweeml code
      */
@@ -165,10 +180,12 @@ Ajax system allow the developper to perform easy ajax requests
     <div id="#myDiv">
         This div should be updated
     </div>
+````
      
 
 3. Respond to call in controller
 
+````php
     // Controller code
     public function actionCool() {
         // ... controller code
@@ -180,6 +197,7 @@ Ajax system allow the developper to perform easy ajax requests
             $this->render('htmlFullView');
         }
     }
+````
 
 ### shadowbox - depends on callback, debug and sweelix
 
@@ -187,6 +205,7 @@ Shadowbox system allow easy lightbox management
 
 1. Configure application to enable debugging, and callback
 
+````php
     // App config code
     'clientScript' => array(
         'behaviors' => array(
@@ -207,9 +226,11 @@ Shadowbox system allow easy lightbox management
         ),
     ),
     //...     
+````
 
 2. Use shadowbox functions in the code (view)
 
+````javascript
     // View code
     /**
      * "Pure" js code
@@ -230,7 +251,9 @@ Shadowbox system allow easy lightbox management
     <a href="javascript:void(0);" onclick="jQuery.sweelix.raise('shadowboxOpen', parameters)">Open the shadowbox</a>
     // ...
     <a href="javascript:void(0);" onclick="jQuery.sweelix.raise('shadowboxClose')">Close shadowbox</a>
+````
     
+````php
     /**
      * Sweeml code
      */
@@ -244,7 +267,9 @@ Shadowbox system allow easy lightbox management
     <?php echo CHtml::link('Close shadowbox','#', array(
     	'onclick'=> Sweeml::raiseCloseShadowbox(), 
     )); ?>
+````
     
+````php
     // ...
     // or using js in url 
     <?php echo CHtml::link('Open the shadowbox',
@@ -255,6 +280,7 @@ Shadowbox system allow easy lightbox management
     	    )) 
     ); ?>
     <?php echo CHtml::link('Close shadowbox',Sweeml::raiseCloseShadowboxUrl()); ?>
+````
     
 
 

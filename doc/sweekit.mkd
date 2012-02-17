@@ -145,6 +145,8 @@ This methods should work like the original ones.
 The difference is that they register js, css and everything to allow multi fileuploads with drag'n'drop
 and fancy features. See method doc clock for all options
 
+````php
     <?php echo Sweeml::activeAsyncFileUpload($myModel, 'uploadField', $options); ?>
+````
 
 
