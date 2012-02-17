@@ -16,10 +16,10 @@
 
 /**
  * Class SwClientScriptBehavior
- * 
+ *
  * This behavior implement script management for
  * element used in @see Sweeml
- * 
+ *
  * <code>
  * 	...
  *		'clientScript' => array(
@@ -29,10 +29,10 @@
  *				),
  *			),
  *		),
- * 	... 
+ * 	...
  * </code>
- * 
- * With this behavior active, we can now perform : 
+ *
+ * With this behavior active, we can now perform :
  * <code>
  * 	...
  * 	class MyController extends CController {
@@ -44,7 +44,7 @@
  * 		}
  * 		...
  * 	}
- * 	... 
+ * 	...
  * </code>
  *
  * PHP version 5.2+
@@ -59,7 +59,7 @@
  * @since     1.1
  */
 class SwClientScriptBehavior extends CBehavior {
-	public $sweelixScript=array(); 
+	public $sweelixScript=array();
 	public $sweelixPackages=null;
 	private $_assetUrl;
 	private $_config;
@@ -70,9 +70,9 @@ class SwClientScriptBehavior extends CBehavior {
 	 * Attaches the behavior object only if owner is instance of CClientScript
 	 * or one of its derivative
 	 * @see CBehavior::attach()
-	 * 
+	 *
 	 * @param CClientScript $owner the component that this behavior is to be attached to.
-	 * 
+	 *
 	 * @return void
 	 * @since  1.1.0
 	 */
@@ -83,10 +83,10 @@ class SwClientScriptBehavior extends CBehavior {
 			throw new CException(__CLASS__.' can only be attached ot a CClientScript instance');
 		}
 	}
-	
+
 	/**
 	 * Publish assets to allow script and css appending
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -96,7 +96,15 @@ class SwClientScriptBehavior extends CBehavior {
 		}
 		return $this->_assetUrl;
 	}
-	
+
+	/**
+	 * Register sweelix script
+	 *
+	 * @param string $name name of the package we want to register
+	 *
+	 * @return CClientScript
+	 * @since  1.1.0
+	 */
 	public function registerSweelixScript($name) {
 		if(isset($this->sweelixScript[$name]))
 			return $this->getOwner();
@@ -135,12 +143,30 @@ class SwClientScriptBehavior extends CBehavior {
 		}
 		return $this->getOwner();
 	}
+
+	/**
+	 * Register shadowbox script and init it in the
+	 * page
+	 *
+	 * @return void
+	 * @since  1.1.0
+	 */
 	private function _initShadowbox() {
 		if($this->_sbInit === false) {
 			$this->getOwner()->registerScript('shadowboxInit', 'Shadowbox.init('.CJavaScript::encode($this->_shadowboxConfig).');', CClientScript::POS_READY);
 			$this->_sbInit=true;
 		}
 	}
+
+	/**
+	 * Define configuration parameters for
+	 * javascript packages
+	 *
+	 * @param array $data initial config
+	 *
+	 * @return void
+	 * @since  1.1.0
+	 */
 	public function setConfig($data=array()) {
 		if(isset($data['shadowbox']) == true) {
 			$this->_shadowboxConfig = $data['shadowbox'];

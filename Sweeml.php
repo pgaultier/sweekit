@@ -1,9 +1,9 @@
 <?php
 /**
  * Sweeml.php
- * 
+ *
  * PHP version 5.2+
- * 
+ *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
@@ -11,14 +11,14 @@
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
- */	
+ */
 
 Yii::import('ext.sweekit.validators.SwFileValidator');
 
 /**
- * This Sweeml class override CHtml class to 
+ * This Sweeml class override CHtml class to
  * allow the use of javascript elements
- * 
+ *
  * samples :
  * Methods to generate code to use as url (href="")
  * <code>
@@ -27,31 +27,31 @@ Yii::import('ext.sweekit.validators.SwFileValidator');
  * 	$urlRaiseEvent = Sweeml::raiseOpenShadowboxUrl($url, $shadowBoxOptions);
  * 	$urlRaiseEvent = Sweeml::raiseCloseShadowboxUrl();
  * </code>
- * 
- * Methods to generate code to use in script code 
+ *
+ * Methods to generate code to use in script code
  * <code>
  * 	$jsRaiseEvent = Sweeml::raiseEvent($eventName, $parameters, $context);
  * 	$jsRaiseEvent = Sweeml::raiseRedirect($url);
  * 	$jsRaiseEvent = Sweeml::raiseOpenShadowbox($url, $shadowBoxOptions);
  * 	$jsRaiseEvent = Sweeml::raiseCloseShadowbox();
  * </code>
- * 
+ *
  * Method to register an event using the clientScript
  * <code>
  * 	Sweeml::registerEvent($eventName, $action, $context);
  * </code>
- * 
+ *
  * Method to generate js code to register an event manually
  * <code>
  * 	$jsRaiseEvent = Sweeml::registerEventScript($eventName, $action, $context);
  * </code>
- * 
+ *
  * Method to generate async file upload
  * <code>
  * 	Sweeml::asyncFileUpload($model, $attribute, $options);
  * </code>
- * 
- * 
+ *
+ *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
@@ -60,10 +60,10 @@ Yii::import('ext.sweekit.validators.SwFileValidator');
  * @category  extensions
  * @package   Sweeml
  * @since     1.1
- */	
+ */
 class Sweeml extends CHtml {
 	/**
-	 * Create an asynchronous file upload. This kind of 
+	 * Create an asynchronous file upload. This kind of
 	 * file upload allow the use of fully ajaxed forms
 	 * supported htmlOptions are :
 	 * <code>
@@ -80,29 +80,29 @@ class Sweeml extends CHtml {
 	 *  		'urlDelete' => '...', // default delete url for temporary upload
 	 *  	),
 	 *  	'events' => array( // default plupload events, see http://www.plupload.com for more information
-	 *  		'beforeUpload' => 'js:xxx', 
-	 *  		'chunkUploaded' => 'js:xxx', 
-	 *  		'destroy' => 'js:xxx', 
-	 *  		'error' => 'js:xxx', 
-	 *  		'filesAdded' => 'js:xxx', 
-	 *  		'filesRemoved' => 'js:xxx', 
-	 *  		'fileUploaded' => 'js:xxx', 
+	 *  		'beforeUpload' => 'js:xxx',
+	 *  		'chunkUploaded' => 'js:xxx',
+	 *  		'destroy' => 'js:xxx',
+	 *  		'error' => 'js:xxx',
+	 *  		'filesAdded' => 'js:xxx',
+	 *  		'filesRemoved' => 'js:xxx',
+	 *  		'fileUploaded' => 'js:xxx',
 	 *  		'init' => 'js:xxx',
-	 *  		'postInit' => 'js:xxx', 
-	 *  		'queueChanged' => 'js:xxx', 
-	 *  		'refresh' => 'js:xxx', 
-	 *  		'stateChanged' => 'js:xxx', 
+	 *  		'postInit' => 'js:xxx',
+	 *  		'queueChanged' => 'js:xxx',
+	 *  		'refresh' => 'js:xxx',
+	 *  		'stateChanged' => 'js:xxx',
 	 *  		'uploadComplete' => 'js:xxx',
-	 *  		'uploadFile' => 'js:xxx', 
+	 *  		'uploadFile' => 'js:xxx',
 	 *  		'uploadProgress' => 'js:xxx',
 	 *  	),
 	 * );
 	 * </code>
-	 * 
+	 *
 	 * @param CModel $model       original model used
 	 * @param string $attribute   attribute to draw
-	 * @param array  $htmlOptions html options 
-	 * 
+	 * @param array  $htmlOptions html options
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -110,22 +110,22 @@ class Sweeml extends CHtml {
 		if($value === null) {
 			$value = SwUploadedFile::getInstancesByName($name);
 		}
-		
+
 		$htmlOptions['name'] = $name;
 		$htmlOptions['id']=self::getIdByName($name);
 		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
-		
-		return self::renderAsyncFileUpload($value, $htmlOptions, $config, $attachedEvents);		
+
+		return self::renderAsyncFileUpload($value, $htmlOptions, $config, $attachedEvents);
 	}
-	
+
 	/**
 	 * Create an asynchronous file upload take care this
 	 * kind of file upload does not gracefully downgrade
-	 * 
+	 *
 	 * @param CModel $model       original model used
 	 * @param string $attribute   attribute to draw
-	 * @param array  $htmlOptions html options 
-	 * 
+	 * @param array  $htmlOptions html options
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -165,15 +165,15 @@ class Sweeml extends CHtml {
 			self::addErrorCss($htmlOptions);
 		return self::renderAsyncFileUpload($value, $htmlOptions, $config, $attachedEvents);
 	}
-	
+
 	/**
 	 * render the asyncfile element using base data
-	 * 
+	 *
 	 * @param array $values         already uploaded files
-	 * @param array $htmlOptions    element htmlOptions 
+	 * @param array $htmlOptions    element htmlOptions
 	 * @param array $config         configuration parameters
 	 * @param array $attachedEvents events attached to the asyncfile element
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -183,8 +183,8 @@ class Sweeml extends CHtml {
 			foreach($values as $addedFile) {
 				if($addedFile instanceof SwUploadedFile) {
 					$uploadedFiles[] = array('fileName' => $addedFile->getName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
-				}				
-				
+				}
+
 			}
 			if($uploadedFiles !== null) {
 				$config['uploadedFiles'] = $uploadedFiles;
@@ -209,21 +209,21 @@ class Sweeml extends CHtml {
 			$content = Yii::t('sweelix', 'Browse ...');
 		}
 
-		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');'; 
+		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
 		if(Yii::app()->getRequest()->isAjaxRequest === false) {
 			Yii::app()->clientScript->registerScript($htmlOptions['id'], $js);
 		} else {
 			$htmlTag = $htmlTag.' '.self::script($js);
 		}
-		return $htmlTag; 
+		return $htmlTag;
 	}
 	/**
 	 * Rework htmlOptions to prepare asyncfile upload data and return
 	 * array(configArray, eventsArray)
-	 * 
+	 *
 	 * @param array &$htmlOptions htmlOptions used
-	 * 
+	 *
 	 * @return array
 	 * @since  1.1.0
 	 */
@@ -266,8 +266,8 @@ class Sweeml extends CHtml {
 			$events = $htmlOptions['events'];
 			unset($htmlOptions['events']);
 			$knownEvents = array('beforeUpload', 'chunkUploaded', 'destroy',
-			 'error', 'filesAdded', 'filesRemoved', 'fileUploaded', 'init', 
-			 'postInit', 'queueChanged', 'refresh', 'stateChanged', 'uploadComplete', 
+			 'error', 'filesAdded', 'filesRemoved', 'fileUploaded', 'init',
+			 'postInit', 'queueChanged', 'refresh', 'stateChanged', 'uploadComplete',
 			 'uploadFile', 'uploadProgress');
 			foreach($events as $name => $func) {
 				if(in_array($name, $knownEvents) == true) {
@@ -285,7 +285,7 @@ class Sweeml extends CHtml {
 	 * @param mixed  $action
 	 * @param string $method
 	 * @param array  $htmlOptions
-	 * 
+	 *
 	 * @return string
 	 * @sinces XXX
 	 */
@@ -304,10 +304,10 @@ class Sweeml extends CHtml {
 
 	/**
 	 * Generate a shadowbox open script using raiseevents
-	 * 
+	 *
 	 * @param mixed  $url              url information will be normalized
 	 * @param array  $shadowBoxOptions options to pass to shadowbox as described in documentation
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -321,12 +321,12 @@ class Sweeml extends CHtml {
 		}
 		return self::raiseEvent('shadowboxOpen', $shadowBoxOptions);
 	}
-	
+
 	/**
 	 * Generate a shadowbox close script using raiseevents
-	 * 
+	 *
 	 * @param string $eventName name of the event to raise. Usefull if multiple events are available
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -334,13 +334,13 @@ class Sweeml extends CHtml {
 		Yii::app()->getClientScript()->registerSweelixScript('shadowbox');
 		return self::raiseEvent('shadowboxClose');
 	}
-	
+
 	/**
 	 * Raise redirect js event
-	 * 
+	 *
 	 * @param array   $url   url in yii format
 	 * @param integer $timer delay in second before executing redirect
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -351,26 +351,26 @@ class Sweeml extends CHtml {
 			return self::raiseEvent('redirect', self::normalizeUrl($url));
 		}
 	}
-	
+
 	/**
 	 * Raise redirect js event through url
-	 * 
+	 *
 	 * @param array $url url in yii format
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
 	public static function raiseRedirectUrl($url) {
 		return 'javascript:'.self::raiseRedirect($url);
 	}
-	
+
 	/**
 	 * Generate a shadowbox open script ready to set in link (url)
 	 * using raiseevents
-	 * 
+	 *
 	 * @param mixed  $url              url information will be normalized
 	 * @param array  $shadowBoxOptions options to pass to shadowbox as described in documentation
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -381,7 +381,7 @@ class Sweeml extends CHtml {
 	/**
 	 * Generate a shadowbox close script ready to set in link (url)
 	 * using raiseevents
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -395,7 +395,7 @@ class Sweeml extends CHtml {
 	 * @param string $eventName  name of the event to raise
 	 * @param array  $parameters parameters to pass to the event manager
 	 * @param string $context    context if needed, else will be in global context
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -407,7 +407,7 @@ class Sweeml extends CHtml {
 			return 'jQuery.sweelix.raiseNamed(\''.$context.'\', \''.$eventName.'\', '.CJavaScript::encode($parameters).');';
 		}
 	}
-	
+
 	/**
 	 * Register and attach the ajaxSubmitHandler
 	 *
@@ -417,7 +417,7 @@ class Sweeml extends CHtml {
 		$scriptName = 'ajaxSubmitHandler'.preg_replace('/[^a-z0-9]/','', $target);
 		Yii::app()->getClientScript()->registerScript($scriptName, self::ajaxSubmitHandlerScript($target), CClientScript::POS_READY);
 	}
-	
+
 	/**
 	 * Register and attach the ajaxSubmitHandler
 	 *
@@ -427,15 +427,15 @@ class Sweeml extends CHtml {
 		Yii::app()->getClientScript()->registerSweelixScript('ajax');
 		return 'jQuery(\''.$target.'\').ajaxSubmitHandler();';;
 	}
-	
+
 	/**
 	 * Raise refresh handler in js
-	 * 
+	 *
 	 * @param string $target target element
 	 * @param array  $url    url in yii format
 	 * @param array  $data   data to pass
 	 * @param string $mode   replacement mode can be replace or update
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -445,40 +445,40 @@ class Sweeml extends CHtml {
 	}
 	/**
 	 * Raise refresh handler in url format
-	 * 
+	 *
 	 * @param string $target target element
 	 * @param array  $url    url in yii format
 	 * @param array  $data   data to pass
 	 * @param string $mode   replacement mode can be replace or update
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
 	public static function raiseAjaxRefreshUrl($target, $url, $data=null, $mode=null) {
 		return 'javascript:'.self::raiseAjaxRefresh($target, $url, $data, $mode);
 	}
-	
+
 	/**
 	 * Generate a raise event url to use in links, ...
 	 *
 	 * @param string $eventName  name of the event to raise
 	 * @param array  $parameters parameters to pass to the event manager
 	 * @param string $context    context if needed, else will be in global context
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
 	public static function raiseEventUrl($eventName, $parameters=array(), $context=null) {
 		return 'javascript:'.self::raiseEvent($eventName, $parameters, $context);
 	}
-	
+
 	/**
 	 * Generate a raise event script. This script can be registered manually
-	 * 
-	 * @param string $eventName  name of the event to raise
-	 * @param array  $parameters parameters to pass to the event manager
-	 * @param string $context    context if needed, else will be in global context
-	 * 
+	 *
+	 * @param string $eventName name of the event to raise
+	 * @param array  $action    action to execute when event is raised, this is pure javascript code
+	 * @param string $context   context if needed, else will be in global context
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -494,9 +494,9 @@ class Sweeml extends CHtml {
 	 * Register a new javascript event handler
 	 *
 	 * @param string $eventName name of the event to register
-	 * @param string $action    action to execute when event is raised, this is pure javascript code 
+	 * @param string $action    action to execute when event is raised, this is pure javascript code
 	 * @param string $context   context if needed, else will be in registered in global context
-	 * 
+	 *
 	 * @return void
 	 * @since  1.1.0
 	 */
