@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.6.1
+ * @version   1.6.2
  * @link      http://www.sweelix.net
  * @category  filters
  * @package   Sweeml.filters
@@ -37,7 +37,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.6.1
+ * @version   1.6.2
  * @link      http://www.sweelix.net
  * @category  filters
  * @package   Sweeml.filters
