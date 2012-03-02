@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.6.1
+ * @version   1.7.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -55,7 +55,7 @@ Yii::import('ext.sweekit.validators.SwFileValidator');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.6.1
+ * @version   1.7.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
