@@ -9,8 +9,8 @@
  * @license   http://www.sweelix.net/license license
  * @version   1.6.1
  * @link      http://www.sweelix.net
- * @category  extensions
- * @package   Sweelix
+ * @category  web
+ * @package   Sweeml.web
  * @since     1.1
  */
 
@@ -59,8 +59,8 @@
  * @license   http://www.sweelix.net/license license
  * @version   1.6.1
  * @link      http://www.sweelix.net
- * @category  extensions
- * @package   Sweelix
+ * @category  web
+ * @package   Sweeml.web
  * @since     1.1
  */
 class SwUploadedFile extends CComponent {
