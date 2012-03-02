@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.6.2
+ * @version   1.7.0
  * @link      http://www.sweelix.net
  * @category  js
  * @package   Sweeml.js
