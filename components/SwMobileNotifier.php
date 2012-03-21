@@ -88,6 +88,14 @@ class SwMobileNotifier extends CApplicationComponent {
 	/**
 	 * @var boolean check if c2dm is available
 	 */
+	/**
+	 * @var boolean set to true if we have to embed the cafile (usefull when ssl dir is outdated)
+	 */
+	public $c2dmEmbeddedCaFile=false;
+	/**
+	 * @var string certificate authority file
+	 */
+	private $_c2dmCaFile;
 	private $_c2dmEnabled = false;
 	
 	
@@ -114,6 +122,10 @@ class SwMobileNotifier extends CApplicationComponent {
 		}
 		if(($this->c2dmUsername !== null) && ($this->c2dmPassword !== null) && ($this->c2dmApplicationIdentifier !== null)) {
 			$this->_c2dmEnabled = true;
+		}
+		if($this->_c2dmEnabled === true) {
+			// prepare ca certificates
+			$this->_initC2dmCa();
 		}
 		parent::init();
 	}
@@ -290,12 +302,20 @@ class SwMobileNotifier extends CApplicationComponent {
 			foreach($pushId as $realPushId) {
 				$post['registration_id'] = $realPushId;
 				$curl = curl_init(self::C2DM_PUSH_URL);
+				if($this->c2dmEmbeddedCaFile === true) {
+					curl_setopt($curl, CURLOPT_CAINFO, $this->_c2dmCaFile);
+					//curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+					//TODO: remove Verifier to false when google sets a valid certificate
+					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+					curl_setopt($curl, CURLOPT_SSLVERSION, 3);
+				}
 				curl_setopt($curl, CURLOPT_POST, true);
 				curl_setopt($curl, CURLOPT_HEADER, true);
 				curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: GoogleLogin auth='. $this->_c2dmGetAuthenticationToken()));
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($curl, CURLOPT_POSTFIELDS, $post);
 				$response = curl_exec($curl);
+				var_dump(curl_error($curl), $response);exit;
 				curl_getinfo($curl);
 				curl_close($curl);
 				if(stripos($response, 'Error') === false) { 
@@ -321,6 +341,9 @@ class SwMobileNotifier extends CApplicationComponent {
 		try {
 			if(($this->_currentToken === null) || ($forceRefresh === true)) {
 				$curl = curl_init(self::C2DM_LOGIN_URL);
+				if($this->c2dmEmbeddedCaFile === true) {
+					curl_setopt($curl, CURLOPT_CAINFO, $this->_c2dmCaFile);
+				}
 				curl_setopt($curl, CURLOPT_POST, true);
 				curl_setopt($curl, CURLOPT_HEADER, false);
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -363,6 +386,36 @@ class SwMobileNotifier extends CApplicationComponent {
 			throw $e;
 		}
 	}
+	
+	private function _initC2dmCa() {
+		if($this->c2dmEmbeddedCaFile === true) {
+			$googleDir = Yii::app()->getRuntimePath().DIRECTORY_SEPARATOR.'google';
+			if(is_dir($googleDir) === false) {
+				mkdir($googleDir);
+			}
+			$this->_c2dmCaFile = $googleDir.DIRECTORY_SEPARATOR.'c2dm_thawte_ca.pem';
+			if(file_exists($this->_c2dmCaFile) === false) {
+				$cert = <<<EOC
+-----BEGIN CERTIFICATE-----
+MIICPDCCAaUCEDyRMcsf9tAbDpq40ES/Er4wDQYJKoZIhvcNAQEFBQAwXzELMAkG
+A1UEBhMCVVMxFzAVBgNVBAoTDlZlcmlTaWduLCBJbmMuMTcwNQYDVQQLEy5DbGFz
+cyAzIFB1YmxpYyBQcmltYXJ5IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTk2
+MDEyOTAwMDAwMFoXDTI4MDgwMjIzNTk1OVowXzELMAkGA1UEBhMCVVMxFzAVBgNV
+BAoTDlZlcmlTaWduLCBJbmMuMTcwNQYDVQQLEy5DbGFzcyAzIFB1YmxpYyBQcmlt
+YXJ5IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MIGfMA0GCSqGSIb3DQEBAQUAA4GN
+ADCBiQKBgQDJXFme8huKARS0EN8EQNvjV69qRUCPhAwL0TPZ2RHP7gJYHyX3KqhE
+BarsAx94f56TuZoAqiN91qyFomNFx3InzPRMxnVx0jnvT0Lwdd8KkMaOIG+YD/is
+I19wKTakyYbnsZogy1Olhec9vn2a/iRFM9x2Fe0PonFkTGUugWhFpwIDAQABMA0G
+CSqGSIb3DQEBBQUAA4GBABByUqkFFBkyCEHwxWsKzH4PIRnN5GfcX6kb5sroc50i
+2JhucwNhkcV8sEVAbkSdjbCxlnRhLQ2pRdKkkirWmnWXbj9T/UWZYB2oK0z5XqcJ
+2HUw19JlYD1n1khVdWk/kfVIC0dpImmClr7JyDiGSnoscxlIaU5rfGW/D/xwzoiQ
+-----END CERTIFICATE-----
+EOC;
+				file_put_contents($this->_c2dmCaFile, $cert);
+			}
+		}
+	}
+	
 	/**
 	 * Prepare ca certificate. Usefull when certificate are not
 	 * fully installed on environment
