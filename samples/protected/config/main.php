@@ -14,10 +14,19 @@ return array(
 
 	// autoloading model and component classes
 	'import'=>array(
+		'ext.sweekit.Sweeml',
+		'application.models.*',
 	),
 
 	// application components
 	'components'=>array(
+		'clientScript' => array(
+			'behaviors' => array(
+				'sweelixClientScript' => array(
+					'class' => 'ext.sweekit.behaviors.SwClientScriptBehavior',
+				),
+			),
+		),			
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
