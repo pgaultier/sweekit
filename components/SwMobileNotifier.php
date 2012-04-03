@@ -304,10 +304,9 @@ class SwMobileNotifier extends CApplicationComponent {
 				$curl = curl_init(self::C2DM_PUSH_URL);
 				if($this->c2dmEmbeddedCaFile === true) {
 					curl_setopt($curl, CURLOPT_CAINFO, $this->_c2dmCaFile);
-					//curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 					//TODO: remove Verifier to false when google sets a valid certificate
-					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-					curl_setopt($curl, CURLOPT_SSLVERSION, 3);
+					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+					//TODO: check if sslv3 is supported curl_setopt($curl, CURLOPT_SSLVERSION, 3);
 				}
 				curl_setopt($curl, CURLOPT_POST, true);
 				curl_setopt($curl, CURLOPT_HEADER, true);
