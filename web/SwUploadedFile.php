@@ -65,13 +65,13 @@
  */
 class SwUploadedFile extends CComponent {
 	public static $targetPath='application.runtime.sweeUpload';
-	private static $_targetPath;
-	private static $_files = null;
+	protected static $_targetPath;
+	protected static $_files = null;
 	
-	private $_name;
-	private $_tempName;
-	private $_extensionName;
-	private $_size;
+	protected $_name;
+	protected $_tempName;
+	protected $_extensionName;
+	protected $_size;
 
 	/**
 	 * Define the path where files will be temporary saved
@@ -188,7 +188,7 @@ class SwUploadedFile extends CComponent {
 		}
 		return $results;
 	}
-	private static function searchDataByName($name, $postData, $prevKey='') {
+	protected static function searchDataByName($name, $postData, $prevKey='') {
 		$id = Sweeml::getIdByName($name);
 		foreach($postData as $key => $value) {
 			if($key === $name) {
@@ -222,17 +222,20 @@ class SwUploadedFile extends CComponent {
 	 * @param unknown_type $postData data to search in
 	 * @param unknown_type $prevKey  concat keys to build correct name
 	 */
-	private static function searchData($infos, $postData, $prevKey='') {
+	protected static function searchData($infos, $postData, $prevKey='') {
 		foreach($postData as $key => $value) {
 			if($key === $infos['attribute']) {
 				if(is_array($value) == true) {
 					// multi upload
 					$testName = $infos['class'].$prevKey.'['.$infos['attribute'].']';
 					$id = Sweeml::getIdByName($testName);
+					
 					foreach($value as $idx => $data) {
 						$myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$data;
+
 						if((file_exists($myFile)===true) && (is_file($myFile)==true)) {
 							$fileInfo = pathinfo($myFile);
+						
 							self::$_files[$infos['class']][$infos['attribute']][$testName.'_'.$idx] = new SwUploadedFile($data, $myFile, $fileInfo['extension'], filesize($myFile));
 						}
 					}

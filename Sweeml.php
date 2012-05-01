@@ -209,7 +209,16 @@ class Sweeml extends CHtml {
 			$content = Yii::t('sweelix', 'Browse ...');
 		}
 
-		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
+		$method = 'asyncUpload';
+		if (isset($htmlOptions['method'])){
+			if ($htmlOptions['method']=='JqueryUI') {
+				$method = 'asyncUploadJqueryUI';
+				$tag = 'div';
+				$htmlOptions['type']='div';
+			}
+		}
+
+		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').'.$method.'('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
 		if(Yii::app()->getRequest()->isAjaxRequest === false) {
 			Yii::app()->clientScript->registerScript($htmlOptions['id'], $js);
