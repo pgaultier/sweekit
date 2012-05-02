@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  controllers
  * @package   Sweeml.samples.controllers
@@ -20,11 +20,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  controllers
  * @package   Sweeml.samples.controllers
- * @since     XXX
+ * @since     1.9.0
  */
 class ProtocolDemoController extends CController {
 	
@@ -32,7 +32,7 @@ class ProtocolDemoController extends CController {
 	 * This page stays with current mode (http/https)
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionIndex() {
 		$this->render('index');
@@ -42,7 +42,7 @@ class ProtocolDemoController extends CController {
 	 * This page renders in https only
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionSecured() {
 		$this->render('index');
@@ -52,7 +52,7 @@ class ProtocolDemoController extends CController {
 	 * This page renders in http only
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionClassic() {
 		$this->render('index');

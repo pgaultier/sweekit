@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  controllers
  * @package   Sweeml.samples.controllers
@@ -30,11 +30,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  controllers
  * @package   Sweeml.samples.controllers
- * @since     XXX
+ * @since     1.9.0
  */
 class AjaxDemoController extends CController {
 	/**
@@ -42,7 +42,7 @@ class AjaxDemoController extends CController {
 	 * @see CController::behaviors()
 	 * 
 	 * @return array
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function behaviors() {
 		return array(
@@ -63,7 +63,7 @@ class AjaxDemoController extends CController {
 	 * Default action
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionIndex() {
 		$demoForm = new DemoForm();
@@ -74,7 +74,7 @@ class AjaxDemoController extends CController {
 	 * render only the bloc content to refresh
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionBlocRefresh() {
 		$this->renderPartial('_blocRefresh');
@@ -85,7 +85,7 @@ class AjaxDemoController extends CController {
 	 * client side
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionJavascriptRefresh() {
 		$jsCode = "alert('Refresh was performed @ ".date('d/m/Y h:i:s')." ');";
@@ -96,7 +96,7 @@ class AjaxDemoController extends CController {
 	 * Form was submited, and should be rendered 
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionFormSubmit() {
 		$demoForm = new DemoForm();
@@ -121,7 +121,7 @@ class AjaxDemoController extends CController {
 	 * validated
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionFormValid() {
 		$this->render('formValid');

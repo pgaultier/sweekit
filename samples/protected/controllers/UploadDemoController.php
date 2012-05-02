@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  controllers
  * @package   Sweeml.samples.controllers
@@ -18,11 +18,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  controllers
  * @package   Sweeml.samples.controllers
- * @since     XXX
+ * @since     1.9.0
  */
 class UploadDemoController extends CController {
 	/**
@@ -30,7 +30,7 @@ class UploadDemoController extends CController {
 	 * @see CController::behaviors()
 	 * 
 	 * @return array
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function behaviors() {
 		return array(
@@ -47,7 +47,7 @@ class UploadDemoController extends CController {
 	 * @see CController::actions()
 	 * 
 	 * @return array
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actions() {
 		return array(
@@ -60,7 +60,7 @@ class UploadDemoController extends CController {
 	 * This page stays with current mode (http/https)
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function actionIndex() {
 		$demoFileForm = new DemoFileForm();

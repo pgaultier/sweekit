@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -23,7 +23,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -104,7 +104,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * This method is required by {@link IApplicationComponent} and is invoked by application.
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function init() {
 		if(($this->mode === null) || (in_array($this->mode, array('devel', 'production')) === false)) {
@@ -146,7 +146,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * @param array  $message message check apple documentation to prepare correct array
 	 * 
 	 * @return mixed
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function sendApnsMessage($pushId, $message) {
 		$result = false;
@@ -176,7 +176,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * returned data is like array( array($timestamp, $pushId), ...)
 	 * 
 	 * @return mixed
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function readApnsFeedback() {
 		$result = false;
@@ -194,7 +194,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * @param boolean $feedback do we open a socket for feedback ?
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	private function _apnsOpenStream($feedback=false) {
 		Yii::trace('Trace: '.__CLASS__.'::'.__FUNCTION__.'()', 'Sweeml.components');
@@ -238,7 +238,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * @param string $payload json message to send
 	 * 
 	 * @return mixed
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	private function _apnsWriteStream($pushId, $payload) {
 		$apnsMessage = chr(0) . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $pushId)) . chr(0) . chr(strlen($payload)) . $payload;
@@ -250,7 +250,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * of pushId which should be revoked
 	 * 
 	 * @return array
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	private function _apnsReadStream() {
 		$result = array();
@@ -268,7 +268,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * Close stream when message where writtend
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	private function _apnsCloseStream() {
 		fclose($this->_apnsStream);
@@ -285,7 +285,7 @@ class SwMobileNotifier extends CApplicationComponent {
 	 * @param string  $collapseKey    collapseKey An arbitrary string that is used to collapse a group of like messages when the device is offline, so that only the last message gets sent to the client.
 	 * 
 	 * @return mixed
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	public function sendC2dmMessage($pushId, $message, $delayWhileIdle=false, $collapseKey=null) {
 		$result = false;
@@ -420,7 +420,7 @@ EOC;
 	 * fully installed on environment
 	 * 
 	 * @return void
-	 * @since  XXX
+	 * @since  1.9.0
 	 */
 	private function _initApnsCa() {
 		if($this->apnsEmbeddedCaFile === true) {
