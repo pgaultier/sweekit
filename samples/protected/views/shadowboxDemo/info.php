@@ -7,11 +7,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  views
  * @package   Sweeml.samples.views.shadowboxDemo
- * @since     XXX
+ * @since     1.9.0
  */
 ?><div style="background-color:#ffffff">
 	<?php echo Sweeml::link('Close the box manually', Sweeml::raiseCloseShadowboxUrl()) ?>

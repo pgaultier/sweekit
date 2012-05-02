@@ -9,11 +9,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  views
  * @package   Sweeml.samples.views.layout
- * @since     XXX
+ * @since     1.9.0
  */
 ?><!DOCTYPE html>
 <html>
