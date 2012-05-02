@@ -1,0 +1,18 @@
+# Sweekit - samples
+
+Samples is a small Yii app built to demo some Sweekit elements.
+
+You'll find demos for
+
+* quick ajax calls
+* using shadowbox wrappers
+* using plupload wrappers
+* using protocol filtering
+
+## Installing
+
+* Copy the content of samples directory where you want to install the demos
+* Copy sweekit extension in the extensions directory
+* Make sure directory are writeable by the webserver
+* point your browser to http://www_webserver/samples/ and check the samples
+

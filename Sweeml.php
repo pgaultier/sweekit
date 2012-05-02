@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.8.0
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -55,7 +55,7 @@ Yii::import('ext.sweekit.validators.SwFileValidator');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.8.0
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -209,7 +209,16 @@ class Sweeml extends CHtml {
 			$content = Yii::t('sweelix', 'Browse ...');
 		}
 
-		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
+		$method = 'asyncUpload';
+		if (isset($htmlOptions['method'])){
+			if ($htmlOptions['method']=='JqueryUI') {
+				$method = 'asyncUploadJqueryUI';
+				$tag = 'div';
+				$htmlOptions['type']='div';
+			}
+		}
+
+		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').'.$method.'('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
 		if(Yii::app()->getRequest()->isAjaxRequest === false) {
 			Yii::app()->clientScript->registerScript($htmlOptions['id'], $js);

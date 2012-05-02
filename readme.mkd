@@ -17,6 +17,7 @@ A short explain is available in the doc directory.
 Available features :
 
 * javascript - see doc/sweekit.mkd and doc.javascript.mkd
+* components - some usefull components
 * helpers - Sweeml (extends CHtml) - see doc/sweekit.mkd
 * behaviors - SwAjaxBehavior, SwClientScriptBehavior, SwRenderBehavior - see doc/behaviors.mkd
 * filters - SwProtocolFilter - see doc/filters.mkd
@@ -26,6 +27,78 @@ Available features :
 * web - SwUploadedFile (Retrieve files uploaded with plupload)
 
 ## Samples - because it's always easier to understand what can be done
+
+A sample application has been built and is available in the "samples" directory.
+
+## Quick code
+
+### Mobile notifier
+
+The mobile notifier allow the developper to send notification to iOS and/or
+Android system.
+
+Of course, you'll need account information from Google or Apple to be able
+to send notifications.
+
+Adding the notifier component to the application
+
+````php
+	/* configuration array */
+	mobileNotification' => array(
+		'class' => 'ext.sweekit.actions.SwMobileNotifier',
+		'mode' => 'production', // can be development to use the sandbox
+		'apnsCertificateFile' => 'my_apple_certificate_for_push.pem',
+		'apnsCertificatePassphrase' => 'my_apple_certificate_passphrase', // comment out if there is no passphrase
+		'apnsEmbeddedCaFile'=>true, // embed entrust ca file if needed (ssl errors, ...)
+		'c2dmUsername' => 'my_gmail_push_account@gmail.com',
+		'c2dmPassword' => 'my_gmail_push_account_password',
+		'c2dmApplicationIdentifier' => 'my_gmail_push_app_identifier',
+	),
+````
+
+You are now able to push messages to mobile devices
+
+#### Sample for Android
+
+````php
+// send message to device
+$res = Yii::app()->getComponent('mobileNotification')->sendC2dmMessage(
+	'the_android_device_id', // look like base64 encoded data
+	array('badge' => 12, 'message' => 'My message to send') // the payload to send to the device
+);
+````
+
+#### Sample for iOS
+
+````php
+// send message to device
+$res = Yii::app()->getComponent('mobileNotification')->sendApnsMessage(
+	'the_ios_device_id', // 64 characters hex id
+	array('aps' => array(
+		'badge' => CPropertyValue::ensureInteger(12), // make sure data is an integer
+		'alert' => 'My message to send',
+	))
+);
+````
+
+Apple added a function to check if device should still receive notification.
+
+This method should be called using a cron system in order to purge old pushId from
+your database to avoid sending useless notifications
+
+````php
+$res = Yii::app()->getComponent('mobileNotification')->readApnsFeedback();
+/**
+ * $res is an array of array : 
+ * $res = array(
+ *		array($timeStamp, $pushId1),
+ *		array($timeStamp, $pushId2),
+ *		// ...
+ * );
+ */
+````
+
+
 
 ### Callback system
 

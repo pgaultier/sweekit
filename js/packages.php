@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.8.0
+ * @version   1.9.0
  * @link      http://www.sweelix.net
  * @category  js
  * @package   Sweeml.js
@@ -67,9 +67,18 @@ return array(
 			'js' => array('plupload/plupload.js'),
 			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax'),
 		),
+		'plupload.full' => array(
+			'js' => array('plupload/plupload.full.js'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax'),
+		),
+		'plupload.ui.plupload' => array(
+			'js' => array('plupload/jquery.ui.plupload/jquery.ui.plupload.js'),
+			'css' => array('plupload/jquery.ui.plupload/css/jquery.ui.plupload.css'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax'),
+		),
 		'plupload.ui' => array(
 			'js' => array('jquery.sweelix.plupload.js'),
 			'css' => array('jquery.sweelix.plupload.css'),
-			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax'),
 		),
 	);
