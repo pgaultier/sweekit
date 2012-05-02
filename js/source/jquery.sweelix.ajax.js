@@ -170,6 +170,127 @@
 					}
 				};
 
+				jQuery.fn.asyncUploadJqueryUI = function (config, events) {
+					config = config||{};
+					events = events||{};
+					var baseConfig = { 
+						'runtimes' : (!!config.runtimes)?config.runtimes:'flash',
+						'multi_selection': (!!config.multiSelection)?config.multiSelection:false,
+						'max_file_size': (!!config.maxFileSize)?config.maxFileSize:'10mb',
+						'chunk_size':(!!config.chunkSize)?config.chunkSize:'10mb',
+						'unique_names':(!!config.uniqueNames)?config.uniqueNames:false,
+						'url':config.url,
+						'flash_swf_url':(!!config.flashSwfUrl)?config.flashSwfUrl:null,
+						'silverlight_xap_url':(!!config.silverlightXapUrl)?config.silverlightXapUrl:null,
+						'browse_button':(!!config.browseButton)?config.browseButton:null,
+						'drop_element':(!!config.dropElement)?config.dropElement:null,
+						'container':(!!config.container)?config.container:null,
+						'multipart':(!!config.multipart)?config.multipart:null,
+						'multipart_params':(!!config.multipartParams)?config.multipartParams:null,
+						'required_features':(!!config.requiredFeatures)?config.requiredFeatures:null,
+						'headers':(!!config.headers)?config.headers:null
+					};
+					if(!!config.filters) {
+						baseConfig['filters'] = config.filters;
+					}
+					var uploadedFiles = (!!config.uploadedFiles)?config.uploadedFiles:null;
+					jQuery.extend(baseConfig, {'headers':{'X-Requested-With':'XMLHttpRequest'}});
+					return this.each(function () {
+						var id = jQuery(this).attr('id');
+						var hiddenId = jQuery(this).attr('id')+'_hidden';
+						baseConfig['browse_button'] = id;
+						
+						var uploader = $('#'+id).plupload(baseConfig).plupload('getUploader');
+						uploader['getId'] = function() {
+							return id;
+						};
+						uploader['getHiddenId'] = function() {
+							return hiddenId;
+						};
+						uploader['getListId'] = function() {
+							return id+'_list';
+						};
+						uploader['getZoneId'] = function() {
+							return id+'_zone';
+						};
+						uploader['getDeleteUrl'] = function() {
+							return (!!config.urlDelete)?config.urlDelete:null;
+						};
+						uploader['getZoneText'] = function() {
+							return (!!config.dropText)?config.dropText:null;
+						};
+						uploader['getMultiSelection'] = function() {
+							return baseConfig.multi_selection;
+						};
+						uploader['cutName'] = function(fileName){
+							var name = fileName;
+							if (fileName.length > 24) {
+								name = fileName.substr(0,12) + '...' + fileName.substr(fileName.length-12,fileName.length)
+							}
+							return name;
+						};
+						uploader['formatSize'] = plupload.formatSize;
+						if('PostInit' in events) {
+							uploader.bind('PostInit', events.PostInit);
+							delete events['PostInit'];
+						}
+						if(!!config.ui) {
+							uploader.bind('PostInit', jQuery.sweelix.plupload.postInit);
+						}
+						uploader.init();
+						jQuery('#'+id).append('<div style="display:none;" id="'+hiddenId+'" ></div>');
+						jQuery.each(events, function(key, callback) {
+							uploader.bind(key, callback);
+						});
+						uploader.bind('FileUploaded', function(up, file, response) {
+							var json = jQuery.parseJSON( response.response );
+							createHiddenField(uploader, json, file, hiddenId, config);
+						});
+						if(!!config.auto) {
+							uploader.bind('FilesAdded', function(up, file) {
+								up.refresh();
+								up.start();
+							});
+						}
+						if(!!config.ui) {
+							uploader.bind('FilesAdded', jQuery.sweelix.plupload.filesAdded);
+							uploader.bind('FilesRemoved', jQuery.sweelix.plupload.filesRemoved);
+							uploader.bind('UploadProgress', jQuery.sweelix.plupload.uploadProgress);
+							uploader.bind('FileUploaded', jQuery.sweelix.plupload.fileUploaded);
+							uploader.bind('Error', jQuery.sweelix.plupload.error);
+						}
+						if(!!uploadedFiles) {
+							var jsFiles = [];
+							jQuery.each(uploadedFiles, function(idx, file) {
+								var jsFile = new plupload.File(plupload.guid(), file.fileName, file.fileSize);
+								jsFiles.push(jsFile);
+								createHiddenField(uploader, file, jsFile, hiddenId, config);
+							});
+							if(!!config.ui) {
+								jQuery.sweelix.plupload.filesAdded(uploader, jsFiles);
+								jQuery.each(jsFiles, function(idx, jsFile){
+									var response = { 'response' : '{"fileName":"'+jsFile.name+'", "status":true, "size":'+jsFile.size+'}', 'status' : true };
+									jQuery.sweelix.plupload.fileUploaded(uploader, jsFile, response);
+								});
+							}
+							if('FilesAdded' in events) {
+								events.FilesAdded(uploader, jsFiles);
+							}
+							if('FileUploaded' in events) {
+								jQuery.each(jsFiles, function(idx, jsFile){
+									var response = { 'response' : '{"fileName":"'+jsFile.name+'", "status":true, "size":'+jsFile.size+'}', 'status' : true };
+									events.FileUploaded(uploader, jsFile, response);
+								});
+							}
+							if('UploadComplete' in events) {
+								events.UploadComplete(uploader, jsFiles);
+							}
+							uploader.refresh(); // not sure if this is needed
+						}
+						window['uploader_'+uploader.getId()] = uploader;
+					});
+				};
+
 				jQuery.fn.asyncUpload = function (config, events) {
 					config = config||{};
 					events = events||{};
