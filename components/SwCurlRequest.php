@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -36,7 +36,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -61,7 +61,7 @@ class SwCurlRequest extends CComponent {
 	 * @param mixed $value      curl option value
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setOption($curlOption, $value) {
 		$this->_curlOptions[$curlOption] = $value;
@@ -73,7 +73,7 @@ class SwCurlRequest extends CComponent {
 	 * @param array $headers request headers
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setHeaders($headers=array()) {
 		foreach($headers as $headerKey => $headerValue) {
@@ -87,7 +87,7 @@ class SwCurlRequest extends CComponent {
 	 * @param mixed $body body data
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setBody($body=null) {
 		$this->_body = $body;
@@ -99,7 +99,7 @@ class SwCurlRequest extends CComponent {
 	 * @param array $parameters get parameters
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setUrlParameters($parameters) {
 		$this->_parameters = $parameters;
@@ -112,7 +112,7 @@ class SwCurlRequest extends CComponent {
 	 * @param string $content header field value
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setHeaderField($field, $content) {
 		$this->_headers[] = $field.': '.$content;
@@ -126,7 +126,7 @@ class SwCurlRequest extends CComponent {
 	 * @param string $type     type for http auth
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setHttpAuthentication($username = '', $password = '', $type = 'any') {
 		$type = strtoupper($type);
@@ -142,7 +142,7 @@ class SwCurlRequest extends CComponent {
 	 * @param string $method HTTP method
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setMethod($method) {
 		if(in_array($method,array('GET','POST','PUT','DELETE','HEAD'))) {
@@ -157,7 +157,7 @@ class SwCurlRequest extends CComponent {
 	 * @param string $password password for proxy auth
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setProxyAuthentication($username = '', $password = '') {
 		$this->setOption(CURLOPT_PROXYUSERPWD, $username.':'.$password);
@@ -168,7 +168,7 @@ class SwCurlRequest extends CComponent {
 	 * @param integer $timeout
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setTimeOut($timeout) {
 		$this->setOption(CURLOPT_TIMEOUT, $timeout);
@@ -182,7 +182,7 @@ class SwCurlRequest extends CComponent {
 	 * @param string  $pathToCert path to cert file if needed
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setSsl($verifyPeer=true,$verifyHost=2,$pathToCert=null) {
 		if ($verifyPeer === true) {
@@ -201,7 +201,7 @@ class SwCurlRequest extends CComponent {
 	 * return an array with (httpCode, responseHeaders, responseBody)
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	protected function _preRun() {
 		$responseHeaders = '';
@@ -250,7 +250,7 @@ class SwCurlRequest extends CComponent {
 	 * and return correct response
 	 *
 	 * @return SwCurlResponse
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function execute() {
 		$response = $this->_preRun();
@@ -264,7 +264,7 @@ class SwCurlRequest extends CComponent {
 	 * Define the method for current request
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	protected function _setMethod() {
 		switch($this->_method) {
@@ -286,7 +286,7 @@ class SwCurlRequest extends CComponent {
 	 * allowed only for POST and PUT methods
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	private function _setBody() {
 		if($this->_body !== null) {

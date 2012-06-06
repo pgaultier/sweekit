@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -24,11 +24,11 @@ Yii::import('ext.sweekit.map.SwMapBaseComponent');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
- * @since     XXX
+ * @since     1.10.0
  *
  * @property string $country indicates the national political entity, and is typically the highest order type returned by the Geocoder.
  * @property string $formatted
@@ -86,7 +86,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param array $googleData
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	protected function populateWithGoogleData($googleData) {
 		if(isset($googleData['address_components']) === true) {
@@ -115,7 +115,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * Get geometry for current address
 	 *
 	 * @return SwMapGeometry
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getGeometry() {
 		return $this->_geometry;
@@ -128,7 +128,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * $number, $route, $zipCode, $locality and $country
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getNormalizedAddresses() {
 		$parameters = array(
@@ -177,7 +177,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short  false to use long description true otherwise
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setNumber($number, $short=false) {
 		if($short === true) {
@@ -192,7 +192,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short  false to use long description true otherwise
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getNumber($short=false) {
 		return $short?$this->_number['short']:$this->_number['long'];
@@ -204,7 +204,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short false to use long description true otherwise
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setRoute($route, $short=false) {
 		if($short === true) {
@@ -219,7 +219,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short false to use long description true otherwise
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getRoute($short=false) {
 		return $short?$this->_route['short']:$this->_route['long'];
@@ -231,7 +231,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short   false to use long description true otherwise
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setZipCode($zipCode, $short=false) {
 		if($short === true) {
@@ -246,7 +246,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short false to use long description true otherwise
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getZipCode($short=false) {
 		return $short?$this->_zipCode['short']:$this->_zipCode['long'];
@@ -258,7 +258,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short   false to use long description true otherwise
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setLocality($locality, $short=false) {
 		if($short === true) {
@@ -273,7 +273,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short false to use long description true otherwise
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getLocality($short=false) {
 		return $short?$this->_locality['short']:$this->_locality['long'];
@@ -285,7 +285,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short   false to use long description true otherwise
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setCountry($country, $short=false) {
 		if($short === true) {
@@ -300,7 +300,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param boolean $short false to use long description true otherwise
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getCountry($short=false) {
 		return $short?$this->_country['short']:$this->_country['long'];
@@ -309,7 +309,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * Get formatted address (as stated by google)
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getFormatted() {
 		return $this->_formatted;
@@ -321,7 +321,7 @@ class SwMapAddress extends SwMapBaseComponent {
 	 * @param string $formatted formatted address
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setFormatted($formatted) {
 		$this->_formatted = $formatted;

@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -25,11 +25,11 @@ Yii::import('ext.sweekit.map.SwMapCoordinates');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
- * @since     XXX
+ * @since     1.10.0
  *
  * @property SwMapCoordinates $location
  * @property string $locationType @see https://developers.google.com/maps/documentation/geocoding/#Results
@@ -61,7 +61,7 @@ class SwMapGeometry extends SwMapBaseComponent {
 	 * @param array $googleData
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	protected function populateWithGoogleData($googleData) {
 		if(isset($googleData['location']) === true) {
@@ -85,7 +85,7 @@ class SwMapGeometry extends SwMapBaseComponent {
 	 * Get coordinates of current location
 	 *
 	 * @return SwMapCoordinates
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getLocation() {
 		return $this->_location;
@@ -94,7 +94,7 @@ class SwMapGeometry extends SwMapBaseComponent {
 	 * Get information about geocoding request accuracy
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getLocationType() {
 		return $this->_locationType;
@@ -104,7 +104,7 @@ class SwMapGeometry extends SwMapBaseComponent {
 	 * an array of coordinates : array('southwest' => SwMapCoordinates, 'notheast' => SwMapCoordinates);
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getViewPort() {
 		return $this->_viewPort;
@@ -115,7 +115,7 @@ class SwMapGeometry extends SwMapBaseComponent {
 	 * The bounds are not alwys populated. Values are retrieved from the view port if they do not exists;
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getBounds() {
 		if($this->_bounds === null) {

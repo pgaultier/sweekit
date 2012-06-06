@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -24,11 +24,11 @@ Yii::import('ext.sweekit.map.SwMapBaseComponent');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
- * @since     XXX
+ * @since     1.10.0
  */
 class SwMapCoordinates extends SwMapBaseComponent {
 	public $latitude;
@@ -41,7 +41,7 @@ class SwMapCoordinates extends SwMapBaseComponent {
 	 * @param float $longitude longitude (xxx.xxxxxxx)
 	 *
 	 * @return SwMapCoordinates
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function __construct($latitude=null, $longitude=null) {
 		if($latitude !== null) {
@@ -56,7 +56,7 @@ class SwMapCoordinates extends SwMapBaseComponent {
 	 * object to string usable in GoogleMap webservices
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function __toString() {
 		return $this->latitude.','.$this->longitude;
@@ -66,7 +66,7 @@ class SwMapCoordinates extends SwMapBaseComponent {
 	 * Get address of current location
 	 *
 	 * @return SwMapAddress
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getAddress() {
 		if($this->_address === null) {
@@ -96,7 +96,7 @@ class SwMapCoordinates extends SwMapBaseComponent {
 	 * Get elevation of current coordinates
 	 *
 	 * @return float
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getElevation() {
 		if($this->_elevation === null) {

@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -21,7 +21,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -60,7 +60,7 @@ class SwCurlResponse extends CComponent {
 	 * Get response headers
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getHeaders() {
 		return $this->_headers;
@@ -71,7 +71,7 @@ class SwCurlResponse extends CComponent {
 	 * @param string $field header field
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getHeaderField($field) {
 		$field = strtolower($field);
@@ -85,7 +85,7 @@ class SwCurlResponse extends CComponent {
 	 * Get body as raw data
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getRawData() {
 		return $this->_body;
@@ -94,7 +94,7 @@ class SwCurlResponse extends CComponent {
 	 * Get body as decoded data
 	 *
 	 * @return mixed
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getData() {
 		if(strncmp('application/json', $this->getHeaderField('Content-Type'), 16) == 0) {
@@ -109,7 +109,7 @@ class SwCurlResponse extends CComponent {
 	 * @param string $headers
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	protected function _parseHeaders($headers) {
 		$retVal = array();
