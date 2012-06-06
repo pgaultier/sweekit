@@ -255,7 +255,7 @@ class SwCurlRequest extends CComponent {
 	public function execute() {
 		$response = $this->_preRun();
 		if($response !== null) {
-			$response = new SwCurlResponse($response[0], $response[1], $response[2]);
+			$response = Yii::createComponent('ext.sweekit.components.SwCurlResponse', $response[0], $response[1], $response[2]);
 		}
 		return $response;
 	}
