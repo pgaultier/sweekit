@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -22,11 +22,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
- * @since     XXX
+ * @since     1.10.0
  */
 class SwMapBaseComponent extends CComponent {
 	public $componentName = 'sweekitmap';
@@ -34,7 +34,7 @@ class SwMapBaseComponent extends CComponent {
 	 * Get current google map application component
 	 *
 	 * @return SwMap
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getMap() {
 		return Yii::app()->getComponent($this->componentName);
@@ -46,7 +46,7 @@ class SwMapBaseComponent extends CComponent {
 	 * @param string $language language to use
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setLanguage($language) {
 		$this->_language = $language;
@@ -70,7 +70,7 @@ class SwMapBaseComponent extends CComponent {
 	 * @param string $outputFormat format to use : json/xml
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setOutputFormat($outputFormat) {
 		$this->_outputFormat = $outputFormat;
@@ -93,7 +93,7 @@ class SwMapBaseComponent extends CComponent {
 	 * @param boolean $status true to use the sensor
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setSensor($status) {
 		if($status === true) {

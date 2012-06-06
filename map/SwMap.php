@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -21,11 +21,11 @@ Yii::import('ext.sweekit.components.SwCurlRequest');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
- * @since     XXX
+ * @since     1.10.0
  *
  * @property boolean $sensor       sensor status
  * @property string  $outputFormat webservice format
@@ -50,7 +50,7 @@ class SwMap extends CApplicationComponent {
 	 * @param boolean $status true to use the sensor
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setSensor($status) {
 		if($status === true) {
@@ -78,7 +78,7 @@ class SwMap extends CApplicationComponent {
 	 * @param integer $duration cache duration in seconds
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setCacheExpire($duration) {
 		$this->_cacheExpire = $duration;
@@ -88,7 +88,7 @@ class SwMap extends CApplicationComponent {
 	 * Get the cache duration in seconds
 	 *
 	 * @return integer
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getCacheExpire() {
 		return $this->_cacheExpire;
@@ -100,7 +100,7 @@ class SwMap extends CApplicationComponent {
 	 * @param string $language language to use
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setLanguage($language) {
 		$this->_language = $language;
@@ -119,7 +119,7 @@ class SwMap extends CApplicationComponent {
 	 * @param string $type wanted format
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function setOutputFormat($type) {
 		if(in_array($type, array('json', 'xml')) === true) {
@@ -130,7 +130,7 @@ class SwMap extends CApplicationComponent {
 	 * Return generic ouput format to use (json/xml)
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function getOutputFormat() {
 		return $this->_outputFormat;
@@ -143,7 +143,7 @@ class SwMap extends CApplicationComponent {
 	 * @param array $parameters parameters needed byt the map service
 	 *
 	 * @return SwCurlResponse
-	 * @since  XXX
+	 * @since  1.10.0
 	 */
 	public function execute($parameters=null) {
 		$requestHash = md5(serialize($parameters));

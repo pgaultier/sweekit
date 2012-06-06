@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.9.0
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  models
  * @package   Sweeml.samples.models
@@ -20,7 +20,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.9.0
+ * @version   1.10.0
  * @link      http://www.sweelix.net
  * @category  controllers
  * @package   Sweeml.samples.models
