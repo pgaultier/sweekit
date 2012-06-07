@@ -169,7 +169,7 @@ class SwMap extends CApplicationComponent {
 
 				$this->_currentRequest[$requestHash] = $request->execute();
 				if(Yii::app()->getCache() !== null) {
-					$result = Yii::app()->getCache()->set($requestHash, $this->_currentRequest[$requestHash], $this->getCacheDuration());
+					$result = Yii::app()->getCache()->set($requestHash, $this->_currentRequest[$requestHash], $this->getCacheExpire());
 				}
 			} else {
 				$this->_currentRequest[$requestHash] = $result;
