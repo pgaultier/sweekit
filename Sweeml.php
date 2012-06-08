@@ -511,6 +511,7 @@ class Sweeml extends CHtml {
 	 */
 	public static function registerEvent($eventName, $action, $context=null) {
 		$js = self::registerEventScript($eventName, $action, $context);
+		$eventName = $eventName.'-'.md5($js); // allow multiple register if code is not identical
 		if($context === null) {
 			Yii::app()->getClientScript()->registerScript($eventName, $js, CClientScript::POS_HEAD);
 		} else {
