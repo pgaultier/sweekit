@@ -61,7 +61,9 @@
 					jQuery.sweelix.warn('sweelix.%s.raise(%s,%s) : %s.%s() error, event does not exists', module.id, elName, evt, elName, evt);
 				} else {
 					// attachedCallBacks[elName][evt]();
-					attachedCallBacks[elName][evt].apply(this, args);
+					for(i in attachedCallBacks[elName][evt]) {
+						attachedCallBacks[elName][evt][i].apply(this, args);
+					}
 					jQuery.sweelix.info('sweelix.%s.raise(%s,%s) : %s.%s() success', module.id, elName, evt, elName, evt);
 				}
 			}
@@ -97,13 +99,16 @@
 						jQuery.each(evts, function(i, evt) {
 							if (typeof(attachedCallBacks[name]) === 'undefined') {
 								attachedCallBacks[name] = {};
-								attachedCallBacks[name][evt] = method;
+								attachedCallBacks[name][evt] = [];
+								attachedCallBacks[name][evt].push(method);
 								jQuery.sweelix.info('sweelix.%s.register(%s,%s) : %s.%s() registered and handler created', module.id, name, evt, name, evt);
 							} else if (typeof(attachedCallBacks[name][evt]) === 'undefined') {
-								attachedCallBacks[name][evt] = method;
+								attachedCallBacks[name][evt] = [];
+								attachedCallBacks[name][evt].push(method);
 								jQuery.sweelix.info('sweelix.%s.register(%s,%s) : %s.%s() registered in existing handler', module.id, name, evt, name, evt);
 							} else {
-								jQuery.sweelix.warn('sweelix.%s.register(%s,%s) : %s.%s() already registered', module.id, name, evt, name, evt);
+								attachedCallBacks[name][evt].push(method);
+								jQuery.sweelix.info('sweelix.%s.register(%s,%s) : %s.%s() registered in existing handler with existing event', module.id, name, evt, name, evt);
 							}
 						});
 					},
