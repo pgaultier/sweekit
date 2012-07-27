@@ -414,44 +414,83 @@
 				/**
 				 * Handle ajax update for form. Allow classic renderPartial update or direct javascript eval
 				 * 
-				 * @param string targetSelector where to update element
+				 * @param string targetSelector the targetSelector allow event delegation. targetSelector is the form element
 				 */
-				jQuery.fn.ajaxSubmitHandler = function () {
-					jQuery.sweelix.info('jQuery(%s).ajaxSubmitHandler()', this.selector);
-					return this.each(function () {
-						jQuery(this).bind('submit', function(evt) {
-							evt.preventDefault();
-							jQuery(this).trigger('beforeAjax');
-							var targetUrl = jQuery(this).attr('action');
-							if(typeof(targetUrl) == 'undefined') {
-								targetUrl = jQuery(location).attr('href');
-							}
-							jQuery.ajax({
-								headers: { 
-									'Accept' : 'application/javascript;q=0.9,text/html;q=0.8,*/*;q=0.5'
-								},
-								'data':jQuery(this).serialize(),
-								'url':targetUrl,
-								'type':'POST',
-								'context':this,
-								'success':function(data, status, xhr){
-								},
-								'complete':function(xhr, status, data) {
-									switch(xhr.getResponseHeader('Content-Type')) {
-										case 'application/javascript' :
-											break;
-										case 'text/html' :
-										default :
-											jQuery(this).html(xhr.responseText);
-											break;
-									}
-									jQuery(this).trigger('afterAjax');
+				jQuery.fn.ajaxSubmitHandler = function (targetSelector) {
+					targetSelector = targetSelector || null; 
+					if(targetSelector == null) {
+						jQuery.sweelix.info('jQuery(%s).ajaxSubmitHandler()', this.selector);
+						return this.each(function () {
+							jQuery(this).on('submit', function(evt) {
+								evt.preventDefault();
+								jQuery(this).trigger('beforeAjax');
+								var targetUrl = jQuery(this).attr('action');
+								if(typeof(targetUrl) == 'undefined') {
+									targetUrl = jQuery(location).attr('href');
 								}
+								jQuery.ajax({
+									headers: { 
+										'Accept' : 'application/javascript;q=0.9,text/html;q=0.8,*/*;q=0.5'
+									},
+									'data':jQuery(this).serialize(),
+									'url':targetUrl,
+									'type':'POST',
+									'context':this,
+									'success':function(data, status, xhr){
+									},
+									'complete':function(xhr, status, data) {
+										switch(xhr.getResponseHeader('Content-Type')) {
+											case 'application/javascript' :
+												break;
+											case 'text/html' :
+											default :
+												jQuery(this).html(xhr.responseText);
+												break;
+										}
+										jQuery(this).trigger('afterAjax');
+									}
+								});
 							});
 						});
-					});
+					} else {
+						jQuery.sweelix.info('jQuery(%s).ajaxSubmitHandler(%s)', this.selector, targetSelector);
+						return this.each(function (idx, el) {
+							
+							jQuery(this).on('submit', targetSelector, function(evt) {
+								evt.preventDefault();
+								jQuery(this).trigger('beforeAjax');
+								var targetUrl = jQuery(this).attr('action');
+								if(typeof(targetUrl) == 'undefined') {
+									targetUrl = jQuery(location).attr('href');
+								}
+								jQuery.ajax({
+									headers: { 
+										'Accept' : 'application/javascript;q=0.9,text/html;q=0.8,*/*;q=0.5'
+									},
+									'data':jQuery(this).serialize(),
+									'url':targetUrl,
+									'type':'POST',
+									'context':this,
+									'success':function(data, status, xhr){
+									},
+									'complete':function(xhr, status, data) {
+										switch(xhr.getResponseHeader('Content-Type')) {
+											case 'application/javascript' :
+												break;
+											case 'text/html' :
+											default :
+												jQuery(this).html(xhr.responseText);
+												break;
+										}
+										jQuery(this).trigger('afterAjax');
+									}
+								});
+							});
+						});
+						
+					}
 				};
-				
+
 				/**
 				 * Refresh part
 				 * 
