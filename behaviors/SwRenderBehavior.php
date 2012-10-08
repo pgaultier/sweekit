@@ -127,15 +127,22 @@ class SwRenderBehavior extends CBehavior {
 	 * Render pure javascript to ease ajax communication
 	 * 
 	 * @param array   $data      php object to send as json
-	 * @param boolean $terminate whether to terminate the current application after calling this method
+	 * @param integer $httpCode  Status code 
+	 * @param boolean $terminate whether to terminate the current application after calling this method 
+	 * @param array   $headers   additionnal headers
 	 * 
 	 * @return void
 	 * @since  1.1.0
 	 */
-	public function renderJson($data, $httpCode=200, $terminate=true) {
+	public function renderJson($data, $httpCode=200, $terminate=true, $headers = array()) {
+		foreach ($headers as $key => $value) {
+			header($key.': '.$value);
+		}
 		header('Content-Type: application/json');
 		self::sendHeader($httpCode);
-		echo CJavaScript::jsonEncode($data);
+		if ($data !== null) {
+			echo CJavaScript::jsonEncode($data);
+		}
 		if($terminate === true) {
 			Yii::app()->end();
 		}
