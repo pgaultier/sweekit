@@ -145,13 +145,8 @@ class SwRenderBehavior extends CBehavior {
 		if(isset($headers['headerdata']) === true) {
 			$metadata = $headers['headerdata'];
 			unset($headers['headerdata']);
-			if($this->getOwner()->hasProperty('headerPrefix') == true) {
-				$prefix = 'X-'.$this->getOwner()->headerPrefix.'-';
-			} else {
-				$prefix = 'X-'.Yii::app()->getName().'-';
-			}
-			foreach ($metada as $key => $value) {
-				header($prefix.$key.': '.$value);
+			foreach ($metadata as $key => $value) {
+				header($this->prefix.$key.': '.$value);
 			}
 		}
 		foreach ($headers as $key => $value) {
@@ -179,6 +174,21 @@ class SwRenderBehavior extends CBehavior {
 		}
 		header('ETag: '. base64_encode(hash_hmac('sha256', CJSON::encode($data), $etagKey, true)));
 	}
+
+	private $_prefix;
+	
+	protected function getPrefix() {
+		if ($this->_prefix === null) {
+			if($this->getOwner()->hasProperty('headerPrefix') == true) {
+				$prefix = 'X-'.$this->getOwner()->headerPrefix.'-';
+			} else {
+				$prefix = 'X-'.Yii::app()->name.'-';
+			}
+			$this->_prefix = preg_replace('/[^0-9a-z-_]/i', '', $prefix);
+		}
+		return $this->_prefix;
+	}
+	
 	/**
 	 * compute correct header base on http code
 	 *
