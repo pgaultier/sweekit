@@ -137,7 +137,8 @@ class SwClientScriptBehavior extends CBehavior {
 			}
 			$this->sweelixScript[$name]=$package;
 			if($this->_init === false) {
-				$this->getOwner()->registerScript('sweelixInit', 'jQuery.sweelix.init('.CJavaScript::encode($this->_config).');', CClientScript::POS_READY);
+				// $this->getOwner()->registerScript('sweelixInit', 'var sweelixConfig = '.CJavaScript::encode($this->_config).';', CClientScript::POS_HEAD);
+				$this->getOwner()->registerScript('sweelixInit', 'sweelix.configure('.CJavaScript::encode($this->_config).');', CClientScript::POS_HEAD);
 				$this->_init=true;
 			}
 		}
