@@ -41,10 +41,10 @@
 		var result;
 		if (isMethodAvailable(_method)) {
 			try {
-				window.top.console[_method].apply(this, args);
+				window.self.console[_method].apply(this, args);
 			} catch (e) {
 				for (i = 0, l = args.length; i < l; i++) {
-					window.top.console[_method](args[i]);
+					window.self.console[_method](args[i]);
 				}
 			}
 		} else if (config.fallback && args.length) {
