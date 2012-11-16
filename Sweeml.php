@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.8.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -55,7 +55,7 @@ Yii::import('ext.sweekit.validators.SwFileValidator');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.8.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -133,9 +133,9 @@ class Sweeml extends CHtml {
 		self::resolveNameID($model,$attribute,$htmlOptions);
 		$filters = array();
 		foreach($model->getValidators($attribute) as $validator) {
-			if($validator instanceof SwFileValidator) {
+			if($validator instanceof CFileValidator) {
 				if(is_string($validator->types) === true) {
-					$filters[] = array('extensions' => $validator->types);
+					$filters[] = array('extensions' => str_replace(' ', '',$validator->types));
 				}elseif(is_array($validator->types) === true) {
 					$filters[] = array('extensions' => implode(',',$validator->types));
 				}
@@ -209,16 +209,7 @@ class Sweeml extends CHtml {
 			$content = Yii::t('sweelix', 'Browse ...');
 		}
 
-		$method = 'asyncUpload';
-		if (isset($htmlOptions['method'])){
-			if ($htmlOptions['method']=='JqueryUI') {
-				$method = 'asyncUploadJqueryUI';
-				$tag = 'div';
-				$htmlOptions['type']='div';
-			}
-		}
-
-		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').'.$method.'('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
+		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
 		if(Yii::app()->getRequest()->isAjaxRequest === false) {
 			Yii::app()->clientScript->registerScript($htmlOptions['id'], $js);
@@ -512,9 +503,9 @@ class Sweeml extends CHtml {
 	public static function registerEvent($eventName, $action, $context=null) {
 		$js = self::registerEventScript($eventName, $action, $context);
 		if($context === null) {
-			Yii::app()->getClientScript()->registerScript($eventName, $js, CClientScript::POS_HEAD);
+			Yii::app()->getClientScript()->registerScript($eventName, $js, CClientScript::POS_READY);
 		} else {
-			Yii::app()->getClientScript()->registerScript($context.'-'.$eventName, $js, CClientScript::POS_HEAD);
+			Yii::app()->getClientScript()->registerScript($context.'-'.$eventName, $js, CClientScript::POS_READY);
 		}
 	}
 }

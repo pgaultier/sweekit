@@ -414,44 +414,168 @@
 				/**
 				 * Handle ajax update for form. Allow classic renderPartial update or direct javascript eval
 				 * 
-				 * @param string targetSelector where to update element
+				 * @param string targetSelector the targetSelector allow event delegation. targetSelector is the form element
 				 */
-				jQuery.fn.ajaxSubmitHandler = function () {
-					jQuery.sweelix.info('jQuery(%s).ajaxSubmitHandler()', this.selector);
-					return this.each(function () {
-						jQuery(this).bind('submit', function(evt) {
-							evt.preventDefault();
-							jQuery(this).trigger('beforeAjax');
-							var targetUrl = jQuery(this).attr('action');
-							if(typeof(targetUrl) == 'undefined') {
-								targetUrl = jQuery(location).attr('href');
-							}
-							jQuery.ajax({
-								headers: { 
-									'Accept' : 'application/javascript;q=0.9,text/html;q=0.8,*/*;q=0.5'
-								},
-								'data':jQuery(this).serialize(),
-								'url':targetUrl,
-								'type':'POST',
-								'context':this,
-								'success':function(data, status, xhr){
-								},
-								'complete':function(xhr, status, data) {
-									switch(xhr.getResponseHeader('Content-Type')) {
-										case 'application/javascript' :
-											break;
-										case 'text/html' :
-										default :
-											jQuery(this).html(xhr.responseText);
-											break;
+				jQuery.fn.ajaxSubmitHandler = function (targetSelector) {
+					targetSelector = targetSelector || null; 
+					var button = {
+						'target' : 'input[type=submit], input[type=image], button[type=submit]',
+						'clicked' : 'input[data-ajaxclick=true], button[data-ajaxclick=true]'
+					};
+					if(targetSelector == null) {
+						jQuery.sweelix.info('jQuery(%s).ajaxSubmitHandler()', this.selector);
+						return this.each(function () {
+							var currentForm = jQuery(this);
+							jQuery(currentForm).on('click', jQuery(button.target), function(evt) {
+								//jQuery(button.clicked, currentForm).removeAttr("data-ajaxclick");
+								$(evt.target).attr("data-ajaxclick", "true");
+							});
+							jQuery(this).on('submit', function(evt) {
+								evt.preventDefault();
+								jQuery(this).trigger('beforeAjax');
+								var data = jQuery(this).serializeArray();
+								var cButton = jQuery(button.clicked);
+								if(cButton.length > 0) {
+									var b = {
+										'name' : cButton.attr('name'),
+										'type' : cButton.attr('type').toLowerCase()
+									};
+									if(b.type == 'image') {
+										data.push({
+											'name' : b.name+'_x',
+											'value' : 1
+										});
+										data.push({
+											'name' : b.name+'_y',
+											'value' : 1
+										});
+									} else {
+										data.push({
+											'name' : b.name,
+											'value' : cButton.val()
+										});
 									}
-									jQuery(this).trigger('afterAjax');
+									cButton.removeAttr("data-ajaxclick");
 								}
+								var targetUrl = jQuery(this).attr('action');
+								if(typeof(targetUrl) == 'undefined') {
+									targetUrl = jQuery(location).attr('href');
+								}
+								jQuery.ajax({
+									headers: { 
+										'Accept' : 'application/javascript;q=0.9,text/html;q=0.8,*/*;q=0.5'
+									},
+									'data':data,
+									'url':targetUrl,
+									'type':'POST',
+									'context':this,
+									'success':function(data, status, xhr){
+									},
+									'complete':function(xhr, status, data) {
+										switch(xhr.getResponseHeader('Content-Type')) {
+											case 'application/javascript' :
+												break;
+											case 'text/html' :
+											default :
+												jQuery(this).html(xhr.responseText);
+												break;
+										}
+										jQuery(this).trigger('afterAjax');
+									}
+								});
 							});
 						});
-					});
+					} else {
+						jQuery.sweelix.info('jQuery(%s).ajaxSubmitHandler(%s)', this.selector, targetSelector);
+						var aButton = {
+							'target' : button.target.split(','),
+							'clicked' : button.clicked.split(','),
+							'form' : this.selector.split(',')
+						};
+						
+						var tmp = '';
+						var sep = '';
+						$(aButton.target).each(function(idx, el) {
+							tmp += sep + targetSelector + ' ' + el;
+							sep = ', ';
+						});
+						aButton.target = tmp;
+						
+						var tmp = '';
+						var sep = '';
+						$(aButton.clicked).each(function(idx, el) {
+							tmp += sep + targetSelector + ' ' + el;
+							sep = ', ';
+						});
+						aButton.clicked = tmp;
+						
+						aButton.form = this.selector;
+						
+						return this.each(function (idx, el) {
+							
+							$(targetSelector).on('click', $(aButton.target), function(evt) {
+								$(evt.target).attr("data-ajaxclick", "true");
+							})
+							
+							$(targetSelector).on('submit', function(evt) {
+								evt.preventDefault();
+								jQuery(this).trigger('beforeAjax');
+								var data = jQuery(evt.target).serializeArray();
+								var cButton = jQuery(button.clicked);
+								if(cButton.length > 0) {
+									var b = {
+										'name' : cButton.attr('name'),
+										'type' : cButton.attr('type').toLowerCase()
+									};
+									if(b.type == 'image') {
+										data.push({
+											'name' : b.name+'_x',
+											'value' : 1
+										});
+										data.push({
+											'name' : b.name+'_y',
+											'value' : 1
+										});
+									} else {
+										data.push({
+											'name' : b.name,
+											'value' : cButton.val()
+										});
+									}
+									cButton.removeAttr("data-ajaxclick");
+								}
+								var targetUrl = jQuery(this).attr('action');
+								if(typeof(targetUrl) == 'undefined') {
+									targetUrl = jQuery(location).attr('href');
+								}
+								jQuery.ajax({
+									headers: { 
+										'Accept' : 'application/javascript;q=0.9,text/html;q=0.8,*/*;q=0.5'
+									},
+									'data':data,
+									'url':targetUrl,
+									'type':'POST',
+									'context':this,
+									'success':function(data, status, xhr){
+									},
+									'complete':function(xhr, status, data) {
+										switch(xhr.getResponseHeader('Content-Type')) {
+											case 'application/javascript' :
+												break;
+											case 'text/html' :
+											default :
+												jQuery(this).html(xhr.responseText);
+												break;
+										}
+										jQuery(this).trigger('afterAjax');
+									}
+								});
+							});
+						});
+						
+					}
 				};
-				
+
 				/**
 				 * Refresh part
 				 * 
