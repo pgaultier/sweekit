@@ -12,7 +12,6 @@
  * @category  extensions
  * @package   Sweeml
  */
-namespace sweelix\sweekit;
 
 Yii::import('ext.sweelix.sweekit.validators.SwFileValidator');
 
