@@ -137,7 +137,48 @@ class SwClientScriptBehavior extends CBehavior {
 			}
 			$this->sweelixScript[$name]=$package;
 			if($this->_init === false) {
-				$this->getOwner()->registerScript('sweelixInit', 'jQuery.sweelix.init('.CJavaScript::encode($this->_config).');', CClientScript::POS_READY);
+				if(isset($this->_config['debug']) === true) {
+					if(isset($this->_config['debug']['mode']) === true) {
+						if(is_string($this->_config['debug']['mode']) === true) {
+							$this->_config['debug']['mode'] = array($this->_config['debug']['mode']);
+						}
+						$appenders = array();
+						foreach($this->_config['debug']['mode'] as $debugMode => $parameters) {
+							if((is_integer($debugMode) === true) && (is_string($parameters) === true)) {
+								$debugMode = $parameters;
+								$parameters = null;
+							}
+							$debugMode = strtolower($debugMode);
+							if($parameters !== null) {
+								$parameters = CJavaScript::encode($parameters);
+							} else {
+								$parameters = '';
+							}
+
+							switch($debugMode) {
+								case 'popup' :
+									$appenders[] = 'js:new log4javascript.PopUpAppender('.$parameters.')';
+									break;
+								case 'browser' :
+									$appenders[] = 'js:new log4javascript.BrowserConsoleAppender('.$parameters.')';
+									break;
+								case 'inpage' :
+									$appenders[] = 'js:new log4javascript.InPageAppender('.$parameters.')';
+									break;
+								case 'alert' :
+									$appenders[] = 'js:new log4javascript.AlertAppender('.$parameters.')';
+									break;
+							}
+						}
+						unset($this->_config['debug']['mode']);
+						if(count($appenders)>0) {
+							$this->_config['debug']['appenders'] = 'js:'.CJavascript::encode($appenders);
+						}
+
+					}
+				}
+				// $this->getOwner()->registerScript('sweelixInit', 'var sweelixConfig = '.CJavaScript::encode($this->_config).';', CClientScript::POS_HEAD);
+				$this->getOwner()->registerScript('sweelixInit', 'sweelix.configure('.CJavaScript::encode($this->_config).');', CClientScript::POS_HEAD);
 				$this->_init=true;
 			}
 		}

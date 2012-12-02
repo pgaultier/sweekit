@@ -14,12 +14,14 @@
  * @since     1.1
  */
 
+Yii::import('ext.sweekit.Sweeml');
+
 /**
  * Class SwUploadedFile
- * 
+ *
  * This component allow the user to retrieve files which where
  * uploaded using the plupload stuff
- * 
+ *
  * <code>
  * 	...
  * 		// file was created as Sweeml::asyncFileUpload($file, 'uploadedFile', $options)
@@ -33,7 +35,7 @@
  * 				$uploadedFile->saveAs('targetDirectory/'.$uploadedFile->getName());
  * 			}
  * 		}
- * 	... 
+ * 	...
  * </code>
  *
  * <code>
@@ -48,9 +50,9 @@
  * 				$uploadedFile->saveAs('targetDirectory/'.$uploadedFile->getName());
  * 			}
  * 		}
- * 	... 
+ * 	...
  * </code>
- * 
+ *
  *
  * PHP version 5.2+
  *
@@ -67,7 +69,7 @@ class SwUploadedFile extends CComponent {
 	public static $targetPath='application.runtime.sweeUpload';
 	protected static $_targetPath;
 	protected static $_files = null;
-	
+
 	protected $_name;
 	protected $_tempName;
 	protected $_extensionName;
@@ -75,7 +77,7 @@ class SwUploadedFile extends CComponent {
 
 	/**
 	 * Define the path where files will be temporary saved
-	 * 
+	 *
 	 * @return string
 	 * @since  1.1.0
 	 */
@@ -86,14 +88,14 @@ class SwUploadedFile extends CComponent {
 		}
 		return self::$_targetPath;
 	}
-	
+
 	/**
 	 * Returns an instance of the first uploaded file for selected attribute.
 	 * The file should be uploaded using {@link Sweeml::asyncFileUpload}.
-	 * 
+	 *
 	 * @param CModel $model     the model instance
 	 * @param string $attribute the attribute name. Tabular file uploading is supported.
-	 * 
+	 *
 	 * @return SwUploadedFile the instance of the uploaded file.
 	 * @since  1.1.0
 	 */
@@ -120,13 +122,13 @@ class SwUploadedFile extends CComponent {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Returns all uploaded files for the given model attribute. Usefull for multi-upload
-	 * 
+	 *
 	 * @param CModel $model     the model instance
 	 * @param string $attribute the attribute name.
-	 * 
+	 *
 	 * @return array array of SwUploadedFile objects.
 	 * @since  1.1.0
 	 */
@@ -216,8 +218,8 @@ class SwUploadedFile extends CComponent {
 	/**
 	 * Recursive method used to collect info data.
 	 * The original method cannot be used anymore because $_FILES is not used.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param unknown_type $infos    model / attribute infos
 	 * @param unknown_type $postData data to search in
 	 * @param unknown_type $prevKey  concat keys to build correct name
@@ -229,13 +231,13 @@ class SwUploadedFile extends CComponent {
 					// multi upload
 					$testName = $infos['class'].$prevKey.'['.$infos['attribute'].']';
 					$id = Sweeml::getIdByName($testName);
-					
+
 					foreach($value as $idx => $data) {
 						$myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$data;
 
 						if((file_exists($myFile)===true) && (is_file($myFile)==true)) {
 							$fileInfo = pathinfo($myFile);
-						
+
 							self::$_files[$infos['class']][$infos['attribute']][$testName.'_'.$idx] = new SwUploadedFile($data, $myFile, $fileInfo['extension'], filesize($myFile));
 						}
 					}
@@ -254,11 +256,11 @@ class SwUploadedFile extends CComponent {
 			}
 		}
 	}
-	
+
 	/**
 	 * Cleans up the loaded SwUploadedFile instances.
 	 * This method is mainly used by test scripts to set up a fixture.
-	 * 
+	 *
 	 * @return void
 	 * @since  1.1.0
 	 */
@@ -268,14 +270,14 @@ class SwUploadedFile extends CComponent {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * Use {@link getInstance} to get an instance of an uploaded file.
-	 * 
+	 *
 	 * @param string  $name      the original name of the file being uploaded
 	 * @param string  $tempName  the path of the uploaded file on the server.
 	 * @param string  $extension the extension of the uploaded file
 	 * @param integer $size      the actual size of the uploaded file in bytes
-	 * 
+	 *
 	 * @return SwUploadedFile
 	 * @since  1.1.0
 	 */
@@ -290,7 +292,7 @@ class SwUploadedFile extends CComponent {
 	 * String output.
 	 * This is PHP magic method that returns string representation of an object.
 	 * The implementation here returns the uploaded file's name.
-	 * 
+	 *
 	 * @return string
 	 * @since 1.1
 	 */
@@ -300,10 +302,10 @@ class SwUploadedFile extends CComponent {
 
 	/**
 	 * Saves the uploaded file.
-	 * 
+	 *
 	 * @param string  $file           the file path used to save the uploaded file
 	 * @param boolean $deleteTempFile whether to delete the temporary file after saving.
-	 * 
+	 *
 	 * @return boolean
 	 * @since  1.1.0
 	 */
@@ -321,7 +323,7 @@ class SwUploadedFile extends CComponent {
 
 	/**
 	 * Delete temporary file
-	 * 
+	 *
 	 * @return void
 	 * @since  1.1.0
 	 */
@@ -339,7 +341,7 @@ class SwUploadedFile extends CComponent {
 
 	/**
 	 * @return string the path of the uploaded file on the server.
-	 * 
+	 *
 	 * Note: we need to create some kind of garbage collector
 	 */
 	public function getTempName() {
