@@ -14,6 +14,8 @@
  * @since     1.1
  */
 
+Yii::import('ext.sweekit.Sweeml');
+
 /**
  * Class SwUploadedFile
  *
