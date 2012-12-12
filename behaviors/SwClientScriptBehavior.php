@@ -172,7 +172,7 @@ class SwClientScriptBehavior extends CBehavior {
 						}
 						unset($this->_config['debug']['mode']);
 						if(count($appenders)>0) {
-							$this->_config['debug']['appenders'] = 'js:'.CJavascript::encode($appenders);
+							$this->_config['debug']['appenders'] = 'js:'.CJavaScript::encode($appenders);
 						}
 
 					}
