@@ -32,6 +32,15 @@
 			config = sweelix.config(this.id);
 			config['globalCblName'] = (!!config['globalCblName'])?config['globalCblName']:'swlx';
 			config['top'] = (!!config['top'])?config['top']:true;
+			
+			sweelix.register('redirect', function(params){
+				if(typeof(params) == 'object'){
+					setTimeout(function(){document.location.href = params.url;}, params.timer*1000);
+				} else {
+					document.location.href = params;
+		        }
+			});				
+			
 		};
 		var attachedCallBacks = {};
 
