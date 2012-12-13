@@ -100,12 +100,13 @@ class SwClientScriptBehavior extends CBehavior {
 	/**
 	 * Register sweelix script
 	 *
-	 * @param string $name name of the package we want to register
+	 * @param string  $name      name of the package we want to register
+	 * @param boolean $importCss do not load packaged css
 	 *
 	 * @return CClientScript
 	 * @since  1.1.0
 	 */
-	public function registerSweelixScript($name) {
+	public function registerSweelixScript($name, $importCss=true) {
 		if(isset($this->sweelixScript[$name]))
 			return $this->getOwner();
 		if($this->sweelixPackages===null)
@@ -127,7 +128,7 @@ class SwClientScriptBehavior extends CBehavior {
 					$this->getOwner()->registerScriptFile($this->getSweelixAssetUrl().'/'.$js);
 				}
 			}
-			if(isset($package['css']) == true) {
+			if(($importCss === true) && (isset($package['css']) == true)) {
 				foreach($package['css'] as $css) {
 					$this->getOwner()->registerCssFile($this->getSweelixAssetUrl().'/'.$css);
 				}
