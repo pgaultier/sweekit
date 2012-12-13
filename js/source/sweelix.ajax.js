@@ -76,14 +76,14 @@ log4javascript.JsonAppender = JsonAppender;
 	$.fn.ajaxSubmitHandler = function (targetSelector) {
 		targetSelector = targetSelector || null; 
 		var button = {
-			'target' : 'input[type=submit], input[type=image], button[type=submit]',
-			'clicked' : 'input[data-ajaxclick=true], button[data-ajaxclick=true]'
+			'target' : 'input:submit, input:image, button:submit',
+			'clicked' : 'input[data-ajaxclick="true"], button[data-ajaxclick="true"]'
 		};
 		if(targetSelector == null) {
 			$s.info('jQuery('+this.selector+').ajaxSubmitHandler()');
 			return this.each(function () {
 				var currentForm = $(this);
-				$(currentForm).on('click', $(button.target), function(evt) {
+				$(currentForm).on('click', button.target, function(evt) {
 					//jQuery(button.clicked, currentForm).removeAttr("data-ajaxclick");
 					$(evt.target).attr("data-ajaxclick", "true");
 				});
@@ -170,7 +170,7 @@ log4javascript.JsonAppender = JsonAppender;
 			
 			return this.each(function (idx, el) {
 				
-				$(targetSelector).on('click', $(aButton.target), function(evt) {
+				$(targetSelector).on('click', aButton.target, function(evt) {
 					$(evt.target).attr("data-ajaxclick", "true");
 				})
 				
