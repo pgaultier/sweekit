@@ -338,6 +338,19 @@ class Sweeml extends CHtml {
 	}
 
 	/**
+	 * Generate a notice open script using raiseevents
+	 *
+	 * @param array  $noticeOptions options to pass to notice as described in documentation
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public static function raiseShowNotice($noticeOptions=array()) {
+		Yii::app()->getClientScript()->registerSweelixScript('notice');
+		return self::raiseEvent('showNotice', $noticeOptions);
+	}
+
+	/**
 	 * Raise redirect js event
 	 *
 	 * @param array   $url   url in yii format
@@ -389,6 +402,19 @@ class Sweeml extends CHtml {
 	 */
 	public static function raiseCloseShadowboxUrl() {
 		return 'javascript:'.self::raiseCloseShadowbox();
+	}
+
+	/**
+	 * Generate a notice open script to set in link (url)
+	 * using raiseevents
+	 *
+	 * @param array  $noticeOptions options to pass to notice as described in documentation
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public static function raiseShowNoticeUrl($noticeOptions=array()) {
+		return 'javascript:'.self::raiseShowNotice($noticeOptions);
 	}
 
 	/**
