@@ -33,6 +33,11 @@ return array(
 			'js' => array('sweelix.shadowbox.js'),
 			'depends' => array('sweelix', 'debug', 'callback', 'shadowboxjs'),
 		),
+		'notice' => array(
+			'js' => array('sweelix.notice.js'),
+			'css' => array('sweelix.notice.css'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback'),
+		),
 		'log4javascript' => array(
 			'js' => array('log4javascript/log4javascript.js'),
 		),
