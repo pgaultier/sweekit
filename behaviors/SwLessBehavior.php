@@ -158,6 +158,9 @@ class SwLessBehavior extends CBehavior {
 		}
 		$urlCss = Yii::app()->getAssetManager()->publish($cssFilePath, false, 0, $this->getForceRefresh());
 
+		$params=func_get_args();
+		$this->recordCachingAction('clientScript','registerLessFile',$params);
+
 		Yii::endProfile('SwLessBehavior.registerLessFile','sweekit.profile');
 		return $this->getOwner()->registerCssFile($urlCss, $media);
 	}
@@ -187,6 +190,10 @@ class SwLessBehavior extends CBehavior {
 			}
 		}
 		$this->less[$id]=array($less,$media);
+
+		$params=func_get_args();
+		$this->recordCachingAction('clientScript','registerLess',$params);
+
 		Yii::endProfile('SwLessBehavior.registerLess','sweekit.profile');
 		return $this->getOwner()->registerCss($id.'-less', $css, $media);
 	}
@@ -405,5 +412,21 @@ class SwLessBehavior extends CBehavior {
 	 */
 	public function getCacheDuration() {
 		return $this->_cacheDuration;
+	}
+
+
+	/**
+	 * Records a method call when an output cache is in effect.
+	 * This is a shortcut to Yii::app()->controller->recordCachingAction.
+	 * In case when controller is absent, nothing is recorded.
+	 * @param string $context a property name of the controller. It refers to an object
+	 * whose method is being called. If empty it means the controller itself.
+	 * @param string $method the method name
+	 * @param array $params parameters passed to the method
+	 * @see COutputCache
+	 */
+	protected function recordCachingAction($context,$method,$params) {
+		if(($controller=Yii::app()->getController())!==null)
+			$controller->recordCachingAction($context,$method,$params);
 	}
 }
