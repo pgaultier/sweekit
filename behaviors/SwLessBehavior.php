@@ -25,6 +25,12 @@
  *			'behaviors' => array(
  *				'lessClientScript' => array(
  *					'class' => 'ext.sweekit.behaviors.SwLessBehavior',
+ *					'cacheId' => 'cache', // define cache component to use
+ *					'cacheDuration' => 0, // default value infinite duration
+ *					'forceRefresh' => false, // default value : do not recompile files
+ *					'formatter' => 'lessjs', // default output format
+ *					'variables' => array(), // variables to expand
+ *					'directory' => 'application.less', // directory where less files are stored
  *				),
  *			),
  *		),
@@ -38,7 +44,9 @@
  * 		...
  * 		public function actionTest() {
  * 			...
- * 			Yii::app()->clientScript->registerSweelixScript('sweelix');
+ * 			Yii::app()->clientScript->registerLessFile('sweelix.less');
+ * 			// or
+ * 			Yii::app()->clientScript->registerLess('.block { width : (3px * 2); }');
  * 			...
  * 		}
  * 		...
@@ -59,6 +67,7 @@
  */
 class SwLessBehavior extends CBehavior {
 	const COMPILER_PATH='ext.sweekit.vendors.lessphp';
+	const CACHE_PATH='application.runtime.less';
 	const CACHE_KEY_PREFIX='Sweelix.LessCompilation.';
 	/**
 	 * Attaches the behavior object only if owner is instance of CClientScript
@@ -68,7 +77,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param CClientScript $owner the component that this behavior is to be attached to.
 	 *
 	 * @return void
-	 * @since  1.1.0
+	 * @since  XXX
 	 */
 	public function attach($owner) {
 		if($owner instanceof CClientScript) {
@@ -92,7 +101,7 @@ class SwLessBehavior extends CBehavior {
 	}
 
 	/**
-	 * get current cms cache id
+	 * get current cache id
 	 *
 	 * @return string
 	 * @since  XXX
@@ -100,6 +109,16 @@ class SwLessBehavior extends CBehavior {
 	public function getCacheId() {
 		return $this->_cacheId;
 	}
+
+	/**
+	 * @var array less snippets registered
+	 */
+	protected $less;
+
+	/**
+	 * @var array less files registered
+	 */
+	protected $lessFiles;
 
 	private $_cache;
 	/**
@@ -115,6 +134,7 @@ class SwLessBehavior extends CBehavior {
 		}
 		return $this->_cache;
 	}
+
 	/**
 	 * Register less file
 	 *
@@ -130,17 +150,20 @@ class SwLessBehavior extends CBehavior {
 		$cssFilePath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.pathinfo($url, PATHINFO_FILENAME).'.css';
 		$lessFilePath = $this->getDirectory().DIRECTORY_SEPARATOR.$url;
 
-		if(($this->getForceRefresh() === true) || (is_file($cssFilePath) === false) || (filemtime($lessFilePath) >= filemtime($cssFilePath))) {
-			$this->compileFile($url, $cssFilePath);
+		if($this->isLessFileRegistered($url) === false) {
+			if(($this->getForceRefresh() === true) || (is_file($cssFilePath) === false) || (filemtime($lessFilePath) >= filemtime($cssFilePath))) {
+				$this->compileFile($url, $cssFilePath);
+			}
+			$this->lessFiles[$url]=$media;
 		}
-
 		$urlCss = Yii::app()->getAssetManager()->publish($cssFilePath, false, 0, $this->getForceRefresh());
+
 		Yii::endProfile('SwLessBehavior.registerLessFile','sweekit.profile');
 		return $this->getOwner()->registerCssFile($urlCss, $media);
 	}
 
 	/**
-	 * Register less css file
+	 * Register less css code
 	 *
 	 * @param string $id    ID that uniquely identifies this piece of generated CSS code
 	 * @param string $less  the LESS code
@@ -151,6 +174,7 @@ class SwLessBehavior extends CBehavior {
 	 */
 	public function registerLess($id, $less, $media='') {
 		Yii::beginProfile('SwLessBehavior.registerLess','sweekit.profile');
+
 		$css = false;
 		if(($this->getForceRefresh() === false) && ($this->getCache() !== null)) {
 			$cacheKey = self::CACHE_KEY_PREFIX.md5($less);
@@ -162,15 +186,55 @@ class SwLessBehavior extends CBehavior {
 				$this->getCache()->set($cacheKey, $css, $this->getCacheDuration());
 			}
 		}
+		$this->less[$id]=array($less,$media);
 		Yii::endProfile('SwLessBehavior.registerLess','sweekit.profile');
-		return $this->getOwner()->registerCss($id, $css, $media);
+		return $this->getOwner()->registerCss($id.'-less', $css, $media);
+	}
+
+	/**
+	 * Check if snippet is registered
+	 *
+	 * @param string $id snippet id
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
+	public function isLessRegistered($id) {
+		return isset($this->less[$id]);
+	}
+
+	/**
+	 * Check if file is registered
+	 *
+	 * @param string $url file url
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
+	public function isLessFileRegistered($url) {
+		return isset($this->lessFiles[$url]);
 	}
 
 	private $_formatter;
+	/**
+	 * Get current formatter
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
 	public function getFormatter() {
 		return $this->_formatter;
 	}
 
+	/**
+	 * Define the formatter to use. Can be
+	 * compressed, classic or lessjs (default)
+	 *
+	 * @param string $formatter
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
 	public function setFormatter($formatter) {
 		if(in_array($formatter, array('lessjs', 'compressed', 'classic')) === true) {
 			$this->_formatter = $formatter;
@@ -181,10 +245,25 @@ class SwLessBehavior extends CBehavior {
 	}
 
 	private $_variables;
+
+	/**
+	 * Get dynamic less variable to use
+	 *
+	 * @return array
+	 * @since  XXX
+	 */
 	public function getVariables() {
 		return $this->_variables;
 	}
 
+	/**
+	 * Define variables to expand in parsed less files
+	 *
+	 * @param array $variables variables to expand
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
 	public function setVariables($variables) {
 		$this->_variables = $variables;
 		if($this->_compiler !== null) {
@@ -192,25 +271,30 @@ class SwLessBehavior extends CBehavior {
 		}
 	}
 
-	private $_preserveComments;
-	public function getPreserveComments() {
-		return $this->_preserveComments;
-	}
-
-	public function setPreserveComments($preserveComments) {
-		$this->_preserveComments = $preserveComments;
-		if($this->_compiler !== null) {
-			$this->_compiler->setPreserveComments($preserveComments);
-		}
-	}
-
 	private $_lessDirectory;
+
+	/**
+	 * Define the directory where less files are published.
+	 * The directory must be defined usin a pathalias
+	 *
+	 * @param string $directory path alias to the less directory
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
 	public function setDirectory($directory) {
 		$this->_lessDirectory = Yii::getPathOfAlias($directory);
 		if($this->_compiler !== null) {
 			$this->_compiler->setImportDir($this->_lessDirectory);
 		}
 	}
+
+	/**
+	 * Retrieve real less path
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
 	public function getDirectory() {
 		return $this->_lessDirectory;
 	}
@@ -224,9 +308,17 @@ class SwLessBehavior extends CBehavior {
 	}
 
 	private $_cacheDirectory;
+
+	/**
+	 * Get cache directory. Default to protected.runtime.less
+	 * This directory is used to pre-publish css files
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
 	public function getCacheDirectory() {
 		if($this->_cacheDirectory === null) {
-			$this->_cacheDirectory = Yii::getPathOfAlias('application.runtime.less');
+			$this->_cacheDirectory = Yii::getPathOfAlias(self::CACHE_PATH);
 			if(is_dir($this->_cacheDirectory) === false) {
 				mkdir($this->_cacheDirectory, 0777, true);
 			}
@@ -234,10 +326,29 @@ class SwLessBehavior extends CBehavior {
 		return $this->_cacheDirectory;
 	}
 
+	/**
+	 * Wraps the original compile function @see lessc::compile for detailed
+	 * information
+	 *
+	 * @param string $less less code to compile
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
 	public function compile($less) {
 		return $this->getCompiler()->compile($less);
 	}
 
+	/**
+	 * Wraps the original compileFile function @see lessc::compileFile for detailed
+	 * information
+	 *
+	 * @param string $lessFile original less file to compile
+	 * @param string $cssFile  compiled css file
+	 *
+	 * @return mixed
+	 * @since  XXX
+	 */
 	public function compileFile($lessFile, $cssFile=null) {
 		$result = false;
 		$lessFile = $this->getDirectory().DIRECTORY_SEPARATOR.$lessFile;
@@ -248,6 +359,13 @@ class SwLessBehavior extends CBehavior {
 	}
 
 	private $_compiler;
+
+	/**
+	 * Lazy load the less compiler
+	 *
+	 * @return lessc
+	 * @since  XXX
+	 */
 	protected function getCompiler() {
 		if($this->_compiler === null) {
 			require_once(Yii::getPathOfAlias(self::COMPILER_PATH).DIRECTORY_SEPARATOR.'lessc.inc.php');
@@ -258,9 +376,6 @@ class SwLessBehavior extends CBehavior {
 			if($this->getVariables() !== null) {
 				$this->_compiler->setVariables($this->getVariables());
 			}
-			if($this->getPreserveComments() !== null) {
-				$this->_compiler->setPreserveComments($this->getPreserveComments());
-			}
 			if($this->getDirectory() !== null) {
 				$this->_compiler->setImportDir($this->getDirectory());
 			}
@@ -269,9 +384,25 @@ class SwLessBehavior extends CBehavior {
 	}
 
 	private $_cacheDuration = 0;
+
+	/**
+	 * Define cache duration for less code blocks
+	 *
+	 * @param integer $cacheDuration @see CCache::get for more information
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
 	public function setCacheDuration($cacheDuration) {
 		$this->_cacheDuration;
 	}
+
+	/**
+	 * Get cache duration to use
+	 *
+	 * @return integer
+	 * @since  XXX
+	 */
 	public function getCacheDuration() {
 		return $this->_cacheDuration;
 	}
