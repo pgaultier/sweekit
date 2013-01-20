@@ -31,6 +31,7 @@
  *					'formatter' => 'lessjs', // default output format
  *					'variables' => array(), // variables to expand
  *					'directory' => 'application.less', // directory where less files are stored
+ *					'assetsDirectories' => 'img', // directory (relative to less files) to publish
  *				),
  *			),
  *		),
@@ -135,6 +136,41 @@ class SwLessBehavior extends CBehavior {
 		return $this->_cache;
 	}
 
+	private $_assetsUrl;
+	/**
+	 * Published assets url
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
+	public function getAssetsUrl() {
+		if($this->_assetsUrl === null) {
+			$this->_assetsUrl = Yii::app()->getAssetManager()->publish($this->getCacheDirectory(), false, -1, $this->getForceRefresh());
+		}
+		return $this->_assetsUrl;
+	}
+
+	private $_preparedLessAssets;
+	/**
+	 * Duplicate less directory structure without the baseless files
+	 * should be upgrade
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
+	protected function prepareLessAssets() {
+		if(($this->_preparedLessAssets === null) && ($this->getAssetsDirectories() !== null)) {
+			foreach($this->getAssetsDirectories() as $directory) {
+				$sourceDirectory = $this->getDirectory().DIRECTORY_SEPARATOR.$directory;
+				if(is_dir($sourceDirectory) === true) {
+					$cachedDirectory = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$directory;
+					CFileHelper::copyDirectory($sourceDirectory, $cachedDirectory);
+				}
+			}
+			$this->_preparedLessAssets = true;
+		}
+	}
+
 	/**
 	 * Register less file
 	 *
@@ -147,16 +183,19 @@ class SwLessBehavior extends CBehavior {
 	public function registerLessFile($url,$media='') {
 		Yii::beginProfile('SwLessBehavior.registerLessFile','sweekit.profile');
 
-		$cssFilePath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.pathinfo($url, PATHINFO_FILENAME).'.css';
+		$cssFileName = pathinfo($url, PATHINFO_FILENAME).'.css';
+		$cssFilePath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$cssFileName;
 		$lessFilePath = $this->getDirectory().DIRECTORY_SEPARATOR.$url;
 
 		if($this->isLessFileRegistered($url) === false) {
 			if(($this->getForceRefresh() === true) || (is_file($cssFilePath) === false) || (filemtime($lessFilePath) >= filemtime($cssFilePath))) {
 				$this->compileFile($url, $cssFilePath);
+				$this->prepareLessAssets();
 			}
 			$this->lessFiles[$url]=$media;
 		}
-		$urlCss = Yii::app()->getAssetManager()->publish($cssFilePath, false, 0, $this->getForceRefresh());
+		// $urlCss = Yii::app()->getAssetManager()->publish($cssFilePath, false, 0, $this->getForceRefresh());
+		$urlCss = $this->getAssetsUrl().'/'.$cssFileName;
 
 		$params=func_get_args();
 		$this->recordCachingAction('clientScript','registerLessFile',$params);
@@ -306,10 +345,52 @@ class SwLessBehavior extends CBehavior {
 		return $this->_lessDirectory;
 	}
 
+	private $_assetsDirectories;
+
+	/**
+	 * List of directories (relatives to less path) which
+	 * must be published as companion assets
+	 *
+	 * @param array list of less companion directories
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
+	public function setAssetsDirectories($assetsDirectories) {
+		$this->_assetsDirectories = $assetsDirectories;
+	}
+
+	/**
+	 * List of directories (relatives to less path) which
+	 * must be published as companion assets
+	 *
+	 * @return array
+	 * @since  XXX
+	 */
+	public function getAssetsDirectories() {
+		return $this->_assetsDirectories;
+	}
+
 	private $_forceRefresh = false;
+
+	/**
+	 * Define if we want to force compilation / copy on all request
+	 *
+	 * @param boolean $forceRefresh
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
 	public function setForceRefresh($forceRefresh) {
 		$this->_forceRefresh = $forceRefresh;
 	}
+
+	/**
+	 * Check if we have to force refresh on each request
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
 	public function getForceRefresh() {
 		return $this->_forceRefresh;
 	}
