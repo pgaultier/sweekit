@@ -392,7 +392,7 @@ class SwLessBehavior extends CBehavior {
 	 * @since  XXX
 	 */
 	public function getForceRefresh() {
-		return $this->_forceRefresh;
+		return ((Yii::app()->assetManager->linkAssets === false) && ($this->_forceRefresh === true));
 	}
 
 	private $_cacheDirectory;
