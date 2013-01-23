@@ -145,7 +145,11 @@ class SwLessBehavior extends CBehavior {
 	 */
 	public function getAssetsUrl() {
 		if($this->_assetsUrl === null) {
-			$this->_assetsUrl = Yii::app()->getAssetManager()->publish($this->getCacheDirectory(), false, -1, $this->getForceRefresh());
+			if(Yii::app()->getAssetManager()->linkAssets === true) {
+				$this->_assetsUrl = Yii::app()->getAssetManager()->publish($this->getCacheDirectory());
+			} else {
+				$this->_assetsUrl = Yii::app()->getAssetManager()->publish($this->getCacheDirectory(), false, -1, $this->getForceRefresh());
+			}
 		}
 		return $this->_assetsUrl;
 	}
@@ -392,7 +396,7 @@ class SwLessBehavior extends CBehavior {
 	 * @since  XXX
 	 */
 	public function getForceRefresh() {
-		return ((Yii::app()->assetManager->linkAssets === false) && ($this->_forceRefresh === true));
+		return ($this->_forceRefresh === true);
 	}
 
 	private $_cacheDirectory;
