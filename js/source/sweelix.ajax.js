@@ -75,6 +75,10 @@ log4javascript.JsonAppender = JsonAppender;
 	 */
 	$.fn.ajaxSubmitHandler = function (targetSelector) {
 		targetSelector = targetSelector || null; 
+		var replace = false
+		if(arguments.length == 2) {
+			replace = (!!arguments[1] );
+		}
 		var button = {
 			'target' : 'input:submit, input:image, button:submit',
 			'clicked' : 'input[data-ajaxclick="true"], button[data-ajaxclick="true"]'
@@ -134,7 +138,11 @@ log4javascript.JsonAppender = JsonAppender;
 									break;
 								case 'text/html' :
 								default :
-									$(this).html(xhr.responseText);
+									if(replace == true) {
+										$(this).replaceWith(xhr.responseText);
+									} else {
+										$(this).html(xhr.responseText);
+									}
 									break;
 							}
 							$(this).trigger('afterAjax');
@@ -174,7 +182,7 @@ log4javascript.JsonAppender = JsonAppender;
 					$(evt.target).attr("data-ajaxclick", "true");
 				})
 				
-				$(targetSelector).on('submit', function(evt) {
+				$(this).on('submit', targetSelector, function(evt) {
 					evt.preventDefault();
 					$(this).trigger('beforeAjax');
 					var data = $(evt.target).serializeArray();
@@ -216,15 +224,19 @@ log4javascript.JsonAppender = JsonAppender;
 						'success':function(data, status, xhr){
 						},
 						'complete':function(xhr, status, data) {
-							switch(xhr.getResponseHeader('Content-Type')) {
+							$(this).trigger('afterAjax');
+							switch(xhr.getResponseHeader('Content-Type')) { 
 								case 'application/javascript' :
 									break;
 								case 'text/html' :
 								default :
-									$(this).html(xhr.responseText);
+									if(replace == true) {
+										$(this).replaceWith(xhr.responseText);
+									} else {
+										$(this).html(xhr.responseText);
+									}
 									break;
 							}
-							$(this).trigger('afterAjax');
 						}
 					});
 				});
