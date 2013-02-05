@@ -77,6 +77,7 @@
 				sweelix.error('Text is missing');
 			}
 			var title = (typeof(parameters.title) !== 'undefined')?parameters.title:''; 
+			var close = (typeof(parameters.close) !== 'undefined')?parameters.close:'x'; 
 			var text = parameters.text;
 			var sticky = (typeof(parameters.sticky) !== 'undefined')?parameters.sticky:config.sticky;
 			var cssClass = (typeof(parameters.cssClass) !== 'undefined')?parameters.cssClass:config.cssClass;
@@ -97,7 +98,7 @@
 			if(title.length > 0) {
 				title = str_replace('{{title}}', title, templates.title);
 			}
-			var close = str_replace('{{close}}', 'x', templates.close);
+			close = str_replace('{{close}}', close, templates.close);
 			notice = str_replace(['{{title}}', '{{text}}', '{{close}}', '{{num}}', '{{cssClass}}'], [title, text, close, itemNum, cssClass], notice);
 			
 			// If it's false, don't show another gritter message
