@@ -63,6 +63,44 @@ Yii::import('ext.sweelix.sweekit.validators.SwFileValidator');
  */
 class Sweeml extends CHtml {
 	/**
+	 * Generates the data suitable for list-based HTML elements.
+	 * The generated data can be used in {@link dropDownList}, {@link listBox}, {@link checkBoxList},
+	 * {@link radioButtonList}, and their active-versions (such as {@link activeDropDownList}).
+	 * Note, this method does not HTML-encode the generated data. You may call {@link encodeArray} to
+	 * encode it if needed.
+	 * Please refer to the {@link value} method on how to specify value field, text field and group field.
+	 * @param CActiveDataProvider $models a list of model objects. This parameter
+	 * can also be an array of associative arrays (e.g. results of {@link CDbCommand::queryAll}).
+	 * @param string $valueField the attribute name for list option values
+	 * @param string $textField the attribute name for list option texts
+	 * @param string $groupField the attribute name for list option group names. If empty, no group will be generated.
+	 * @return array the list data that can be used in {@link dropDownList}, {@link listBox}, etc.
+	 */
+	public static function listDataFromActiveDataProvider($activeDataProvider,$valueField,$textField,$groupField='')
+	{
+		$listData=array();
+		if($groupField==='')
+		{
+			foreach($activeDataProvider->getData() as $model)
+			{
+				$value=self::value($model,$valueField);
+				$text=self::value($model,$textField);
+				$listData[$value]=$text;
+			}
+		}
+		else
+		{
+			foreach($activeDataProvider->getData() as $model)
+			{
+				$group=self::value($model,$groupField);
+				$value=self::value($model,$valueField);
+				$text=self::value($model,$textField);
+				$listData[$group][$value]=$text;
+			}
+		}
+		return $listData;
+	}
+	/**
 	 * Create an asynchronous file upload. This kind of
 	 * file upload allow the use of fully ajaxed forms
 	 * supported htmlOptions are :
