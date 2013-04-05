@@ -104,18 +104,27 @@
 	
 	$s.plupload.asyncDelete = function(uploaderId, id, callback){
 		var up = window['uploader_'+uploaderId];
+		var hiddenId = '#h'+id;
 		if(up.getDeleteUrl() != null) {
-			var hiddenId = '#h'+id;
-			$.ajax({
+			jQuery.ajax({
 				'url' : up.getDeleteUrl(),
 				'data' : {'name':$(hiddenId).val()},
 				'success' : function(){
-					$(hiddenId).remove();
+					jQuery(hiddenId).remove();
+					var file = {id:id};
+					up.removeFile(file);
 					if(typeof(callback) == 'function') {
 						callback(id);
 					}
 				}
 			});
+		} else {
+			jQuery(hiddenId).remove();
+			var file = {id:id};
+			up.removeFile(file);
+			if(typeof(callback) == 'function') {
+				callback(id);
+			}
 		}
 	};
 
@@ -125,9 +134,7 @@
 				jQuery('#'+hiddenId+' input[type=hidden]').each(function(idx, el){
 					var fileId = jQuery(el).attr('id');
 					fileId = fileId.substring(1);
-					jQuery.ajax.asyncDelete(up.getId(), fileId, function(id){ 
-						jQuery('#'+id).remove();
-					});
+					$s.plupload.asyncDelete(up.getId(), fileId, function(id){ });
 				});
 			}
 			jQuery('#'+hiddenId).append('<input type="hidden" id="h'+file.id+'" name="'+config.realName+'" value="'+json.fileName+'" />')
