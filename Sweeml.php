@@ -134,6 +134,8 @@ class Sweeml extends CHtml {
 	 *  		'uploadFile' => 'js:xxx',
 	 *  		'uploadProgress' => 'js:xxx',
 	 *  	),
+	 *  	// events can be replaced with a js object :
+	 *  	'eventsObject' => 'js:new UploadManager()', // take care to keep method names as they are defined in plupload (first letter uppercase)
 	 * );
 	 * </code>
 	 *
@@ -314,6 +316,8 @@ class Sweeml extends CHtml {
 					$attachedEvents[ucfirst($name)] = $func;
 				}
 			}
+		} elseif(isset($htmlOptions['eventsObject'])) {
+			$attachedEvents = $htmlOptions['eventsObject'];
 		}
 		return array($config, $attachedEvents);
 	}
