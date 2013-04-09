@@ -348,7 +348,7 @@ class SwImage {
 	 * @param integer $width  target width
 	 * @param integer $height target height
 	 *
-	 * @return string
+	 * @return SwImage
 	 * @since  1.0.0
 	 */
 	public function resize($width, $height) {
@@ -424,6 +424,51 @@ class SwImage {
 	}
 
 	/**
+	 * Retrieve content type of current image.
+	 *
+	 * @throws Exception
+	 * @return string
+	 *
+	 * @since  XXX
+	 */
+	public function getContentType() {
+		if($this->_imageType === null) {
+			list($this->_originalWidth, $this->_originalHeight, $this->_imageType) = getimagesize($this->_fileImage);
+		}
+		$contentType = 'application/octet-stream';
+		switch($this->_imageType) {
+			case IMAGETYPE_PNG:
+				$contentType = 'image/png';
+				break;
+			case IMAGETYPE_GIF:
+				$contentType = 'image/gif';
+				break;
+			case IMAGETYPE_JPEG:
+				$contentType = 'image/jpeg';
+				break;
+			default:
+				throw new Exception('imagetype unknown');
+				break;
+		}
+		return $contentType;
+	}
+
+	/**
+	 * Render the image directly withou using local files.
+	 * Usefull for previewing images
+	 *
+	 * @return string
+	 *
+	 * @since  XXX
+	 */
+	public function liveRender() {
+		if($this->_resized === false) {
+			$this->resize($this->_targetWidth, $this->_targetHeight);
+		}
+		return $this->resample(true);
+	}
+
+	/**
 	 * Save computed image to specific place
 	 *
 	 * @param string $targetFile full pathname to save the file
@@ -471,14 +516,18 @@ class SwImage {
 	}
 
 	/**
-	 * Resample the image using GD
+	 * Resample the image using GD, if the parameters $return is set to
+	 * true, the bytes are returned instead of saving them to a specific
+	 * file
 	 *
 	 * @throws Exception
 	 *
-	 * @return void
+	 * @param $return boolean true to return the data instead of writing it
+	 *
+	 * @return mixed
 	 * @since  1.0.0
 	 */
-	private function resample() {
+	private function resample($return = false) {
 		$this->computeSize();
 		$originalImage = $this->loadImage($this->_fileImage, $this->_imageType);
 		$targetImage = imagecreatetruecolor($this->_finalWidth, $this->_finalHeight);
@@ -505,21 +554,42 @@ class SwImage {
 			}
 
 		}
+		$cachedName = ($return === true)?null:$this->getCachedName(true);
+		$rawData = null;
 		switch($this->_imageType) {
 			case IMAGETYPE_PNG:
 				$imageQuality = (int) ($this->_quality/10);
-				imagepng($targetImage, $this->getCachedName(true), (($imageQuality<10)?$imageQuality:9) );
+				if($return === true) {
+					ob_start();
+				}
+				imagepng($targetImage, $cachedName, (($imageQuality<10)?$imageQuality:9) );
+				if($return === true) {
+					$rawData = ob_get_clean();
+				}
 				break;
 			case IMAGETYPE_GIF:
-				imagegif( $targetImage, $this->getCachedName(true) );
+				if($return === true) {
+					ob_start();
+				}
+				imagegif( $targetImage, $cachedName );
+				if($return === true) {
+					$rawData = ob_get_clean();
+				}
 				break;
 			case IMAGETYPE_JPEG:
-				imagejpeg( $targetImage, $this->getCachedName(true), $this->_quality );
+				if($return === true) {
+					ob_start();
+				}
+				imagejpeg( $targetImage, $cachedName, $this->_quality );
+				if($return === true) {
+					$rawData = ob_get_clean();
+				}
 				break;
 			default:
 				throw new Exception('imagetype unknown');
 				break;
 		}
+		return $rawData;
 	}
 
 	/**
