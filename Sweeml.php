@@ -193,12 +193,8 @@ class Sweeml extends CHtml {
 				$htmlOptions['config']['filters'] = $filters;
 			}
 		}
-		if(isset($htmlOptions['value']) === true) {
-			$value  = $htmlOptions['value'];
-			unset($htmlOptions['value']);
-		} else {
-			$value = null;
-		}
+		Yii::import('ext.sweekit.web.SwUploadedFile');
+		$value = SwUploadedFile::getInstances($model, $attribute);
 		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
 
 		if($model->hasErrors($attribute))
