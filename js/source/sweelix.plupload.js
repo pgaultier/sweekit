@@ -25,9 +25,7 @@
 			// dt.types.contains check is for firefox
 			return dt && dt.effectAllowed != 'none' && (dt.files || (!isWebkit && dt.types.contains && dt.types.contains('Files')));
 		}
-		this.postInit = function (up) {
-			$('#'+up.getId()).before('<div id="'+up.getZoneId()+'" class="dropZone" style="display:none">'+up.getZoneText()+'</div>');
-			$('#'+up.getId()).after('<div id="'+up.getListId()+'" class="filesContainer"> </div>');
+		function initDragEvent() {
 			document.addEventListener('dragenter', function(e){
 				if(!isValidDrag(e)) return;
 				$('.dropZone').show();
@@ -64,6 +62,12 @@
 			$('.dropZone').bind('drop', function(evt){
 				$('.dropZone').hide().removeClass('hover');
 			});
+			
+		}
+		this.postInit = function (up) {
+			$('#'+up.getId()).before('<div id="'+up.getZoneId()+'" class="dropZone" style="display:none">'+up.getZoneText()+'</div>');
+			$('#'+up.getId()).after('<div id="'+up.getListId()+'" class="filesContainer"> </div>');
+			initDragEvent();
 		};
 		this.filesAdded = function (up, files) {
 			$.each(files,  function(i, file){ 
@@ -210,19 +214,15 @@
 			}
 			uploader.init();
 			$('#'+id).append('<div style="display:none;" id="'+hiddenId+'" ></div>');
+			
 			$.each(events, function(key, callback) {
 				uploader.bind(key, callback);
 			});
+			
 			uploader.bind('FileUploaded', function(up, file, response) {
 				var json = $.parseJSON( response.response );
 				createHiddenField(uploader, json, file, hiddenId, config);
 			});
-			if(!!config.auto) {
-				uploader.bind('FilesAdded', function(up, file) {
-					up.refresh();
-					up.start();
-				});
-			}
 			if(!!config.ui) {
 				uploader.bind('FilesAdded', $s.plupload.filesAdded);
 				uploader.bind('FilesRemoved', $s.plupload.filesRemoved);
@@ -234,29 +234,23 @@
 				var jsFiles = [];
 				$.each(uploadedFiles, function(idx, file) {
 					var jsFile = new plupload.File(plupload.guid(), file.fileName, file.fileSize);
+					jsFile.status = plupload.DONE;
+					jsFile.percent = 100;
 					jsFiles.push(jsFile);
-					createHiddenField(uploader, file, jsFile, hiddenId, config);
 				});
-				if(!!config.ui) {
-					$s.plupload.filesAdded(uploader, jsFiles);
-					$.each(jsFiles, function(idx, jsFile){
-						var response = { 'response' : '{"fileName":"'+jsFile.name+'", "status":true, "size":'+jsFile.size+'}', 'status' : true };
-						$s.plupload.fileUploaded(uploader, jsFile, response);
-					});
-				}
-				if('FilesAdded' in events) {
-					events.FilesAdded(uploader, jsFiles);
-				}
-				if('FileUploaded' in events) {
-					$.each(jsFiles, function(idx, jsFile){
-						var response = { 'response' : '{"fileName":"'+jsFile.name+'", "status":true, "size":'+jsFile.size+'}', 'status' : true };
-						events.FileUploaded(uploader, jsFile, response);
-					});
-				}
-				if('UploadComplete' in events) {
-					events.UploadComplete(uploader, jsFiles);
-				}
+				uploader.trigger('FilesAdded', jsFiles);
+				$.each(jsFiles, function(idx, jsFile){
+					var response = { 'response' : '{"fileName":"'+jsFile.name+'", "status":true, "size":'+jsFile.size+'}', 'status' : true };
+					uploader.trigger('FileUploaded', jsFile, response);
+				});
+				uploader.trigger('UploadComplete', jsFiles);
 				uploader.refresh(); // not sure if this is needed
+			}
+			if(!!config.auto) {
+				uploader.bind('FilesAdded', function(up, file) {
+					up.refresh();
+					up.start();
+				});
 			}
 			window['uploader_'+uploader.getId()] = uploader;
 		});
