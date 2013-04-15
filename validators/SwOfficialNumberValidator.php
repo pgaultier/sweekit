@@ -39,6 +39,7 @@ class SwOfficialNumberValidator extends CValidator {
 		'siren' => 'iso7812',
 		'siret' => 'iso7812',
 		'rib' => 'rib',
+		'vat' => 'vat',
 	);
 
 	/**
@@ -65,8 +66,10 @@ class SwOfficialNumberValidator extends CValidator {
 
 			$result = call_user_func(array($this, $method), $value);
 
-			$message=$this->message!==null?$this->message:Yii::t('sweelix','{attribute} is not a valid {type}.');
-			$this->addError($object,$attribute,$message,array('{type}'=>$this->type));
+			if($result === false) {
+				$message=$this->message!==null?$this->message:Yii::t('sweelix','{attribute} is not a valid {type}.');
+				$this->addError($object,$attribute,$message,array('{type}'=>$this->type));
+			}
 		} else {
 			throw new CException(Yii::t('sweelix','type {type} is incorrect.', array('{type}'=>$this->type)));
 		}
@@ -74,6 +77,30 @@ class SwOfficialNumberValidator extends CValidator {
 
 	}
 
+	/**
+	 * Compute the iso 7812 modulus also known as Luhn or 
+	 * mod 10 algorithm
+	 * 
+	 * @param string $number number to validate
+	 * 
+	 * @return integer
+	 * @since  XXX
+	 */
+	protected function computeIso7812Modulus($number) {
+		$sumTable = array(
+			array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
+			array(0, 2, 4, 6, 8, 1, 3, 5, 7, 9),
+		);
+		$result = 0;
+		$parity = 0;
+		for($i=(strlen($number) - 1); $i>=0; $i--) {
+			$result += $sumTable[$parity][$number[$i]];
+			$parity = 1 - $parity;
+		}
+		$modulus = $result % 10;
+		return $modulus;
+	}
+	
 	/**
 	 * Check if number conform to iso 7812 validation algorithm
 	 * also know as Luhn or mod 10 algorithm
@@ -85,19 +112,8 @@ class SwOfficialNumberValidator extends CValidator {
 	 */
 	protected function checkIso7812($number) {
 		$check = false;
-		if(preg_match('/^([a-z0-9]+)$/i', $number) === 1) {
-			$sumTable = array(
-				array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
-				array(0, 2, 4, 6, 8, 1, 3, 5, 7, 9),
-			);
-			$result = 0;
-			$parity = 0;
-			for($i=(strlen($number) - 1); $i>=0; $i--) {
-				$result += $sumTable[$parity][$number[$i]];
-				$parity = 1 - $parity;
-			}
-			$modulus = $result % 10;
-			$check = ($modulus === 0);
+		if(preg_match('/^([0-9]+)$/i', $number) === 1) {
+			$check = ($this->computeIso7812Modulus($number) === 0);
 		}
 		return $check;
 	}
@@ -149,6 +165,62 @@ class SwOfficialNumberValidator extends CValidator {
 		}
 		return $check;
 	}
+	
+	/**
+	 * Check if VAT number is correct using FR rules
+	 * 
+	 * @param string $number vat number
+	 * 
+	 * @return boolean
+	 * @since  XXX
+	 */
+	protected function checkFrVat($number) {
+		$check = false; 
+		$key = substr($number, 2, 2);
+		$siren = substr($number, 4, 9);
+		$check = $this->checkIso7812($siren);
+		if($check === true) {
+			$checkKey = (12 + 3 * ($siren % 97)) % 97;
+			$ckeck = ($key == $checkKey);
+		}
+		return $check;
+	}
 
+	/**
+	 * Check if VAT number is correct
+	 * 
+	 * @param string $number vat number
+	 * 
+	 * @return boolean
+	 * @since  XXX
+	 */
+	protected function checkVat($number) {
+		$check = false;
+		$countryCode = substr($number, 0, 2);
+		$vatValidator = $this->findVatValidator($countryCode);
+		if($vatValidator !== false) {
+			$check = call_user_func(array($this, $vatValidator), $number);
+		} else {
+			throw new CException(Yii::t('sweelix','VAT Validator not implemented for country "{country}".', array('{country}'=>$countryCode)));
+		}
+		return $check;
+	}
+	
+	/**
+	 * Find VAT validator using the country code.
+	 * Return method name if validator exists
+	 * 
+	 * @param string $country country code
+	 * 
+	 * @return string
+	 * @since  XXX
+	 */
+	protected function findVatValidator($country) {
+		$vatChecker = 'check'.ucfirst(strtolower($country)).'Vat';
+		if(method_exists($this, $vatChecker) === false) {
+			$vatChecker = false;
+		}
+		return $vatChecker;
+	}
 
 }
