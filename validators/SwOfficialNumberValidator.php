@@ -40,6 +40,7 @@ class SwOfficialNumberValidator extends CValidator {
 		'siret' => 'iso7812',
 		'rib' => 'rib',
 		'vat' => 'vat',
+		'insee' => 'modulo97',
 	);
 
 	/**
@@ -78,11 +79,11 @@ class SwOfficialNumberValidator extends CValidator {
 	}
 
 	/**
-	 * Compute the iso 7812 modulus also known as Luhn or 
+	 * Compute the iso 7812 modulus also known as Luhn or
 	 * mod 10 algorithm
-	 * 
+	 *
 	 * @param string $number number to validate
-	 * 
+	 *
 	 * @return integer
 	 * @since  XXX
 	 */
@@ -100,7 +101,7 @@ class SwOfficialNumberValidator extends CValidator {
 		$modulus = $result % 10;
 		return $modulus;
 	}
-	
+
 	/**
 	 * Check if number conform to iso 7812 validation algorithm
 	 * also know as Luhn or mod 10 algorithm
@@ -165,17 +166,35 @@ class SwOfficialNumberValidator extends CValidator {
 		}
 		return $check;
 	}
-	
+
+	/**
+	 * Check if number conform to mod 97 validation algorithm
+	 *
+	 * @param string $number number to validate
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
+	protected function checkModulo97($number) {
+		$check = false;
+		$matches = array();
+		if(preg_match('/^([0-9]+)([0-9]{2})$/', $number, $matches) == 1) {
+			$modulo = 97 - bcmod($matches[1], 97);
+			$check = ($modulo == $matches[2]);
+		}
+		return $check;
+	}
+
 	/**
 	 * Check if VAT number is correct using FR rules
-	 * 
+	 *
 	 * @param string $number vat number
-	 * 
+	 *
 	 * @return boolean
 	 * @since  XXX
 	 */
 	protected function checkFrVat($number) {
-		$check = false; 
+		$check = false;
 		$key = substr($number, 2, 2);
 		$siren = substr($number, 4, 9);
 		$check = $this->checkIso7812($siren);
@@ -187,10 +206,22 @@ class SwOfficialNumberValidator extends CValidator {
 	}
 
 	/**
-	 * Check if VAT number is correct
-	 * 
+	 * Check if VAT number is correct using BE rules
+	 *
 	 * @param string $number vat number
-	 * 
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
+	protected function checkBeVat($number) {
+		return $this->checkModulo97(substr($number, 2, 10));
+	}
+
+	/**
+	 * Check if VAT number is correct
+	 *
+	 * @param string $number vat number
+	 *
 	 * @return boolean
 	 * @since  XXX
 	 */
@@ -205,13 +236,13 @@ class SwOfficialNumberValidator extends CValidator {
 		}
 		return $check;
 	}
-	
+
 	/**
 	 * Find VAT validator using the country code.
 	 * Return method name if validator exists
-	 * 
+	 *
 	 * @param string $country country code
-	 * 
+	 *
 	 * @return string
 	 * @since  XXX
 	 */
