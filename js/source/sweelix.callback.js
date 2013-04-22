@@ -1,14 +1,13 @@
 /**
- * File jquery.sweelix.debug.js
+ * File sweelix.callback.js
  *
  * This is a simple "trace" / "debug" script. It allow
  * debug process whithout breaking the page
  * <code>
  * {
- * 	'debug':	{
- * 		'debug':true, 
- * 		'fallback':false,
- * 		'method':'log'
+ * 	'callback':	{
+ * 		'globalCblName':'swlx', 
+ * 		'top':true
  * 	}
  * }
  * </code>
@@ -108,7 +107,7 @@
 		this.raiseNamed = function() {
 			if ((config.top === true) && (window.top !== window.self)) {
 				sweelix.warn('sweelix.raise() re-routed to top window');
-				var topObj = window.top.jQuery.sweelix;
+				var topObj = window.top.sweelix;
 				topObj.raise.apply(this, arguments);
 			} else {
 				if (arguments.length < 2) {
@@ -123,7 +122,7 @@
 		this.raise = function() {
 			if ((config.top === true) && (window.top !== window.self)) {
 				sweelix.warn('sweelix.raise() re-routed to top window');
-				var topObj = window.top.jQuery.sweelix;
+				var topObj = window.top.sweelix;
 				topObj.raise.apply(this, arguments);
 			} else {
 				if (arguments.length < 1) {
