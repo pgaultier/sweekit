@@ -9,7 +9,7 @@
  * @license   http://www.sweelix.net/license license
  * @version   XXX
  * @link      http://www.sweelix.net
- * @category  web
+ * @category  mailer
  * @package   sweekit.mailer
  */
 
@@ -18,12 +18,25 @@ Yii::import('ext.sweekit.mailer.SwMailerInterface');
 /**
  * Class SwMailerConfig allow configuration of selected mailer
  *
+ * component must be called mailer.
+ *
+ * <code>
+ *  'mailer' => array(
+ *  	'class' => 'ext.sweekit.mailer.SwMailerConfig',
+ *  	'parameters' => array(
+ *  		'class' => 'ext.sweekit.mailer.SwMailerCritsend',
+ *  		'apiUsername' => 'user name',
+ *  		'apiPassword' => 'user password'
+ *  	)
+ *  )
+ * </code>
+ *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license
  * @version   XXX
  * @link      http://www.sweelix.net
- * @category  web
+ * @category  mailer
  * @package   sweekit.mailer
  * @since     XXX
  */
@@ -43,7 +56,7 @@ Yii::import('ext.sweekit.mailer.SwMailerInterface');
  	 *
  	 * @param array $parameters
  	 *
- 	 * @retunr void
+ 	 * @return void
  	 * @since  XXX
  	 */
  	public function setParameters($parameters) {
