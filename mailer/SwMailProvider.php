@@ -62,7 +62,7 @@
  	 */
  	public function setConnector($connector) {
  		if($this->_initialized === true) {
-			throw new CException(Yii::t('sweelix', 'SwMailer, config can be defined only during configuration'));
+			throw new CException(Yii::t('sweelix', 'SwMailProvider, connector can be defined only during configuration'));
 		}
  		$this->_connector = $connector;
  	}
@@ -92,7 +92,7 @@
  	 */
  	public function setReplyTo($email) {
  	 	if($this->_initialized === true) {
-			throw new CException(Yii::t('sweelix', 'SwMailer, replyTo can be defined only during configuration'));
+			throw new CException(Yii::t('sweelix', 'SwMailProvider, replyTo can be defined only during configuration'));
 		}
  		$this->_replyTo = $email;
  	}
@@ -122,7 +122,7 @@
  	*/
  	public function setFromEmail($email) {
  		if($this->_initialized === true) {
- 			throw new CException(Yii::t('sweelix', 'SwMailer, from can be defined only during configuration'));
+ 			throw new CException(Yii::t('sweelix', 'SwMailProvider, fromEmail can be defined only during configuration'));
  		}
  		$this->_from['email'] = $email;
  	}
@@ -137,7 +137,7 @@
  	 */
  	public function setFromName($name) {
  		if($this->_initialized === true) {
- 			throw new CException(Yii::t('sweelix', 'SwMailer, from can be defined only during configuration'));
+ 			throw new CException(Yii::t('sweelix', 'SwMailProvider, fromName can be defined only during configuration'));
  		}
  		$this->_from['name'] = $name;
  	}
