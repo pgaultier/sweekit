@@ -19,18 +19,21 @@
  * component must be called mailer.
  *
  * <code>
- *  'mailer' => array(
- *  	'class' => 'ext.sweekit.mailer.SwMailProvider',
- *  	'connectorConfig' => array(
- *  		'class' => 'ext.sweekit.mailer.SwMailerCritsend',
- *  		'apiUsername' => 'user name',
- *  		'apiPassword' => 'user password'
- *  	)
- *  )
+ * 		'mailProvider' => array(
+ * 			'class' => 'ext.sweekit.mailer.SwMailProvider',
+ * 			'fromEmail' => 'pgaultier@ibitux.com',
+ * 			'fromName' => 'Philippe',
+ * 			'replyTo' => 'pgaultier@ibitux.net',
+ * 			'connector' => array(
+ * 				'class' => 'ext.sweekit.mailer.SwCritsendMailer',
+ * 				'apiUsername' => 'pgaultier@ibitux.com',
+ * 				'apiPassword' => 'iKRQDoOndOSM7gzMH',
+ * 			),
+ * 		),
  * </code>
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
  * @version   XXX
  * @link      http://www.sweelix.net
