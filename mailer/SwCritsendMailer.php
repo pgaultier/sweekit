@@ -19,6 +19,15 @@ Yii::import('ext.sweekit.mailer.SwMailer');
  * Class SwCritsendMailer wraps @see critsend mailer into
  * an Yii object
  *
+ * <code>
+ * 		'connector' => array(
+ * 			'class' => 'ext.sweekit.mailer.SwCritsendMailer',
+ * 			'apiUsername' => 'username',
+ * 			'apiPassword' => 'apikey',
+ * 		),
+ * </code>
+ *
+ *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
  * @license   http://www.sweelix.net/license license

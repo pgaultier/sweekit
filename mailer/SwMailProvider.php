@@ -21,13 +21,11 @@
  * <code>
  * 		'mailProvider' => array(
  * 			'class' => 'ext.sweekit.mailer.SwMailProvider',
- * 			'fromEmail' => 'pgaultier@ibitux.com',
- * 			'fromName' => 'Philippe',
- * 			'replyTo' => 'pgaultier@ibitux.net',
+ * 			'fromEmail' => 'sender@email.com',
+ * 			'fromName' => 'Sender Name',
+ * 			'replyTo' => 'reply@email.com',
  * 			'connector' => array(
- * 				'class' => 'ext.sweekit.mailer.SwCritsendMailer',
- * 				'apiUsername' => 'pgaultier@ibitux.com',
- * 				'apiPassword' => 'iKRQDoOndOSM7gzMH',
+ * 				//  @see SwXxxMailer (email provider)
  * 			),
  * 		),
  * </code>
