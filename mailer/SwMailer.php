@@ -1,6 +1,6 @@
 <?php
 /**
- * File SwMailerConfig.php
+ * File SwMailer.php
  *
  * PHP version 5.2+
  *
@@ -13,23 +13,9 @@
  * @package   sweekit.mailer
  */
 
-Yii::import('ext.sweekit.mailer.SwMailerInterface');
-
 /**
- * Class SwMailerConfig allow configuration of selected mailer
- *
- * component must be called mailer.
- *
- * <code>
- *  'mailer' => array(
- *  	'class' => 'ext.sweekit.mailer.SwMailerConfig',
- *  	'parameters' => array(
- *  		'class' => 'ext.sweekit.mailer.SwMailerCritsend',
- *  		'apiUsername' => 'user name',
- *  		'apiPassword' => 'user password'
- *  	)
- *  )
- * </code>
+ * Class SwMailer is an abstract class which expose minimal
+ * methods
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2012 Sweelix
@@ -40,50 +26,77 @@ Yii::import('ext.sweekit.mailer.SwMailerInterface');
  * @package   sweekit.mailer
  * @since     XXX
  */
- class SwMailerConfig extends CApplicationComponent {
- 	/**
- 	 * @var boolean define status of the module
- 	 */
- 	private $_initialized = false;
+abstract class SwMailer extends CComponent {
 
- 	/**
- 	 * @var array Configuration parameters
- 	 */
- 	private $_subConfig;
+	/**
+	 * Send email to multiple users
+	 *
+	 * @param string $campaign name used to filter emails
+	 * @param array  $users    users must be an array of array : array(array('email' => 'user@email.com', 'name' => 'User name'), ...)
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
+	abstract public function sendCampaign($campaign, $users);
 
- 	/**
- 	 * Define selected object class using classic component configuration
- 	 *
- 	 * @param array $parameters
- 	 *
- 	 * @return void
- 	 * @since  XXX
- 	 */
- 	public function setParameters($parameters) {
- 			if($this->_initialized === true) {
-			throw new CException(Yii::t('sweelix', 'SwMailerConfig, parameters can be defined only during configuration'));
-		}
- 		$this->_subConfig = $parameters;
- 	}
+	/**
+	 * Send an email to one user
+	 *
+	 * @param string $campaign name used to filter emails
+	 * @param string $email    target user email
+	 * @param string $name     target user name
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
+	abstract public function send($campaign, $email, $name=null);
 
- 	/**
- 	 * Get current configuration
- 	 *
- 	 * @return array
- 	 * @since  XXX
- 	 */
- 	public function getParameters() {
- 		return $this->_subConfig;
- 	}
- 	/**
- 	 * Init module with parameters @see CApplicationComponent::init()
- 	 *
- 	 * @return void
- 	 * @since  XXX
- 	 */
- 	public function init() {
- 		$this->attachBehaviors($this->behaviors);
- 		$this->_initialized = true;
- 	}
+	/**
+	 * Define content to send
+	 *
+	 * @param string $subject     email subject
+	 * @param string $htmlBody    html used to populate the email
+	 * @param string $textualBody text used for the email
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
+	abstract public function setContent($subject, $htmlBody=null, $textualBody=null);
 
+	/**
+	 * Define the replyTo field
+	 *
+	 * @param string $email email for reply to
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
+	abstract public function setReplyTo($email);
+
+	/**
+	 * Retrieve current replyTo setting
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
+	abstract public function getReplyTo();
+
+	/**
+	 * Define the from field
+	 *
+	 * @param string $email email for reply to
+	 * @param string $name  readable name
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
+	abstract public function setFrom($email, $name=null);
+
+	/**
+	 * Retrieve current from settings array('email' => $email, 'name' => $name)
+	 *
+	 * @return array
+	 * @since  XXX
+	 */
+	abstract public function getFrom();
  }

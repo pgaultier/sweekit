@@ -1,6 +1,6 @@
 <?php
 /**
- * File SwMailerCritsend.php
+ * File SwCritsendMailer.php
  *
  * PHP version 5.2+
  *
@@ -9,14 +9,14 @@
  * @license   http://www.sweelix.net/license license
  * @version   XXX
  * @link      http://www.sweelix.net
- * @category  web
- * @package   sweekit.web
+ * @category  mailer
+ * @package   sweekit.mailer
  */
 
-Yii::import('ext.sweekit.mailer.SwMailerInterface');
+Yii::import('ext.sweekit.mailer.SwMailer');
 
 /**
- * Class SwMailerCritsend wraps @see critsend mailer into
+ * Class SwCritsendMailer wraps @see critsend mailer into
  * an Yii object
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
@@ -24,11 +24,11 @@ Yii::import('ext.sweekit.mailer.SwMailerInterface');
  * @license   http://www.sweelix.net/license license
  * @version   XXX
  * @link      http://www.sweelix.net
- * @category  web
- * @package   sweekit.web
+ * @category  mailer
+ * @package   sweekit.mailer
  * @since     XXX
  */
-class SwMailerCritsend extends CComponent implements SwMailerInterface {
+class SwCritsendMailer extends SwMailer {
 
 	/**
 	 * @var string define encoding to use
@@ -378,7 +378,7 @@ class SwMailerCritsend extends CComponent implements SwMailerInterface {
 	 */
 	protected function getSoapClient() {
 		try {
-			Yii::trace('Trace: '.__CLASS__.'::'.__FUNCTION__.'()', 'ext.sweekit.web');
+			Yii::trace('Trace: '.__CLASS__.'::'.__FUNCTION__.'()', 'ext.sweekit.mailer');
 			if($this->_soapClient === null) {
 				foreach($this->getHosts() as $host => $config) {
 					try {
@@ -398,7 +398,7 @@ class SwMailerCritsend extends CComponent implements SwMailerInterface {
 			}
 			return $this->_soapClient;
 		} catch(Exception $e) {
-			Yii::log('Error in '.__CLASS__.'::'.__FUNCTION__.'():'.$e->getMessage(), CLogger::LEVEL_ERROR, 'ext.sweekit.web');
+			Yii::log('Error in '.__CLASS__.'::'.__FUNCTION__.'():'.$e->getMessage(), CLogger::LEVEL_ERROR, 'ext.sweekit.mailer');
 			throw $e;
 		}
 	}
