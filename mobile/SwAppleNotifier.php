@@ -9,9 +9,11 @@
  * @license   http://www.sweelix.net/license license
  * @version   XXX
  * @link      http://www.sweelix.net
- * @category  components
- * @package   sweekit.components
+ * @category  mobile
+ * @package   sweekit.mobile
  */
+
+Yii::import('ext.sweekit.mobile.SwMobileNotifierInterface');
 
 /**
  * This SwAppleNotififier allow users to send
@@ -22,8 +24,8 @@
  * @license   http://www.sweelix.net/license license
  * @version   XXX
  * @link      http://www.sweelix.net
- * @category  components
- * @package   sweekit.components
+ * @category  mobile
+ * @package   sweekit.mobile
  *
  * @property string $certificatePath
  * @property string $temporaryCertificatePath
