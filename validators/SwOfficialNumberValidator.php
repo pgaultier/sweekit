@@ -173,7 +173,6 @@ class SwOfficialNumberValidator extends CValidator {
 		return $check;
 	}
 
-<<<<<<< Updated upstream
 	/**
 	 * Check if number conform to mod 97 validation algorithm
 	 *
@@ -192,8 +191,6 @@ class SwOfficialNumberValidator extends CValidator {
 		return $check;
 	}
 
-=======
->>>>>>> Stashed changes
 	/**
 	 * Check if VAT number is correct using FR rules
 	 *
