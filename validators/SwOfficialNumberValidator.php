@@ -49,6 +49,12 @@ class SwOfficialNumberValidator extends CValidator {
 	public $type;
 
 	/**
+	 * @var boolean whether the attribute value can be null or empty. Defaults to true,
+	 * meaning that if the attribute is empty, it is considered valid.
+	 */
+	public $allowEmpty=true;
+
+	/**
 	 * Check if current attribute value conform to selected
 	 * algorithm
 	 *
@@ -61,15 +67,15 @@ class SwOfficialNumberValidator extends CValidator {
 	protected function validateAttribute($object, $attribute) {
 
 		if(isset(self::$officialNumberValidators[$this->type]) === true) {
-
-			$method = 'check'.ucfirst(self::$officialNumberValidators[$this->type]);
 			$value = $object->$attribute;
 
-			$result = call_user_func(array($this, $method), $value);
-
-			if($result === false) {
-				$message=$this->message!==null?$this->message:Yii::t('sweelix','{attribute} is not a valid {type}.');
-				$this->addError($object,$attribute,$message,array('{type}'=>$this->type));
+			if(($this->allowEmpty === false) || ($this->isEmpty($value) === false)) {
+				$method = 'check'.ucfirst(self::$officialNumberValidators[$this->type]);
+				$result = call_user_func(array($this, $method), $value);
+				if($result === false) {
+					$message=$this->message!==null?$this->message:Yii::t('sweelix','{attribute} is not a valid {type}.');
+					$this->addError($object,$attribute,$message,array('{type}'=>$this->type));
+				}
 			}
 		} else {
 			throw new CException(Yii::t('sweelix','type {type} is incorrect.', array('{type}'=>$this->type)));
@@ -167,6 +173,7 @@ class SwOfficialNumberValidator extends CValidator {
 		return $check;
 	}
 
+<<<<<<< Updated upstream
 	/**
 	 * Check if number conform to mod 97 validation algorithm
 	 *
@@ -185,6 +192,8 @@ class SwOfficialNumberValidator extends CValidator {
 		return $check;
 	}
 
+=======
+>>>>>>> Stashed changes
 	/**
 	 * Check if VAT number is correct using FR rules
 	 *
@@ -231,8 +240,6 @@ class SwOfficialNumberValidator extends CValidator {
 		$vatValidator = $this->findVatValidator($countryCode);
 		if($vatValidator !== false) {
 			$check = call_user_func(array($this, $vatValidator), $number);
-		} else {
-			throw new CException(Yii::t('sweelix','VAT Validator not implemented for country "{country}".', array('{country}'=>$countryCode)));
 		}
 		return $check;
 	}
