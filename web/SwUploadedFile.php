@@ -216,6 +216,24 @@ class SwUploadedFile extends CComponent {
 		}
 	}
 	/**
+	 * Build correct path for current file
+	 *
+	 * @param string $targetFileUrl file url like : tmp://xxx or resource://xxx
+	 * @param string $id            id of current target file
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
+	protected static function buildFilePath($targetFileUrl, $id=null) {
+		if(strncasecmp('tmp://', $targetFileUrl, 6) === 0) {
+			$targetFileUrl = str_replace('tmp://', self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR, $targetFileUrl);
+		} else {
+			$targetFileUrl = false;
+		}
+		return $targetFileUrl;
+	}
+
+	/**
 	 * Recursive method used to collect info data.
 	 * The original method cannot be used anymore because $_FILES is not used.
 	 *
@@ -233,9 +251,10 @@ class SwUploadedFile extends CComponent {
 					$id = Sweeml::getIdByName($testName);
 
 					foreach($value as $idx => $data) {
-						$myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$data;
+						// $myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$data;
+						$myFile = self::buildFilePath($data, $id);
 
-						if((file_exists($myFile)===true) && (is_file($myFile)==true)) {
+						if(($myFile !== false) && (file_exists($myFile)===true) && (is_file($myFile)==true)) {
 							$fileInfo = pathinfo($myFile);
 
 							self::$_files[$infos['class']][$infos['attribute']][$testName.'_'.$idx] = new SwUploadedFile($data, $myFile, $fileInfo['extension'], filesize($myFile));
@@ -245,8 +264,9 @@ class SwUploadedFile extends CComponent {
 					$testName = $infos['class'].$prevKey.'['.$infos['attribute'].']';
 					$id = Sweeml::getIdByName($testName);
 					// single upload
-					$myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$value;
-					if((file_exists($myFile)===true) && (is_file($myFile)==true)) {
+					// $myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$value;
+					$myFile = self::buildFilePath($value, $id);
+					if(($myFile !== false) && (file_exists($myFile)===true) && (is_file($myFile)==true)) {
 						$fileInfo = pathinfo($myFile);
 						self::$_files[$infos['class']][$infos['attribute']][$testName] = new SwUploadedFile($value, $myFile, $fileInfo['extension'], filesize($myFile));
 					}
@@ -333,10 +353,18 @@ class SwUploadedFile extends CComponent {
 		}
 	}
 	/**
+	 * Get current file name
+	 *
+	 * @param boolean true to remove the 'tmp://' part
+	 *
 	 * @return string the original name of the file being uploaded
 	 */
-	public function getName() {
-		return $this->_name;
+	public function getName($clean=false) {
+		if($clean === true) {
+			return str_replace('tmp://', '', $this->_name);
+		} else {
+			return $this->_name;
+		}
 	}
 
 	/**
