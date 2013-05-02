@@ -71,7 +71,7 @@
 		};
 		this.filesAdded = function (up, files) {
 			$.each(files,  function(i, file){ 
-				$('#'+up.getListId()).append('<div id="'+ file.id + '" class="fileContainer" title="'+file.name+'">' + up.cutName(file.name) + ' ('+ up.formatSize(file.size) +')<div class="progressBar"><div class="progress"></div></div></div>');
+				$('#'+up.getListId()).append('<div id="'+ file.id + '" class="fileContainer" title="'+file.name+'">' + up.cutName(file.name.replace('tmp://', '')) + ' ('+ up.formatSize(file.size) +')<div class="progressBar"><div class="progress"></div></div></div>');
 			});
 			up.refresh();
 		};
