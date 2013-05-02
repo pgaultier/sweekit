@@ -193,8 +193,32 @@ class Sweeml extends CHtml {
 				$htmlOptions['config']['filters'] = $filters;
 			}
 		}
+
 		Yii::import('ext.sweekit.web.SwUploadedFile');
+
 		$value = SwUploadedFile::getInstances($model, $attribute);
+
+		$fileList = null;
+		if(is_array($model->$attribute) === true) {
+			$fileList = $model->$attribute;
+		} elseif(empty($model->$attribute) === false) {
+			$fileList = array($model->$attribute);
+		}
+
+		if($fileList !== null) {
+			$resourcePath = Yii::getPathOfAlias(isset($htmlOptions['resourcesPath'])?$htmlOptions['resourcesPath']:'webroot');
+			if(isset($htmlOptions['resourcesPath']) === true) { unset($htmlOptions['resourcesPath']); }
+			foreach($fileList as $element) {
+				if(strncasecmp('tmp://', $element, 6) !== 0) {
+					$realFile = $resourcePath.DIRECTORY_SEPARATOR.$element;
+					if(file_exists($realFile) === true) {
+						$fileInfo = pathinfo($realFile);
+						$value[] = new SwUploadedFile($fileInfo['basename'], $realFile, $fileInfo['extension'], filesize($realFile));
+					}
+				}
+			}
+		}
+
 		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
 
 		if($model->hasErrors($attribute))
