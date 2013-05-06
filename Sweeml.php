@@ -198,11 +198,11 @@ class Sweeml extends CHtml {
 
 		$value = SwUploadedFile::getInstances($model, $attribute);
 
-		$fileList = null;
-		if(is_array($model->$attribute) === true) {
-			$fileList = $model->$attribute;
-		} elseif(empty($model->$attribute) === false) {
-			$fileList = array($model->$attribute);
+		$fileList = $model->$attribute;
+		if((is_array($fileList) === false) && (empty($fileList) === false)) {
+			$fileList = array($fileList);
+		} elseif(is_array($fileList) === false) {
+			$fileList = null;
 		}
 
 		if($fileList !== null) {
