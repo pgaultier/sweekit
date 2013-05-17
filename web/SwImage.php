@@ -337,7 +337,6 @@ class SwImage {
 	public function setRatio($value) {
 		if(($value === false) || ($value === true)) {
 			$this->_ratio = $value;
-			$this->_fit = $this->_fit && ($this->_ratio === false);
 		}
 		$this->_resized = false;
 		return $this;
@@ -354,7 +353,6 @@ class SwImage {
 	public function setFit($value) {
 		if(($value === false) || ($value === true)) {
 			$this->_fit = $value;
-			$this->_ratio = $this->_ratio && ($this->_fit === false);
 		}
 		$this->_resized = false;
 		return $this;
