@@ -236,21 +236,12 @@ class Sweeml extends CHtml {
 	 * @since  1.1.0
 	 */
 	protected static function renderAsyncFileUpload($values, $htmlOptions, $config, $attachedEvents) {
-//		while (isset($htmlOptions['value']) === true && is_array($htmlOptions['value']) === true && count($htmlOptions['value']) > 0) {
-//			$values[] = array_pop($htmlOptions['value']);
-//		}		
 		if(is_array($values) == true) {
 			$uploadedFiles = null;
 			foreach($values as $addedFile) {
 				if($addedFile instanceof SwUploadedFile) {
-//					if (preg_match('/(^tmp:\/\/)/', $addedFile->getName()) === 1) {
-//						$uploadedFiles[] = array('fileName' => $addedFile->getTempName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
-//					} else {
-						$uploadedFiles[] = array('fileName' => $addedFile->getName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
-//					}
-					
+					$uploadedFiles[] = array('fileName' => $addedFile->getName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
 				}
-
 			}
 			if($uploadedFiles !== null) {
 				$config['uploadedFiles'] = $uploadedFiles;
@@ -276,7 +267,7 @@ class Sweeml extends CHtml {
 		}
 
 		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
-		unset($htmlOptions['uploadOptions']);	
+		unset($htmlOptions['uploadOptions']);
 		unset($htmlOptions['value']);
 
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
