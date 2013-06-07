@@ -74,6 +74,8 @@ class SwUploadedFile extends CComponent {
 	protected $_tempName;
 	protected $_extensionName;
 	protected $_size;
+	protected $_model;
+	protected $_attribute;
 
 	/**
 	 * Define the path where files will be temporary saved
@@ -257,7 +259,7 @@ class SwUploadedFile extends CComponent {
 						if(($myFile !== false) && (file_exists($myFile)===true) && (is_file($myFile)==true)) {
 							$fileInfo = pathinfo($myFile);
 
-							self::$_files[$infos['class']][$infos['attribute']][$testName.'_'.$idx] = new SwUploadedFile($data, $myFile, $fileInfo['extension'], filesize($myFile));
+							self::$_files[$infos['class']][$infos['attribute']][$testName.'_'.$idx] = new SwUploadedFile($data, $myFile, $fileInfo['extension'], filesize($myFile), $infos['class'], $infos['attribute']);
 						}
 					}
 				} else {
@@ -268,7 +270,7 @@ class SwUploadedFile extends CComponent {
 					$myFile = self::buildFilePath($value, $id);
 					if(($myFile !== false) && (file_exists($myFile)===true) && (is_file($myFile)==true)) {
 						$fileInfo = pathinfo($myFile);
-						self::$_files[$infos['class']][$infos['attribute']][$testName] = new SwUploadedFile($value, $myFile, $fileInfo['extension'], filesize($myFile));
+						self::$_files[$infos['class']][$infos['attribute']][$testName] = new SwUploadedFile($value, $myFile, $fileInfo['extension'], filesize($myFile), $infos['class'], $infos['attribute']);
 					}
 				}
 			} elseif(is_array($value) == true) {
@@ -301,11 +303,13 @@ class SwUploadedFile extends CComponent {
 	 * @return SwUploadedFile
 	 * @since  1.1.0
 	 */
-	public function __construct($name,$tempName,$extension,$size) {
+	public function __construct($name,$tempName,$extension,$size, $model, $attribute) {
 		$this->_name=$name;
 		$this->_tempName=$tempName;
 		$this->_extensionName=$extension;
 		$this->_size=$size;
+		$this->_model = $model;
+		$this->_attribute = $attribute;
 	}
 
 	/**
@@ -333,12 +337,86 @@ class SwUploadedFile extends CComponent {
 		if($deleteTempFile) {
 			$result = copy($this->_tempName, $file);
 			unlink($this->_tempName);
+			if ($result === true) {
+				$data  = $this->cleanUpPost($_POST);
+				$_POST = $data;
+				$this->cleanUpFiles();
+			}
 			return $result;
 		}
-		else if(is_uploaded_file($this->_tempName))
-			return copy($this->_tempName, $file);
+		else if(is_uploaded_file($this->_tempName)) {
+			if (copy($this->_tempName, $file) === true) {
+				$data  = $this->cleanUpPost($_POST);
+				$_POST = $data;
+				$this->cleanUpFiles();
+				return true;
+			} else {
+				return false;
+			}
+		}
 		else
 			return false;
+	}
+
+	/**
+	 * This function remove the asyncfile attribute from post (To avoid double file rendering [datarendering + postrendering])
+	 * and return the filtered data
+	 *
+	 * @param array $data data to filter out
+	 *
+	 * @return array
+	 * @since  XXX
+	 */
+	private function cleanUpPost($data) {
+		$cleanedData = array();
+		foreach ($data as $key => $value) {
+			if ($key === $this->_model) {
+				foreach ($value as $attribute => $attrValue) {
+					if ($attribute === $this->_attribute) {
+						if (is_array($attrValue) === true) {
+							foreach ($attrValue as $index => $fileName) {
+								if ($fileName !== $this->getName()) {
+									$cleanedData[$key][$attribute][] = $fileName;
+								}
+							}
+						}
+					} else {
+						$cleanedData[$key][$attribute] = $attrValue;
+					}
+				}
+			} else if (is_array($value) === true) {
+				$cleanedData[$key] = $this->cleanUpPost($value);
+			}
+		}
+		return $cleanedData;
+	}
+
+
+	/**
+	 * This function remove current file from the instance storage
+	 *
+	 * @return void
+	 * @since  XXX
+	 */
+	private function cleanUpFiles() {
+		$data = self::$_files;
+		if (isset($data[$this->_model]) === true && isset($data[$this->_model][$this->_attribute]) === true) {
+			foreach ($data[$this->_model][$this->_attribute] as $key => $file) {
+
+				if ($file === $this) {
+					unset($data[$this->_model][$this->_attribute][$key]);
+				}
+
+			}
+			if (empty($data[$this->_model][$this->_attribute]) === true) {
+				unset($data[$this->_model][$this->_attribute]);
+			}
+			if (empty($data[$this->_model]) === true) {
+				unset($data[$this->_model]);
+			}
+			self::$_files = $data;
+		}
+
 	}
 
 	/**
@@ -353,11 +431,12 @@ class SwUploadedFile extends CComponent {
 		}
 	}
 	/**
-	 * Get current file name
+	 * Get current file name of the file being uploaded
 	 *
 	 * @param boolean true to remove the 'tmp://' part
 	 *
-	 * @return string the original name of the file being uploaded
+	 * @return string
+	 * @since  XXX
 	 */
 	public function getName($clean=false) {
 		if($clean === true) {
@@ -390,5 +469,25 @@ class SwUploadedFile extends CComponent {
 	 */
 	public function getExtensionName() {
 		return $this->_extensionName;
+	}
+
+	/**
+	 * Return the associate model.
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
+	public function getModel() {
+		return $this->_model;
+	}
+
+	/**
+	 * Return the associate attribute of the model.
+	 *
+	 * @return string
+	 * @since  XXX
+	 */
+	public function getAttribute() {
+		return $this->_attribute;
 	}
 }
