@@ -341,6 +341,7 @@ class Sweeml extends CHtml {
 	}
 
 	private static $_ajaxedFormCount = 0;
+
 	/**
 	 * Render everything to ajax one specific form
 	 *
