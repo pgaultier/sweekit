@@ -197,7 +197,6 @@ class Sweeml extends CHtml {
 		Yii::import('ext.sweekit.web.SwUploadedFile');
 
 		$value = SwUploadedFile::getInstances($model, $attribute);
-
 		$fileList = $model->$attribute;
 		if((is_array($fileList) === false) && (empty($fileList) === false)) {
 			$fileList = array($fileList);
@@ -213,12 +212,11 @@ class Sweeml extends CHtml {
 					$realFile = $resourcePath.DIRECTORY_SEPARATOR.$element;
 					if(file_exists($realFile) === true) {
 						$fileInfo = pathinfo($realFile);
-						$value[] = new SwUploadedFile($fileInfo['basename'], $realFile, $fileInfo['extension'], filesize($realFile));
+						$value[] = new SwUploadedFile($fileInfo['basename'], $realFile, $fileInfo['extension'], filesize($realFile), $model, $attribute);
 					}
 				}
 			}
 		}
-
 		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
 
 		if($model->hasErrors($attribute))
@@ -238,11 +236,19 @@ class Sweeml extends CHtml {
 	 * @since  1.1.0
 	 */
 	protected static function renderAsyncFileUpload($values, $htmlOptions, $config, $attachedEvents) {
+//		while (isset($htmlOptions['value']) === true && is_array($htmlOptions['value']) === true && count($htmlOptions['value']) > 0) {
+//			$values[] = array_pop($htmlOptions['value']);
+//		}		
 		if(is_array($values) == true) {
 			$uploadedFiles = null;
 			foreach($values as $addedFile) {
 				if($addedFile instanceof SwUploadedFile) {
-					$uploadedFiles[] = array('fileName' => $addedFile->getName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
+//					if (preg_match('/(^tmp:\/\/)/', $addedFile->getName()) === 1) {
+//						$uploadedFiles[] = array('fileName' => $addedFile->getTempName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
+//					} else {
+						$uploadedFiles[] = array('fileName' => $addedFile->getName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
+//					}
+					
 				}
 
 			}
@@ -270,8 +276,9 @@ class Sweeml extends CHtml {
 		}
 
 		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
+		unset($htmlOptions['uploadOptions']);	
+		unset($htmlOptions['value']);
 
-		unset($htmlOptions['uploadOptions']);
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
 		if(Yii::app()->getRequest()->isAjaxRequest === false) {
 			Yii::app()->clientScript->registerScript($htmlOptions['id'], $js);
