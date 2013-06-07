@@ -138,7 +138,11 @@ class SwUploadedFile extends CComponent {
 		$infos = array();
 		$infos['original'] = $attribute;
 		Sweeml::resolveNameID($model, $attribute, $infos);
-		$infos['class'] = Sweeml::normalizeModelName($model);
+		if(method_exists('Sweeml', 'normalizeModelName') === true) {
+			$infos['class'] = Sweeml::normalizeModelName($model);
+		} else {
+			$infos['class'] = get_class($model);
+		}
 		$infos['attribute'] = $attribute;
 		$infos['namelen'] = strlen($infos['name']);
 		$files = array();
