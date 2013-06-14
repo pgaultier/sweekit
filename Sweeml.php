@@ -187,6 +187,7 @@ class Sweeml extends CHtml {
 				}
 			}
 		}
+		$htmlOptions['config']['store'] = $attribute;
 		if(count($filters) > 0) {
 			if(isset($htmlOptions['config']['filters']) === true) {
 				$htmlOptions['config']['filters'] = CMap::mergeArray($filters, $htmlOptions['config']['filters']);
