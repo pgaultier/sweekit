@@ -12,95 +12,135 @@
  * @package   Sweelix.javascript
  */
 
-function Sweepload() {
-	var uploader;
-	var self;
-	function cutName(fileName){
-		var name = fileName;
-		if (fileName.length > 24) {
-			name = fileName.substr(0,12) + '...' + fileName.substr(fileName.length-12,fileName.length)
-		}
-		return name;
-	}
-	function getContainerId() {
-		return uploader.getId()+'_list';
-	}
-	function getDropZoneId() {
-		return uploader.getId()+'_zone';
-	}
-	function formatSize(size) {
-		return uploader.formatSize(size)
-	}
-	function getDeleteUrl() {
-		return uploader.getDeleteUrl();
-	}
-	function getPreviewUrl() {
-		return uploader.getPreviewUrl();
-	}
-	
-	this.AsyncDelete = function(file, name){
-		//alert('AsyncDelete');
-		// $('#'+id).fadeOut().remove();
-		console.log('received AsyncDelete', name, file.id);
-		console.log('delete should be avoided and handled directly during post');
-		console.log('Should delete "'+name+'" with url : '+getDeleteUrl());
-	}
-	this.FilesRemoved = function (up, files) {
-		console.log('FilesRemoved');
-		$.each(files,  function(i, file){ 
-			$('#'+file.id).fadeOut('slow', function(){ $(this).remove(); });
-		});
-	};	
-	this.UploadProgress = function (up, file) {
-		$('#'+getContainerId()+' #'+file.id+' div.progress').css({width:file.percent+'%'});
-	};
-	
-	this.PostInit = function(up) {
-		uploader = up;
-		$('#'+up.getId()).after('<div id="'+getContainerId()+'" class="filesContainer"> </div>');
-	}
-	this.FilesAdded = function (up, files) {
-		$.each(files,  function(i, file){ 
-			$('#'+getContainerId()).append('<div id="'+ file.id + '" class="fileContainer" title="'+file.name+'">' + cutName(file.name.replace('tmp://', '')) + ' ('+ formatSize(file.size) +')<div class="progressBar"><div class="progress"></div></div></div>');
-		});
-		console.log('FilesAdded');
-		// up.refresh();
-	};
-	this.FileUploaded = function (up, file, response) {
-		var json = $.parseJSON(response.response); 
-		var name = json.fileName;
-		if(json.status == true) { 
-			$('#'+getContainerId()+' #'+file.id+' div.progress').css({width:'100%'});
-			var remove = $('<a href="#">X</a>');
-			remove.one('click', function(evt){
-				evt.preventDefault();
-				self.AsyncDelete(file, name);
-				uploader.removeFile(file, name);
-			});
-			$('#'+getContainerId()+' #'+file.id).prepend(remove);
-			$.ajax({
-				'url' : getPreviewUrl(),
-				'data' : {
-					'fileName' : name,
-					'mode' : 'json'
-				}
-			}).done(function(data){
-				// var imageName = encodeURIComponent(name);
-				// var imageUrl = getPreviewUrl().replace('__filename__', imageName);
-				// var image = $('<img src="'+imageUrl+'" />');
-				// $('#'+getContainerId()+' #'+file.id).append(image);
-				// console.log('Should preview "'+name+'" with url : '+imageUrl);
-				console.log('Should preview ');
-			});
-			
-		} 
-	};
-	self = this;
-	
-}
-
 (function($s, $){
 
+	function Sweepload() {
+		var uploader;
+		var self;
+		function cutName(fileName){
+			var name = fileName;
+			if (fileName.length > 24) {
+				name = fileName.substr(0,12) + '...' + fileName.substr(fileName.length-12,fileName.length)
+			}
+			return name;
+		}
+		function getContainerId() {
+			return uploader.getId()+'_list';
+		}
+		function getDropZoneId() {
+			return uploader.getId()+'_zone';
+		}
+		function formatSize(size) {
+			return uploader.formatSize(size)
+		}
+		function getDeleteUrl() {
+			return uploader.getDeleteUrl();
+		}
+		function getPreviewUrl() {
+			return uploader.getPreviewUrl();
+		}
+		function getLinkClass() {
+			return uploader.getLinkClass();
+		}
+		function getStore() {
+			return uploader.getStore();
+		}
+		this.Error = function(up, error) {
+			alert(error.message);
+			switch(error.code) {
+				case plupload.GENERIC_ERROR:
+					break;
+				case plupload.HTTP_ERROR:
+					break;
+				case plupload.GENERIC_ERROR:
+					break;
+				case plupload.IO_ERROR:
+					break;
+				case plupload.SECURITY_ERROR:
+					break;
+				case plupload.INIT_ERROR:
+					break;
+				case plupload.FILE_SIZE_ERROR:
+					break;
+				case plupload.FILE_EXTENSION_ERROR:
+					break;
+				case plupload.IMAGE_FORMAT_ERROR:
+					break;
+				case plupload.IMAGE_DIMENSIONS_ERROR:
+					break;
+				default:
+					break;
+			}
+			
+		}
+		this.AsyncDelete = function(file, name){
+			if(uploader.getDeleteUrl() != null) {
+				jQuery.ajax({
+					'url' : uploader.getDeleteUrl(),
+					'data' : {'name':name},
+				}).done(function(data){
+				});
+			}
+
+		}
+		this.FilesRemoved = function (up, files) {
+			$.each(files,  function(i, file){ 
+				$('#'+file.id).fadeOut('slow', function(){ $(this).remove(); });
+			});
+		};	
+		this.UploadProgress = function (up, file) {
+			$('#'+getContainerId()+' #'+file.id+' div.progress').css({width:file.percent+'%'});
+		};
+		
+		this.PostInit = function(up) {
+			uploader = up;
+			$('#'+up.getId()).after('<ul id="'+getContainerId()+'" class="filesContainer"> </ul>');
+		}
+		this.FilesAdded = function (up, files) {
+			$.each(files,  function(i, file){ 
+				$('#'+getContainerId()).append('<li id="'+ file.id + '" class="fileContainer" title="'+file.name+'">' + cutName(file.name.replace('tmp://', '')) + ' ('+ formatSize(file.size) +')<div class="progressBar"><div class="progress"></div></div></li>');
+			});
+			// up.refresh();
+		};
+		this.FileUploaded = function (up, file, response) {
+			var json = $.parseJSON(response.response); 
+			var name = json.fileName;
+			if(json.status == true) { 
+				$('#'+getContainerId()+' #'+file.id+' div.progress').css({width:'100%'});
+				var remove = $('<a href="#" class="close">X</a>');
+				remove.one('click', function(evt){
+					evt.preventDefault();
+					self.AsyncDelete(file, name);
+					uploader.removeFile(file, name);
+				});
+				$('#'+getContainerId()+' #'+file.id).prepend(remove);
+				$.ajax({
+					'url' : getPreviewUrl(),
+					'data' : {
+						'fileName' : name,
+						'mode' : 'json'
+					}
+				}).done(function(data){
+					if(data.path != null) {
+						var element = $('<a href="'+data.path+'" target="_blank"><img src="'+data.url+'" /></a>')
+						if(getLinkClass() != null) {
+							element.addClass(getLinkClass());						
+						}
+						if(getStore() != null) {
+							element.data('store', getStore())
+						}
+					} else {
+						var element = $('<img src="'+data.url+'" />');
+					}
+					$('#'+getContainerId()+' #'+file.id).append(element);
+				});
+				
+			} 
+		};
+		self = this;
+		
+	}	
+	
 	function createHiddenField(up, json, file, hiddenId, config) {
 		if(json.status == true) {
 			if(up.getMultiSelection() == false) {
@@ -162,9 +202,14 @@ function Sweepload() {
 			uploader['getPreviewUrl'] = function() {
 				return (!!config.urlPreview)?config.urlPreview:null;
 			};
-
+			uploader['getLinkClass'] = function() {
+				return (!!config.linkClass)?config.linkClass:null;
+			};
 			uploader['getMultiSelection'] = function() {
 				return baseConfig.multi_selection;
+			};
+			uploader['getStore'] = function() {
+				return (!!config.store)?config.store:null;
 			};
 
 			uploader['formatSize'] = plupload.formatSize;
@@ -176,6 +221,9 @@ function Sweepload() {
 				this.removeFile(file);
 			};
 			
+			if(!!config.ui) {
+				events = new Sweepload();
+			}
 			
 			if('PostInit' in events) {
 				uploader.bind('PostInit', events.PostInit);
@@ -183,10 +231,6 @@ function Sweepload() {
 				// delete events['PostInit'];
 			}
 			
-			// handle ui
-//			if(!!config.ui) {
-//				uploader.bind('PostInit', $s.plupload.postInit);
-//			}
 			
 			uploader.init();
 			$('#'+id).append('<div style="display:none;" id="'+hiddenId+'" ></div>');

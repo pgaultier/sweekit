@@ -12,31 +12,42 @@
 .hover {
 	background-color:#eef2FF;
 }
-.filesContainer {
-	width:260px;
-	font-size:11px;
+ul.filesContainer {
+	list-style-type : none;
+	font-size:10px;
 	font-family:Verdana, Arial, Helvetica;
 }
-.fileContainer {
+li.fileContainer {
+	display:inline-block;
 	position:relative;
 	border:1px solid #cccccc;
 	border-radius:4px;
 	background-color:#f5f5f5;
-	margin:2px 1px;
+	margin: 10px 14px 2px 1px;
+	text-align:center;
 	padding:4px;
 }
-.fileContainer a {
+.fileContainer a.close {
+    display: block;
+	border: 1px solid #666666;
 	position:absolute;
-	right:5px;
-	top:2px;
-	color:#cccccc;
+    right: -10px;
+    top: -8px;
+    width: 15px;	
+	height: 15px;
+    text-align: center;
+	color:#666666;
+	background-color:#f5f5f5;
+    border-radius: 6px;
 	text-decoration:none;
 }
-.fileContainer a:hover {
-	color:#666666;
+.fileContainer a.close:hover {
+	color:#333333;
+	background-color:#f0f0f0;
 }
 .fileContainer .progressBar {
 	background-color:#cccccc;
+	margin:5px 0px;
 	height:2px;
 }
 .fileContainer .progress {
