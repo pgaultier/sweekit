@@ -136,6 +136,7 @@ class Sweeml extends CHtml {
 	 *  	),
 	 *  	// events can be replaced with a js object :
 	 *  	'eventsObject' => 'js:new UploadManager()', // take care to keep method names as they are defined in plupload (first letter uppercase)
+	 *  	// one special :AsyncDelete is for callback when delete is needed
 	 * );
 	 * </code>
 	 *
@@ -296,8 +297,13 @@ class Sweeml extends CHtml {
 			'multiSelection' => false,
 			'url' => self::normalizeUrl(array('asyncUpload', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId())),
 			'urlDelete' => self::normalizeUrl(array('asyncDelete', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId())),
+			'urlPreview' => null,
 		);
 		if(isset($htmlOptions['config']) == true) {
+			if(isset($htmlOptions['config']['urlPreview']) && is_array($htmlOptions['config']['urlPreview']) === true) {
+				$url = array_merge($htmlOptions['config']['urlPreview'], array('id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()));
+				$htmlOptions['config']['urlPreview'] = self::normalizeUrl($url);
+			}
 			$config = CMap::mergeArray($config, $htmlOptions['config']);
 			unset($htmlOptions['config']);
 		}
@@ -336,6 +342,7 @@ class Sweeml extends CHtml {
 			}
 		} elseif(isset($htmlOptions['eventsObject'])) {
 			$attachedEvents = $htmlOptions['eventsObject'];
+			unset($htmlOptions['eventsObject']);
 		}
 		return array($config, $attachedEvents);
 	}
