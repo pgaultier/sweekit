@@ -373,28 +373,29 @@ class SwUploadedFile extends CComponent {
 	 */
 	private function cleanUpPost($data) {
 		$cleanedData = array();
-		foreach ($data as $key => $value) {
-			if ($key === $this->_model) {
-				foreach ($value as $attribute => $attrValue) {
-					if ($attribute === $this->_attribute) {
-						if (is_array($attrValue) === true) {
-							foreach ($attrValue as $index => $fileName) {
-								if ($fileName !== $this->getName()) {
-									$cleanedData[$key][$attribute][] = $fileName;
+		if(is_array($data) === true) {
+			foreach ($data as $key => $value) {
+				if ($key === $this->_model) {
+					foreach ($value as $attribute => $attrValue) {
+						if ($attribute === $this->_attribute) {
+							if (is_array($attrValue) === true) {
+								foreach ($attrValue as $index => $fileName) {
+									if ($fileName !== $this->getName()) {
+										$cleanedData[$key][$attribute][] = $fileName;
+									}
 								}
 							}
+						} else {
+							$cleanedData[$key][$attribute] = $attrValue;
 						}
-					} else {
-						$cleanedData[$key][$attribute] = $attrValue;
 					}
+				} else if (is_array($value) === true) {
+					$cleanedData[$key][key($value)] = $this->cleanUpPost($value);
+				} else {
+					$cleanedData = $value;
 				}
-			} else if (is_array($value) === true) {
-				$cleanedData[$key][key($value)] = $this->cleanUpPost($value);
-			} else {
-				$cleanedData = $value;
 			}
 		}
-		
 		return $cleanedData;
 	}
 
