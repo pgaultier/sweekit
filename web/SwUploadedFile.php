@@ -390,9 +390,7 @@ class SwUploadedFile extends CComponent {
 						}
 					}
 				} else if (is_array($value) === true) {
-					$cleanedData[$key][key($value)] = $this->cleanUpPost($value);
-				} else {
-					$cleanedData = $value;
+					$cleanedData[$key] = $this->cleanUpPost($value);
 				}
 			}
 		}
