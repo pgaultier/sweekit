@@ -93,6 +93,11 @@ class SwPreviewAction extends CAction {
 				$fit = CPropertyValue::ensureBoolean(Yii::app()->getRequest()->getParam('fit', $this->fit));
 				$fit = ($fit === true)?'true':'false';
 				$response['status'] = true;
+				if(getimagesize($file) === false) {
+					$response['image'] = false;
+				} else {
+					$response['image'] = true;
+				}
 				if($tempFile === true) {
 					$relativeFile = 'tmp://'.$fileName;
 					$response['url'] = XHtml::normalizeUrl(array($this->id,
