@@ -111,6 +111,9 @@
 				}).done(function(data){
 					if(data.path != null) {
 						var element = $('<a href="'+data.path+'" target="_blank"><img src="'+data.url+'" /></a>')
+						if(data.image == false) {
+							element.append($('<span>'+data.path+'</span>'));
+						}
 						var config = getConfig();
 						if('linkClass' in config) {
 							element.addClass(config['linkClass']);						

@@ -45,6 +45,9 @@ li.fileContainer {
 	color:#333333;
 	background-color:#f0f0f0;
 }
+.fileContainer span {
+	font-size:10px!important;
+}
 .fileContainer .progressBar {
 	background-color:#cccccc;
 	margin:5px 0px;

@@ -1,5 +1,5 @@
 /**
- * File jquery.sweelix.plupload.js
+ * File jquery.sweelix.plupload.ui.js
  *
  * This is the default handler for plupload
  *
@@ -117,6 +117,9 @@
 						}
 						if('store' in config) {
 							element.data('store', config['store'])
+						}
+						if(data.image == false) {
+							element.after($('<br/><span>'+data.path+'</span>'));
 						}
 					} else {
 						var element = $('<img src="'+data.url+'" />');
