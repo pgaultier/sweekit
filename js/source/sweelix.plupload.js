@@ -12,9 +12,7 @@
  * @package   Sweelix.javascript
  */
 
-(function($s, $){
-
-	function Sweepload() {
+	function Sweeload() {
 		var uploader;
 		var self;
 		function cutName(fileName){
@@ -39,11 +37,8 @@
 		function getPreviewUrl() {
 			return uploader.getPreviewUrl();
 		}
-		function getLinkClass() {
-			return uploader.getLinkClass();
-		}
-		function getStore() {
-			return uploader.getStore();
+		function getConfig() {
+			return uploader.getEventHandlerConfig();
 		}
 		this.Error = function(up, error) {
 			alert(error.message);
@@ -74,13 +69,6 @@
 			
 		}
 		this.AsyncDelete = function(file, name){
-			if(uploader.getDeleteUrl() != null) {
-				jQuery.ajax({
-					'url' : uploader.getDeleteUrl(),
-					'data' : {'name':name},
-				}).done(function(data){
-				});
-			}
 
 		}
 		this.FilesRemoved = function (up, files) {
@@ -123,11 +111,12 @@
 				}).done(function(data){
 					if(data.path != null) {
 						var element = $('<a href="'+data.path+'" target="_blank"><img src="'+data.url+'" /></a>')
-						if(getLinkClass() != null) {
-							element.addClass(getLinkClass());						
+						var config = getConfig();
+						if('linkClass' in config) {
+							element.addClass(config['linkClass']);						
 						}
-						if(getStore() != null) {
-							element.data('store', getStore())
+						if('store' in config) {
+							element.data('store', config['store'])
 						}
 					} else {
 						var element = $('<img src="'+data.url+'" />');
@@ -139,7 +128,9 @@
 		};
 		self = this;
 		
-	}	
+	}
+
+(function($s, $){
 	
 	function createHiddenField(up, json, file, hiddenId, config) {
 		if(json.status == true) {
@@ -148,7 +139,6 @@
 					var fileId = jQuery(el).attr('id');
 					fileId = fileId.substring(1);
 					up.asyncDelete(up.getFile(fileId), jQuery(el).val());
-					// $s.plupload.asyncDelete(up.getId(), fileId, function(id){ });
 				});
 			}
 			jQuery('#'+hiddenId).append('<input type="hidden" id="h'+file.id+'" name="'+config.realName+'" value="'+json.fileName+'" />')
@@ -156,9 +146,9 @@
 	}		
 
 	
-	$.fn.asyncUpload = function (config, events) {
+	$.fn.asyncUpload = function (config) {
 		config = config||{};
-		events = events||{};
+		eventsHandler = {};
 		var baseConfig = { 
 			'runtimes' : (!!config.runtimes)?config.runtimes:'flash',
 			'multi_selection': (!!config.multiSelection)?config.multiSelection:false,
@@ -189,6 +179,14 @@
 			baseConfig['browse_button'] = id;
 			var uploader = new plupload.Uploader(baseConfig);
 			
+			if(config.ui == true) {
+				if(typeof(SweeploadBasicUI) == 'function') {
+					eventsHandler = new SweeploadBasicUI();
+				}
+			} else if(typeof(config.ui) == 'object') {
+				eventsHandler = config.ui;
+			}
+
 			// extend the puloader to return needed elements
 			uploader['getId'] = function() {
 				return id;
@@ -202,31 +200,35 @@
 			uploader['getPreviewUrl'] = function() {
 				return (!!config.urlPreview)?config.urlPreview:null;
 			};
-			uploader['getLinkClass'] = function() {
-				return (!!config.linkClass)?config.linkClass:null;
+			uploader['getEventHandlerConfig'] = function() {
+				return (!!config.eventHandlerConfig)?config.eventHandlerConfig:{};
 			};
 			uploader['getMultiSelection'] = function() {
 				return baseConfig.multi_selection;
-			};
-			uploader['getStore'] = function() {
-				return (!!config.store)?config.store:null;
 			};
 
 			uploader['formatSize'] = plupload.formatSize;
 			
 			uploader['asyncDelete'] = function(file, uploadedName){
-				if(('AsyncDelete' in events) && (typeof(events.AsyncDelete) == 'function')) {
-					events.AsyncDelete(file, uploadedName);
+				if(uploader.getDeleteUrl() != null) {
+					jQuery.ajax({
+						'url' : uploader.getDeleteUrl(),
+						'data' : {'name':uploadedName},
+					}).done(function(data, textStatus, jqXHR){
+						if(('AsyncDelete' in eventsHandler) && (typeof(eventsHandler.AsyncDelete) == 'function')) {
+							eventsHandler.AsyncDelete(file, uploadedName);
+						}
+					}).always(function() { 
+						uploader.removeFile(file);
+					});
+				} else {
+					uploader.removeFile(file);
 				}
-				this.removeFile(file);
 			};
 			
-			if(!!config.ui) {
-				events = new Sweepload();
-			}
 			
-			if('PostInit' in events) {
-				uploader.bind('PostInit', events.PostInit);
+			if('PostInit' in eventsHandler) {
+				uploader.bind('PostInit', eventsHandler.PostInit);
 				// we should not delete events.
 				// delete events['PostInit'];
 			}
@@ -235,7 +237,7 @@
 			uploader.init();
 			$('#'+id).append('<div style="display:none;" id="'+hiddenId+'" ></div>');
 			
-			$.each(events, function(key, callback) {
+			$.each(eventsHandler, function(key, callback) {
 				// do not rebind post init
 				if((key != 'PostInit') && (key != 'AsyncDelete')) {
 					uploader.bind(key, callback);
@@ -250,20 +252,14 @@
 			
 			uploader.bind('FilesRemoved', function(up, files) {
 				$.each(files,  function(i, file){ 
-					console.log('removed name '+$('#h'+file.id).val());
+					var filename = $('#h'+file.id).val();
+					if(filename.search(/tmp:\/\//) == 0) {
+						// we should handle delete only for temp files
+						uploader.asyncDelete(file, filename);
+					}
 					$('#h'+file.id).remove();
 				});
 			});
-			
-			// handle ui
-//			if(!!config.ui) {
-//				uploader.bind('FilesAdded', $s.plupload.filesAdded);
-//				uploader.bind('FilesRemoved', $s.plupload.filesRemoved);
-//				uploader.bind('UploadProgress', $s.plupload.uploadProgress);
-//				uploader.bind('FileUploaded', $s.plupload.fileUploaded);
-//				uploader.bind('Error', $s.plupload.error);
-//			}
-			
 			
 			if(!!uploadedFiles) {
 				// if we have files to show, we should present them as uploaded
