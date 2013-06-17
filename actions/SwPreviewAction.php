@@ -175,8 +175,11 @@ class SwPreviewAction extends CAction {
 					//TODO:handle default image
 					$imageName = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$ext.'.png';
 					if(file_exists($imageName)) {
-						$imageData = file_get_contents($imageName);
-						$imageContentType = 'image/png';
+						$image = SwCacheImage::create($imageName)->resize($width, $height)->setFit($fit);
+						$imageContentType = $image->getContentType();
+						$imageData = file_get_contents($image->getUrl(true));
+						// $imageData = file_get_contents($imageName);
+						// $imageContentType = 'image/png';
 					}
 
 				} else {
