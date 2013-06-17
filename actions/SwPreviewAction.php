@@ -178,8 +178,6 @@ class SwPreviewAction extends CAction {
 						$image = SwCacheImage::create($imageName)->resize($width, $height)->setFit($fit);
 						$imageContentType = $image->getContentType();
 						$imageData = file_get_contents($image->getUrl(true));
-						// $imageData = file_get_contents($imageName);
-						// $imageContentType = 'image/png';
 					}
 
 				} else {
