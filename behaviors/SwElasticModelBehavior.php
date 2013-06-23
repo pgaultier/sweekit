@@ -18,6 +18,45 @@
 /**
  * This class handle prop and extended properties
  *
+ * The following getter / setter must be overriden
+ *
+ * 	/ **
+ * 	 * Massive setter
+ * 	 *
+ * 	 * (non-PHPdoc)
+ * 	 * @see CModel::setAttributes()
+ * 	 *
+ * 	 * @return void
+ * 	 * @since  XXX
+ * 	 * /
+ * 	public function setAttributes($values, $safeOnly=true) {
+ * 		if(($this->asa('elasticProperties') !== null) && ($this->asa('elasticProperties')->getEnabled() === true)) {
+ * 			$this->asa('elasticProperties')->setAttributes($values, $safeOnly);
+ * 			$values = $this->asa('elasticProperties')->filterOutElasticAttributes($values);
+ * 		}
+ * 		parent::setAttributes($values, $safeOnly);
+ * 	}
+ *
+ * 	/ **
+ * 	 * Massive getter
+ * 	 *
+ * 	 * (non-PHPdoc)
+ * 	 * @see CActiveRecord::getAttributes()
+ * 	 *
+ * 	 * @return array
+ * 	 * @since  XXX
+ * 	 * /
+ * 	public function getAttributes($names=true) {
+ * 		$attributes = parent::getAttributes($names);
+ * 		if(($this->asa('elasticProperties') !== null) && ($this->asa('elasticProperties')->getEnabled() === true)) {
+ * 			$elasticAttributes = $this->asa('elasticProperties')->getAttributes($names);
+ * 			$attributes = CMap::mergeArray($attributes, $elasticAttributes);
+ * 		}
+ * 		return $attributes;
+ * 	}
+ *
+ *
+ *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
@@ -28,62 +67,6 @@
  * @since     XXX
  */
  class SwElasticModelBehavior extends CModel implements IBehavior {
-
- 	/**
- 	 * @var array default template to use if asked template does not exists
- 	 */
- 	private $_templatePathAliases = array('application.templates');
-
- 	/**
- 	 * Define path aliases to elastic model templates
- 	 *
- 	 * @param array $pathAliases list of path aliases
- 	 *
- 	 * @return void
- 	 * @since  XXX
- 	 */
- 	public function setTemplatePathAliases($pathAliases) {
- 		if(is_array($pathAliases) === true) {
- 			$this->_templatePathAliases = $pathAliases;
- 		}
- 	}
-
- 	/**
- 	 * list of template aliases
- 	 *
- 	 * @return array
- 	 * @since  XXX
- 	 */
- 	public function getTemplatePathAliases() {
- 		return $this->_templatePathAliases;
- 	}
-
- 	/**
- 	 * @var string attribute name
- 	 */
- 	private $_templateAttribute;
-
- 	/**
- 	 * Define the attribute which is holding all the template information
- 	 *
- 	 * @param string $attribute attribute name
- 	 *
- 	 * @return void
- 	 * @since  XXX
- 	 */
- 	public function setTemplateAttribute($attribute) {
-		$this->_templateAttribute = $attribute;
- 	}
-
- 	/**
- 	 * Get attribute which hold the template information
- 	 *
- 	 * @return string
- 	 * @since  XXX
- 	 */
- 	public function getTemplateAttribute() {
- 		return $this->_templateAttribute;
- 	}
 
  	/**
  	 * @var string elastic attribute
@@ -137,40 +120,129 @@
  	}
 
  	/**
- 	 * @var string dynamic template data
+ 	 * @var array dynamic template data
  	 */
  	private $_template=null;
+ 	private $_templateConfig = null;
+
+ 	/**
+ 	 * Define current template config
+ 	 *
+ 	 * @param array $config elastic model configuration
+ 	 *
+ 	 * @return void
+ 	 * @since  XXX
+ 	 */
+ 	public function setTemplateConfig($config) {
+ 		if(is_callable($config) === true) {
+ 			$this->_templateConfig = $config;
+ 			$this->_template = null;
+ 		} elseif(is_array($config) === true) {
+ 			$this->_template = $config;
+ 		}
+ 	}
+
+ 	private $_templateConfigParameters;
+ 	public function setTemplateConfigParameters($parameters) {
+ 		if(is_array($parameters) === true) {
+ 			$this->_templateConfigParameters = $parameters;
+ 		}
+ 	}
+ 	public function getTemplateConfigParameters() {
+ 		return $this->_templateConfigParameters;
+ 	}
 
  	/**
  	 * Get current template config file
  	 *
- 	 * @return mixed
+ 	 * @return array
  	 * @since  XXX
  	 */
  	public function getTemplateConfig() {
 		if($this->_template === null) {
-			$template = SwTemplate::model()->findByPk($this->getOwner()->{$this->getTemplateAttribute()});
-			$tpl = 'default';
-			if($template !== null) {
-				$tpl = $template->templateDefinition;
-			}
-			foreach($this->getTemplatePathAliases() as $defaultPathAlias) {
-				$templateAlias = $defaultPathAlias.'.'.$tpl;
-				$templateFile = Yii::getPathOfAlias($templateAlias).'.php';
-				if(file_exists($templateFile) === true) {
-					// found default template
-					$this->_template = require($templateFile);
-					break;
-				} else {
-					$templateAlias = null;
-				}
-			}
-			if($templateAlias === null) {
-				// we don't have any template, we must fallback to default
-				$this->_template = array();
+			$this->_template = array();
+			if($this->_templateConfig !== null) {
+				$this->_template = call_user_func_array($this->_templateConfig, $this->_templateConfigParameters);
 			}
 		}
  		return $this->_template;
+ 	}
+
+ 	/**
+ 	 * Fetch a property. return null if
+ 	 * property does not exists.
+ 	 * If the property has embedded images,
+ 	 * we replace the images with cached versions
+ 	 *
+ 	 * @param string $property  property name to fetch
+ 	 * @param array  $arrayCell index array
+ 	 *
+ 	 * @return mixed
+ 	 * @since  XXX
+ 	 */
+ 	public function prop($property, $arrayCell = null) {
+ 		$prop = null;
+ 		if(isset($this->_elasticAttributes[$property]) === true) {
+ 			if($arrayCell !== null) {
+ 				$prop = (isset($this->_elasticAttributes[$property][$arrayCell]) === true)?$this->_elasticAttributes[$property][$arrayCell]:null;
+ 			} else {
+ 				$prop = $this->_elasticAttributes[$property];
+ 				$prop = preg_replace_callback('/<img([^>]+)>/', array($this, 'expandImages'), $prop);
+ 			}
+ 		}
+ 		return $prop;
+ 	}
+ 	/**
+ 	 * Perform inline replacement. For each image, if the image
+ 	 * was defined in the base element, we replace-it with the cached
+ 	 * version
+ 	 *
+ 	 * @param array $matches matches from preg_replace
+ 	 *
+ 	 * @return string
+ 	 * @since  XXX
+ 	 */
+ 	protected function expandImages($matches) {
+ 		$nbMatches = preg_match_all('/([a-z-]+)\="([^"]+)"/', $matches[1], $imgInfos);
+ 		if ($nbMatches > 0) {
+ 			$tabParams = array_combine($imgInfos[1], $imgInfos[2]);
+ 			if (isset($tabParams['data-store'], $tabParams['data-offset']) === true) {
+ 				if (isset($tabParams['height'], $tabParams['width']) === false) {
+ 					if(isset($tabParams['style'])) {
+ 						preg_match_all('/\s*(\w+)\s*:\s*(\w+)\s*;?/', $tabParams['style'], $resData);
+ 						$newParams = array_combine($resData[1], $resData[2]);
+ 						if(isset($newParams['width'])) {
+ 							$tabParams['width'] = str_replace('px', '', $newParams['width']);
+ 						}
+ 						if(isset($newParams['height'])) {
+ 							$tabParams['height'] = str_replace('px', '', $newParams['height']);
+ 						}
+ 					}
+ 				}
+ 				if (isset($tabParams['height'], $tabParams['width']) === true) {
+ 					return Sweeml::image(Yii::app()->getRequest()->getBaseUrl().'/'.SwCacheImage::create($this->prop($tabParams['data-store'], $tabParams['data-offset']))->setRatio(false)->resize($tabParams['width'], $tabParams['height'])->getUrl());
+ 				} else {
+ 					return Sweeml::image(Yii::app()->getRequest()->getBaseUrl().'/'.SwCacheImage::create($this->prop($tabParams['data-store'], $tabParams['data-offset']))->getUrl());
+ 				}
+ 			} else {
+ 				return $matches[0];
+ 			}
+ 		} else {
+ 			return $matches[0];
+ 		}
+ 	}
+
+ 	/**
+ 	 * Check if property has a value
+ 	 *
+ 	 * @param string $property  property name to test
+ 	 *
+ 	 * @return boolean
+ 	 * @since  XXX
+ 	 */
+ 	public function propHasValue($property) {
+ 		$props = $this->getOwner()->{$this->baseName};
+ 		return ((isset($props[$property]) === true) && empty($props[$property]) === false);
  	}
 
  	/**
@@ -466,10 +538,12 @@
  	 */
  	public function loadElasticAttributes($event) {
  		$values = CJSON::decode($this->getOwner()->{$this->getElasticStorage()});
- 		foreach($values as $key => $value) {
- 			if($this->hasAttribute($key) === true) {
- 				$this->_elasticAttributes[$key] = $value;
- 			}
+ 		if(is_array($values) === true) {
+	 		foreach($values as $key => $value) {
+	 			if($this->hasAttribute($key) === true) {
+	 				$this->_elasticAttributes[$key] = $value;
+	 			}
+	 		}
  		}
  	}
 
