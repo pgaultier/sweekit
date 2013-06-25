@@ -450,7 +450,11 @@ class SwImage {
 			//be sure to resample once everything is done and not before
 			$this->resample();
 		}
-		return str_replace(DIRECTORY_SEPARATOR, self::$urlSeparator, $this->getCachedName($fullpath));
+		if($fullpath === true) {
+			return Yii::app()->getBaseUrl().self::$urlSeparator.str_replace(DIRECTORY_SEPARATOR, self::$urlSeparator, $this->getCachedName($fullpath));
+		} else {
+			return str_replace(DIRECTORY_SEPARATOR, self::$urlSeparator, $this->getCachedName($fullpath));
+		}
 	}
 
 	/**
