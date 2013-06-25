@@ -177,14 +177,14 @@ class SwPreviewAction extends CAction {
 					if(file_exists($imageName)) {
 						$image = SwCacheImage::create($imageName)->resize($width, $height)->setFit($fit);
 						$imageContentType = $image->getContentType();
-						$imageData = file_get_contents(Yii::getPathOfAlias('webroot').$image->getUrl(true));
+						$imageData = file_get_contents($image->getUrl(true));
 					}
 
 				} else {
 					if($tempFile === false) {
 						$image = SwCacheImage::create($file)->resize($width, $height)->setFit($fit);
 						$imageContentType = $image->getContentType();
-						$imageData = file_get_contents(Yii::getPathOfAlias('webroot').$image->getUrl(true));
+						$imageData = file_get_contents($image->getUrl(true));
 					} else {
 						$image = SwImage::create($file)->resize($width, $height)->setFit($fit);
 						$imageContentType = $image->getContentType();
