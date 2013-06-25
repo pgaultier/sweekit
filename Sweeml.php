@@ -112,30 +112,13 @@ class Sweeml extends CHtml {
 	 *  	'config' => array(
 	 *  		'runtimes' => 'html5, html4', // can be : html5, html4, flash, browserplus, gears, silverlight
 	 *  		'dropElement' => 'id_zone', // String with the ID of the element that you want to be able to drop files into this is only used by some runtimes that support it
-	 *  		'ui' => false, // display default ui system (override events, ...)
+	 *  		'ui' => false, // true to display default ui system (override events, ...) or object to handle events
+	 *  					   // js:new UploadManager() to handle all plupload events
+	 *  					   // one special event has been added :AsyncDelete is for callback when delete is asked
 	 *  		'multiSelection' => false, // allow multifile upload
 	 *  		'url' => '...', // default upload url for temporary upload
 	 *  		'urlDelete' => '...', // default delete url for temporary upload
 	 *  	),
-	 *  	'events' => array( // default plupload events, see http://www.plupload.com for more information
-	 *  		'beforeUpload' => 'js:xxx',
-	 *  		'chunkUploaded' => 'js:xxx',
-	 *  		'destroy' => 'js:xxx',
-	 *  		'error' => 'js:xxx',
-	 *  		'filesAdded' => 'js:xxx',
-	 *  		'filesRemoved' => 'js:xxx',
-	 *  		'fileUploaded' => 'js:xxx',
-	 *  		'init' => 'js:xxx',
-	 *  		'postInit' => 'js:xxx',
-	 *  		'queueChanged' => 'js:xxx',
-	 *  		'refresh' => 'js:xxx',
-	 *  		'stateChanged' => 'js:xxx',
-	 *  		'uploadComplete' => 'js:xxx',
-	 *  		'uploadFile' => 'js:xxx',
-	 *  		'uploadProgress' => 'js:xxx',
-	 *  	),
-	 *  	// events can be replaced with a js object :
-	 *  	'eventsObject' => 'js:new UploadManager()', // take care to keep method names as they are defined in plupload (first letter uppercase)
 	 * );
 	 * </code>
 	 *
@@ -153,9 +136,9 @@ class Sweeml extends CHtml {
 
 		$htmlOptions['name'] = $name;
 		$htmlOptions['id']=self::getIdByName($name);
-		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
+		$config = self::prepareAsyncFileUpload($htmlOptions);
 
-		return self::renderAsyncFileUpload($value, $htmlOptions, $config, $attachedEvents);
+		return self::renderAsyncFileUpload($value, $htmlOptions, $config);
 	}
 
 	/**
@@ -186,6 +169,8 @@ class Sweeml extends CHtml {
 				}
 			}
 		}
+		// override data store to allow js to be aware of the attribute
+		$htmlOptions['config']['eventHandlerConfig']['store'] = $attribute;
 		if(count($filters) > 0) {
 			if(isset($htmlOptions['config']['filters']) === true) {
 				$htmlOptions['config']['filters'] = CMap::mergeArray($filters, $htmlOptions['config']['filters']);
@@ -217,11 +202,11 @@ class Sweeml extends CHtml {
 				}
 			}
 		}
-		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
+		$config = self::prepareAsyncFileUpload($htmlOptions);
 
 		if($model->hasErrors($attribute))
 			self::addErrorCss($htmlOptions);
-		return self::renderAsyncFileUpload($value, $htmlOptions, $config, $attachedEvents);
+		return self::renderAsyncFileUpload($value, $htmlOptions, $config);
 	}
 
 	/**
@@ -235,7 +220,7 @@ class Sweeml extends CHtml {
 	 * @return string
 	 * @since  1.1.0
 	 */
-	protected static function renderAsyncFileUpload($values, $htmlOptions, $config, $attachedEvents) {
+	protected static function renderAsyncFileUpload($values, $htmlOptions, $config) {
 		if(is_array($values) == true) {
 			$uploadedFiles = null;
 			foreach($values as $addedFile) {
@@ -266,7 +251,7 @@ class Sweeml extends CHtml {
 			$content = Yii::t('sweelix', 'Browse ...');
 		}
 
-		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
+		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).');';
 		unset($htmlOptions['uploadOptions']);
 		unset($htmlOptions['value']);
 
@@ -294,11 +279,27 @@ class Sweeml extends CHtml {
 			'dropText' => Yii::t('sweelix', 'Drop files here'),
 			'ui' => false,
 			'multiSelection' => false,
-			'url' => self::normalizeUrl(array('asyncUpload', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId())),
-			'urlDelete' => self::normalizeUrl(array('asyncDelete', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId())),
+			'url' => array('asyncUpload', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()),
+			'urlDelete' => array('asyncDelete', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()),
+			'urlPreview' => null,
 		);
 		if(isset($htmlOptions['config']) == true) {
+			if(isset($htmlOptions['config']['urlPreview']) && is_array($htmlOptions['config']['urlPreview']) === true) {
+				$htmlOptions['config']['urlPreview'] = array_merge($htmlOptions['config']['urlPreview'], array('id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()));
+			}
+			if(isset($htmlOptions['config']['urlDelete']) && is_array($htmlOptions['config']['urlDelete']) === true) {
+				$htmlOptions['config']['urlDelete'] = array_merge($htmlOptions['config']['urlDelete'], array('id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()));
+			}
+			if(isset($htmlOptions['config']['url']) && is_array($htmlOptions['config']['url']) === true) {
+				$htmlOptions['config']['url'] = array_merge($htmlOptions['config']['url'], array('id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()));
+			}
+
 			$config = CMap::mergeArray($config, $htmlOptions['config']);
+			foreach(array('url', 'urlDelete', 'urlPreview') as $rawUrl) {
+				if(isset($config[$rawUrl]) === true) {
+					$config[$rawUrl] = self::normalizeUrl($config[$rawUrl]);
+				}
+			}
 			unset($htmlOptions['config']);
 		}
 		$config['realName'] = $htmlOptions['name'];
@@ -317,27 +318,12 @@ class Sweeml extends CHtml {
 					$config['silverlightXapUrl'] = Yii::app()->getClientScript()->getSweelixAssetUrl().'/plupload/plupload.silverlight.xap';
 				}
 			}
-			if($config['ui'] == true) {
-				Yii::app()->getClientScript()->registerSweelixScript('plupload.ui');
+			Yii::app()->getClientScript()->registerSweelixScript('sweepload');
+			if($config['ui'] === true) {
+				Yii::app()->getClientScript()->registerSweelixScript('sweepload.ui');
 			}
 		}
-		$attachedEvents = null;
-		if(isset($htmlOptions['events']) == true) {
-			$events = $htmlOptions['events'];
-			unset($htmlOptions['events']);
-			$knownEvents = array('beforeUpload', 'chunkUploaded', 'destroy',
-			 'error', 'filesAdded', 'filesRemoved', 'fileUploaded', 'init',
-			 'postInit', 'queueChanged', 'refresh', 'stateChanged', 'uploadComplete',
-			 'uploadFile', 'uploadProgress');
-			foreach($events as $name => $func) {
-				if(in_array($name, $knownEvents) == true) {
-					$attachedEvents[ucfirst($name)] = $func;
-				}
-			}
-		} elseif(isset($htmlOptions['eventsObject'])) {
-			$attachedEvents = $htmlOptions['eventsObject'];
-		}
-		return array($config, $attachedEvents);
+		return $config;
 	}
 
 	private static $_ajaxedFormCount = 0;
