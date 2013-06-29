@@ -142,7 +142,7 @@
  		}
  	}
 
- 	private $_templateConfigParameters;
+ 	private $_templateConfigParameters = array();
  	public function setTemplateConfigParameters($parameters) {
  		if(is_array($parameters) === true) {
  			$this->_templateConfigParameters = $parameters;
@@ -474,6 +474,9 @@
 			parent::__unset($name);
 	}
 
+	public function getNodeId() {
+		return $this->getOwner()->nodeId;
+	}
 	private $_configured=false;
  	/**
  	 * 'plop' => array(
@@ -488,31 +491,75 @@
  	 */
  	public function configure() {
  		if($this->_configured === false) {
+  			$attributesBehaviors = array();
  			foreach($this->getTemplateConfig() as $attribute => $config) {
  				// patch for testing
- 				$config = $config['model'];
- 				if(is_array($config) === true) {
+
+ 				$modelCfg = $config['model'];
+ 				if(is_array($modelCfg) === true) {
  					$this->_elasticAttributeNames[] = $attribute;
- 					if((isset($config['rules']) === true) && (is_array($config['rules']) === true)) {
- 						foreach($config['rules'] as $rule) {
+ 					if((isset($modelCfg['rules']) === true) && (is_array($modelCfg['rules']) === true)) {
+ 						foreach($modelCfg['rules'] as $rule) {
  							array_unshift($rule, $attribute);
  							$this->_elasticRules[] = $rule;
  						}
  					}
- 					if(isset($config['label']) === true) {
- 						$this->_elasticLabels[$attribute] = $config['label'];
+ 					if(isset($modelCfg['label']) === true) {
+ 						$this->_elasticLabels[$attribute] = $modelCfg['label'];
  					} else {
  						$this->_elasticLabels[$attribute] = ucwords(trim(strtolower(str_replace(array('-','_','.'),' ',preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $attribute)))));
  					}
- 					if(isset($config['value']) === true) {
- 						$this->_elasticAttributes[$attribute] = $config['value'];
+ 					if(isset($modelCfg['value']) === true) {
+ 						$this->_elasticAttributes[$attribute] = $modelCfg['value'];
  					} else {
  						$this->_elasticAttributes[$attribute] = null;
  					}
  				}
+
+ 				$elementCfg = $config['element'];
+
+ 				if (is_array($elementCfg) === true) {
+ 					if (isset($elementCfg['type']) === true && $elementCfg['type'] === 'asyncfile') {
+ 						$attributesBehaviors[$attribute] = array(
+ 							'asString' => false,
+ 							'isMulti' => isset($elementCfg['config']['multiSelection']) ? CPropertyValue::ensureBoolean($elementCfg['config']['multiSelection']) : false,
+ 							'targetPathAlias' => isset($modelCfg['targetPathAlias']) ? $modelCfg['targetPathAlias'] : null,
+ 							'targetUrl' => isset($modelCfg['targetUrl']) ? $modelCfg['targetUrl'] : null,
+ 						);
+ 					}
+ 				}
+ 			}
+ 			if (count($attributesBehaviors) > 0) {
+ 				$this->attachBehavior('fileUploader', array(
+ 					'class' => 'application.modules.sweeft.components.SwUploadedFileBehavior',
+ 					'ownerModel' => $this->getOwner(),
+ 					'pathParameters' => $this->getPathParameters(),
+ 					'attributesForFile' => $attributesBehaviors,
+ 				));
  			}
  			$this->_configured = true;
  		}
+ 	}
+
+ 	private $_pathParameters=array();
+ 	/**
+ 	 * Define path parameters
+ 	 *
+ 	 * @param array $pathParameters path parameters to expand
+ 	 *
+ 	 * @return void
+ 	 * @since  XXX
+ 	 */
+ 	public function setPathParameters($pathParameters) {
+ 		$this->_pathParameters = $pathParameters;
+ 	}
+ 	/**
+ 	 * Get path parameters to expand
+ 	 *
+ 	 * @return array
+ 	 */
+ 	public function getPathParameters() {
+ 		return $this->_pathParameters;
  	}
 
  	/**
@@ -524,7 +571,8 @@
  	 * @since  XXX
  	 */
  	public function storeElasticAttributes($event) {
-		$values = CJSON::encode($this->_elasticAttributes);
+		$this->beforeSave();
+ 		$values = CJSON::encode($this->_elasticAttributes);
 		$this->getOwner()->{$this->getElasticStorage()} = $values;
  	}
 
@@ -545,6 +593,7 @@
 	 			}
 	 		}
  		}
+ 		$this->afterFind();
  	}
 
  	/**
@@ -561,6 +610,7 @@
 		if($this->hasErrors() === true) {
 			$this->getOwner()->addErrors($this->getErrors());
 		}
+		$this->beforeValidate();
  	}
 
 
@@ -582,6 +632,8 @@
  			'onBeforeSave' => 'storeElasticAttributes',
  			'onAfterFind' => 'loadElasticAttributes',
  			'onBeforeValidate' => 'validateElasticAttributes',
+ 			'onAfterDelete' => 'raiseAfterDelete',
+ 			'onAfterSave' => 'raiseAfterSave',
  		);
  	}
 
@@ -652,4 +704,124 @@
  				$this->_owner->attachEventHandler($event,array($this,$handler));
  		}
  	}
+
+ 	/**
+ 	 * This event is raised before the record is saved.
+ 	 * By setting {@link CModelEvent::isValid} to be false, the normal {@link save()} process will be stopped.
+ 	 * @param CModelEvent $event the event parameter
+ 	 */
+ 	public function onBeforeSave($event)
+ 	{
+ 		$this->raiseEvent('onBeforeSave',$event);
+ 	}
+
+ 	/**
+ 	 * This event is raised after the record is saved.
+ 	 * @param CEvent $event the event parameter
+ 	 */
+ 	public function onAfterSave($event)
+ 	{
+ 		$this->raiseEvent('onAfterSave',$event);
+ 	}
+
+ 	/**
+ 	 * This event is raised after the record is deleted.
+ 	 * @param CEvent $event the event parameter
+ 	 */
+ 	public function onAfterDelete($event)
+ 	{
+ 		$this->raiseEvent('onAfterDelete',$event);
+ 	}
+
+
+ 	/**
+ 	 * This event is raised after the record is instantiated by a find method.
+ 	 * @param CEvent $event the event parameter
+ 	 */
+ 	public function onAfterFind($event)
+ 	{
+ 		$this->raiseEvent('onAfterFind',$event);
+ 	}
+
+ 	/**
+ 	 * This method is invoked before saving a record (after validation, if any).
+ 	 * The default implementation raises the {@link onBeforeSave} event.
+ 	 * You may override this method to do any preparation work for record saving.
+ 	 * Use {@link isNewRecord} to determine whether the saving is
+ 	 * for inserting or updating record.
+ 	 * Make sure you call the parent implementation so that the event is raised properly.
+ 	 * @return boolean whether the saving should be executed. Defaults to true.
+ 	 */
+ 	protected function beforeSave()
+ 	{
+ 		$event = new CEvent($this);
+ 		if($this->hasEventHandler('onBeforeSave'))
+ 			$this->onBeforeSave($event);
+ 		return true;
+ 	}
+
+ 	/**
+ 	 * This method is invoked before validation starts.
+ 	 * The default implementation calls {@link onBeforeValidate} to raise an event.
+ 	 * You may override this method to do preliminary checks before validation.
+ 	 * Make sure the parent implementation is invoked so that the event can be raised.
+ 	 * @return boolean whether validation should be executed. Defaults to true.
+ 	 * If false is returned, the validation will stop and the model is considered invalid.
+ 	 */
+ 	protected function beforeValidate()
+ 	{
+ 		$event=new CModelEvent($this);
+ 		$this->onBeforeValidate($event);
+ 		return $event->isValid;
+ 	}
+
+
+ 	/**
+ 	 * This method is invoked after saving a record successfully.
+ 	 * The default implementation raises the {@link onAfterSave} event.
+ 	 * You may override this method to do postprocessing after record saving.
+ 	 * Make sure you call the parent implementation so that the event is raised properly.
+ 	 */
+ 	protected function afterSave()
+ 	{
+ 		if($this->hasEventHandler('onAfterSave'))
+ 			$this->onAfterSave(new CEvent($this));
+ 	}
+
+ 	/**
+ 	 * RebroadCast After save.
+ 	 */
+ 	public function raiseAfterSave() {
+ 		$this->afterSave();
+ 	}
+
+ 	/**
+ 	 * This method is invoked after deleting a record.
+ 	 * The default implementation raises the {@link onAfterDelete} event.
+ 	 * You may override this method to do postprocessing after the record is deleted.
+ 	 * Make sure you call the parent implementation so that the event is raised properly.
+ 	 */
+ 	protected function afterDelete()
+ 	{
+ 		if($this->hasEventHandler('onAfterDelete'))
+ 			$this->onAfterDelete(new CEvent($this));
+ 	}
+
+ 	public function raiseAfterDelete() {
+ 		$this->afterDelete();
+ 	}
+
+ 	/**
+ 	 * This method is invoked after each record is instantiated by a find method.
+ 	 * The default implementation raises the {@link onAfterFind} event.
+ 	 * You may override this method to do postprocessing after each newly found record is instantiated.
+ 	 * Make sure you call the parent implementation so that the event is raised properly.
+ 	 */
+ 	protected function afterFind()
+ 	{
+ 		$event = new CEvent($this);
+ 		if($this->hasEventHandler('onAfterFind'))
+ 			$this->onAfterFind($event);
+ 	}
+
  }
