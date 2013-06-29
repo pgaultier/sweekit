@@ -144,6 +144,7 @@
 					up.asyncDelete(up.getFile(fileId), jQuery(el).val());
 				});
 			}
+			jQuery('#sweeploadEmpty').remove();
 			jQuery('#'+hiddenId).append('<input type="hidden" id="h'+file.id+'" name="'+config.realName+'" value="'+json.fileName+'" />')
 		}
 	}		
@@ -261,6 +262,10 @@
 						uploader.asyncDelete(file, filename);
 					}
 					$('#h'+file.id).remove();
+					if($('#'+hiddenId+' input[type=hidden]').length == 0) {
+						$('#'+hiddenId).append('<input type="hidden" id="sweeploadEmpty" name="'+config.realName+'" value="" />');
+					}
+					
 				});
 			});
 			
