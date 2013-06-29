@@ -100,7 +100,7 @@ class SwPreviewAction extends CAction {
 				}
 				if($tempFile === true) {
 					$relativeFile = 'tmp://'.$fileName;
-					$response['url'] = XHtml::normalizeUrl(array($this->id,
+					$response['url'] = CHtml::normalizeUrl(array($this->id,
 							'mode' => 'raw',
 							'fileName' =>$relativeFile,
 							'key' => $sessionId,
@@ -113,7 +113,7 @@ class SwPreviewAction extends CAction {
 				} else {
 					$basePath = Yii::getPathOfAlias('webroot');
 					$relativeFile = ltrim(str_replace($basePath, '', $file), '/');
-					$response['url'] = XHtml::normalizeUrl(array($this->id,
+					$response['url'] = CHtml::normalizeUrl(array($this->id,
 							'mode' => 'raw',
 							'fileName' =>$relativeFile,
 							'width' => $width,
