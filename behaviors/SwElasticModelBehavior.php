@@ -520,7 +520,6 @@
  				}
 
  				$elementCfg = $config['element'];
-
  				if (is_array($elementCfg) === true) {
  					if (isset($elementCfg['type']) === true && $elementCfg['type'] === 'asyncfile') {
  						$attributesBehaviors[$attribute] = array(
@@ -531,10 +530,11 @@
  						);
  					}
  				}
+ 				
  			}
  			if (count($attributesBehaviors) > 0) {
  				$this->attachBehavior('fileUploader', array(
- 					'class' => 'application.extensions.sweekit.behaviors.SwUploadedFileBehavior',
+ 					'class' => 'ext.sweekit.behaviors.SwUploadedFileBehavior',
  					'ownerModel' => $this->getOwner(),
  					'pathParameters' => $this->getPathParameters(),
  					'attributesForFile' => $attributesBehaviors,
