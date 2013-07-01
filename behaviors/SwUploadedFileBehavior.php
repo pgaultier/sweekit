@@ -39,41 +39,21 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 	private $_shouldSave = false;
 
 	public function beforeSave() {
-/*		if ($this->getOwnerModel()->isNewRecord === false) {*/
+		if ($this->getOwnerModel()->isNewRecord === false) {
 			$this->saveFiles();
-/*		} else {
+		} else {
 			$this->_shouldSave = true;
-		}*/
+		}
 	}
 
 	public function afterSave() {
-/*		if ($this->_shouldSave === true) {
-			$modelCopy = $this->getOwnerModel()->
-//			$this->getOwnerModel()->refresh();
-//			var_dump($this->getOwnerModel()->attributes);
-//			exit;
-			$this->saveFiles();
-			$filteredAttributes = array_keys($this->getAttributesForFile());
-			if($this->getOwner() instanceof SwElasticModelBehavior) {
-				$filteredAttributes = $this->getOwner()->filterOutElasticAttributes($filteredAttributes);
-				$this->getOwner()->storeElasticAttributes(null);
-				$filteredAttributes[] = $this->getOwner()->elasticStorage;
-			}
-			if ($this->getOwnerModel()->isNewRecord === true) {
-				$this->getOwnerModel()->setIsNewRecord(false);
-				$scenario = $this->getOwnerModel()->scenario;
-				$this->getOwnerModel()->setScenario('update');
-				$this->getOwnerModel()->saveAttributes($filteredAttributes);
-				$this->getOwnerModel()->setScenario($scenario);
-				$this->getOwnerModel()->setIsNewRecord(true);
-			} else {
-				$this->getOwnerModel()->saveAttributes($filteredAttributes);
-				// $this->getOwnerModel()->update();
-				// $this->getOwnerModel()->saveAttributes($this->getAttributesForFile());
-			}
-
-
-		}*/
+		if ($this->_shouldSave === true) {
+			$modelName = '';
+			$pk = $this->getOwnerModel()->getPrimaryKey();
+			$modelName = get_class($this->getOwnerModel());
+			$modelToResave = $modelName::model()->findByPk($pk);
+			$modelToResave->save();
+		}
 		$this->setOriginalValues();
 	}
 
@@ -249,7 +229,6 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 			$uploadedFiles = SwUploadedFile::getInstances($this->getOwnerModel(), $attribute);
 
 			if($config['asString'] === true) {
-				// we have files in string
 				$currentFiles = preg_split('/[\s,]+/', $this->getOwnerModel()->$attribute, -1, PREG_SPLIT_NO_EMPTY);
 			} else {
 				if ($config['isMulti'] === false) {
@@ -267,6 +246,8 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 
 
 			$indexFiles = array();
+			
+
 			foreach ($currentFiles as $file) {
 				if(empty($file) === false) {
 					if ( (strncmp('tmp://', $file, 6) != 0) && (in_array($file, $this->originalValues[$attribute]) === false)) {
@@ -275,7 +256,6 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 					$indexFiles[$file] = $file;
 				}
 			}
-
 			$newFiles = array();
 			foreach ($uploadedFiles as $file) {
 				$fileName = strtolower($file->getName());
@@ -300,22 +280,26 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 
 				}
 			}
+			
+				
 			$filesToDelete = array_diff((($this->originalValues[$attribute] === null) ? array() : $this->originalValues[$attribute]), $indexFiles);
 			foreach ($filesToDelete as $file) {
-				$file = str_replace($targetUrl, $targetPath, $file);
-				if (is_file($file) === true) {
-					unlink($file);
+				//XXX: This line is used on creation of entity.
+				// The files tmp:// is saved in attributes so we do not want to delete those files.
+				// See afterSave
+				if (strncmp($file, 'tmp://', 6) != 0) {
+					$file = str_replace($targetUrl, $targetPath, $file);
+					if (is_file($file) === true) {
+						unlink($file);
+					}
 				}
 			}
-	//		var_dump($indexFiles);
 			if ($config['isMulti'] === false) {
 				$finalFiles = array_values($indexFiles);
 				$this->getOwnerModel()->$attribute = array_pop($finalFiles);
 			} else {
 				$this->getOwnerModel()->$attribute = ($config['asString'] === true)?implode(',', array_values($indexFiles)):array_values($indexFiles);
 			}
-//			var_dump($this->getOwnerModel()->$attribute);
-//			exit;
  		}
  	}
 
