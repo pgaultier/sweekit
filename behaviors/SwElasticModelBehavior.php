@@ -534,7 +534,7 @@
  			}
  			if (count($attributesBehaviors) > 0) {
  				$this->attachBehavior('fileUploader', array(
- 					'class' => 'application.modules.sweeft.components.SwUploadedFileBehavior',
+ 					'class' => 'application.extensions.sweekit.behaviors.SwUploadedFileBehavior',
  					'ownerModel' => $this->getOwner(),
  					'pathParameters' => $this->getPathParameters(),
  					'attributesForFile' => $attributesBehaviors,
