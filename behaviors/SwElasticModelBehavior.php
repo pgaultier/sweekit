@@ -360,11 +360,12 @@
 	 * @since  XXX
 	 */
 	public function setAttribute($name,$value) {
-		if(property_exists($this,$name) === true)
+		if(property_exists($this,$name) === true) {
 			$this->$name=$value;
-		elseif(in_array($name, $this->_elasticAttributeNames) === true)
+		} elseif(in_array($name, $this->_elasticAttributeNames) === true) {
 			$this->_elasticAttributes[$name]=$value;
-		else
+		
+		} else
 			return false;
 		return true;
 	}
@@ -380,6 +381,7 @@
 	 */
 	public function setAttributes($values, $safeOnly=true) {
 		$filteredValues = array();
+	
 		foreach($this->attributeNames() as $name) {
 			if(isset($values[$name]) === true) {
 				$filteredValues[$name] = $values[$name];
@@ -494,9 +496,10 @@
   			$attributesBehaviors = array();
  			foreach($this->getTemplateConfig() as $attribute => $config) {
  				// patch for testing
-
+ 				
  				$modelCfg = $config['model'];
  				if(is_array($modelCfg) === true) {
+ 					
  					$this->_elasticAttributeNames[] = $attribute;
  					if((isset($modelCfg['rules']) === true) && (is_array($modelCfg['rules']) === true)) {
  						foreach($modelCfg['rules'] as $rule) {
@@ -541,6 +544,24 @@
  		}
  	}
 
+ 	/**
+ 	 * This function reload the template.
+ 	 * It is used when the assignement of the templateId is done after the creation.
+ 	 * Ex : 
+ 	 * $node = new SwNode();
+ 	 * $node->attributes = $_POST['SwNode'];
+ 	 * Here we need to reconfigure the node to reload the possible templateId assigned in the $_POST.
+ 	 */
+ 	public function reconfigure() {
+ 		$this->_template = null;
+ 		$this->_configured = false;
+ 		$this->_elasticAttributeNames = array();
+ 		$this->_elasticRules = array();
+ 		$this->_elasticAttributes = array();
+ 		$this->_elasticLabels = array(); 
+ 		$this->configure();
+ 	}
+ 	
  	private $_pathParameters=array();
  	/**
  	 * Define path parameters
