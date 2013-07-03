@@ -79,11 +79,15 @@ class SwPreviewAction extends CAction {
 				$targetPath = Yii::getPathOfAlias(Yii::app()->getRequest()->getParam('targetPathAlias', 'webroot'));
 			}
 			if($tempFile === false) {
-				$nodeId = Yii::app()->getRequest()->getParam('nodeId', '');
-				$contentId = Yii::app()->getRequest()->getParam('contentId', '');
-				$tagId = Yii::app()->getRequest()->getParam('tagId', '');
-				$groupId = Yii::app()->getRequest()->getParam('groupId', '');
-				$targetPath = str_replace(array('{nodeId}', '{contentId}', '{tagId}', '{groupId}'), array($nodeId, $contentId, $tagId, $groupId), $targetPath);
+				$replacement = array();
+				if(preg_match_all('/{([^}]+)}/', Yii::app()->getRequest()->getParam('targetPathAlias', 'webroot'), $matches) > 0) {
+					if(isset($matches[1]) === true) {
+						foreach($matches[1] as $repKey) {
+							$replacement['{'.$repKey.'}'] = Yii::app()->getRequest()->getParam($repKey, '');
+						}
+						$targetPath = str_replace(array_keys($replacement), array_values($replacement), $targetPath);
+					}
+				}
 			}
 			$file = $targetPath.DIRECTORY_SEPARATOR.$fileName;
 			$response = array('status' => false);
