@@ -598,6 +598,19 @@
  	}
 
  	/**
+ 	 * Load elastci attributes afterFind
+ 	 *
+ 	 * @param CEvent $event event to pass
+ 	 *
+ 	 * @return void
+ 	 * @since  XXX
+ 	 */
+ 	public function loadElasticAttributesWithEvent($event) {
+ 		$this->loadElasticAttributes();
+		$this->afterFind();
+ 	}
+
+ 	/**
  	 * Load elastic properties from owner model
  	 *
  	 * @param CEvent $event event
@@ -605,7 +618,7 @@
  	 * @return void
  	 * @since  XXX
  	 */
- 	public function loadElasticAttributes($event) {
+ 	public function loadElasticAttributes() {
  		$values = CJSON::decode($this->getOwner()->{$this->getElasticStorage()});
  		if(is_array($values) === true) {
 	 		foreach($values as $key => $value) {
@@ -614,7 +627,6 @@
 	 			}
 	 		}
  		}
- 		$this->afterFind();
  	}
 
  	/**
@@ -635,6 +647,21 @@
  	}
 
 
+ 	/**
+ 	 * Remove attributes which are not handled by elastic model from the search
+ 	 * (non-PHPdoc)
+ 	 * @see CModel::getAttributes()
+ 	 *
+ 	 * @return array
+ 	 * @since  XXX
+ 	 */
+ 	public function getAttributes($names=null) {
+ 		if(is_array($names) === true) {
+ 			$names = array_intersect($this->_elasticAttributeNames, $names);
+ 		}
+ 		return parent::getAttributes($names);
+ 	}
+
  	// handle behavior stuff
  	private $_enabled=false;
  	private $_owner;
@@ -651,7 +678,7 @@
  	public function events() {
  		return array(
  			'onBeforeSave' => 'storeElasticAttributes',
- 			'onAfterFind' => 'loadElasticAttributes',
+ 			'onAfterFind' => 'loadElasticAttributesWithEvent',
  			'onBeforeValidate' => 'validateElasticAttributes',
  			'onAfterDelete' => 'raiseAfterDelete',
  			'onAfterSave' => 'raiseAfterSave',
