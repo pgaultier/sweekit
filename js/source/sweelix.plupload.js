@@ -256,12 +256,14 @@
 			
 			uploader.bind('FilesRemoved', function(up, files) {
 				$.each(files,  function(i, file){ 
-					var filename = $('#h'+file.id).val();
-					if(filename.search(/tmp:\/\//) == 0) {
-						// we should handle delete only for temp files
-						uploader.asyncDelete(file, filename);
+					if($('#h'+file.id).length > 0) {
+						var filename = $('#h'+file.id).val();
+						if(filename.search(/tmp:\/\//) == 0) {
+							// we should handle delete only for temp files
+							uploader.asyncDelete(file, filename);
+						}
+						$('#h'+file.id).remove();
 					}
-					$('#h'+file.id).remove();
 					if($('#'+hiddenId+' input[type=hidden]').length == 0) {
 						$('#'+hiddenId).append('<input type="hidden" id="sweeploadEmpty" name="'+config.realName+'" value="" />');
 					}
