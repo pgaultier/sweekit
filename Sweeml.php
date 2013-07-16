@@ -193,7 +193,7 @@ class Sweeml extends CHtml {
 			$resourcePath = Yii::getPathOfAlias(isset($htmlOptions['resourcesPath'])?$htmlOptions['resourcesPath']:'webroot');
 			if(isset($htmlOptions['resourcesPath']) === true) { unset($htmlOptions['resourcesPath']); }
 			foreach($fileList as $element) {
-				if(strncasecmp('tmp://', $element, 6) !== 0) {
+				if((strncasecmp('tmp://', $element, 6) !== 0) && (empty($element) === false)) {
 					$realFile = $resourcePath.DIRECTORY_SEPARATOR.$element;
 					if(file_exists($realFile) === true) {
 						$fileInfo = pathinfo($realFile);

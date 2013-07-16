@@ -79,11 +79,15 @@ class SwPreviewAction extends CAction {
 				$targetPath = Yii::getPathOfAlias(Yii::app()->getRequest()->getParam('targetPathAlias', 'webroot'));
 			}
 			if($tempFile === false) {
-				$nodeId = Yii::app()->getRequest()->getParam('nodeId', '');
-				$contentId = Yii::app()->getRequest()->getParam('contentId', '');
-				$tagId = Yii::app()->getRequest()->getParam('tagId', '');
-				$groupId = Yii::app()->getRequest()->getParam('groupId', '');
-				$targetPath = str_replace(array('{nodeId}', '{contentId}', '{tagId}', '{groupId}'), array($nodeId, $contentId, $tagId, $groupId), $targetPath);
+				$replacement = array();
+				if(preg_match_all('/{([^}]+)}/', Yii::app()->getRequest()->getParam('targetPathAlias', 'webroot'), $matches) > 0) {
+					if(isset($matches[1]) === true) {
+						foreach($matches[1] as $repKey) {
+							$replacement['{'.$repKey.'}'] = Yii::app()->getRequest()->getParam($repKey, '');
+						}
+						$targetPath = str_replace(array_keys($replacement), array_values($replacement), $targetPath);
+					}
+				}
 			}
 			$file = $targetPath.DIRECTORY_SEPARATOR.$fileName;
 			$response = array('status' => false);
@@ -93,14 +97,15 @@ class SwPreviewAction extends CAction {
 				$fit = CPropertyValue::ensureBoolean(Yii::app()->getRequest()->getParam('fit', $this->fit));
 				$fit = ($fit === true)?'true':'false';
 				$response['status'] = true;
-				if(getimagesize($file) === false) {
-					$response['image'] = false;
-				} else {
+				$imageInfo = getimagesize($file);
+				if(($imageInfo !== false) && (in_array($imageInfo[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) === true)) {
 					$response['image'] = true;
+				} else {
+					$response['image'] = false;
 				}
 				if($tempFile === true) {
 					$relativeFile = 'tmp://'.$fileName;
-					$response['url'] = XHtml::normalizeUrl(array($this->id,
+					$response['url'] = CHtml::normalizeUrl(array($this->id,
 							'mode' => 'raw',
 							'fileName' =>$relativeFile,
 							'key' => $sessionId,
@@ -113,7 +118,7 @@ class SwPreviewAction extends CAction {
 				} else {
 					$basePath = Yii::getPathOfAlias('webroot');
 					$relativeFile = ltrim(str_replace($basePath, '', $file), '/');
-					$response['url'] = XHtml::normalizeUrl(array($this->id,
+					$response['url'] = CHtml::normalizeUrl(array($this->id,
 							'mode' => 'raw',
 							'fileName' =>$relativeFile,
 							'width' => $width,
@@ -156,13 +161,15 @@ class SwPreviewAction extends CAction {
 				$targetPath = Yii::getPathOfAlias(SwUploadedFile::$targetPath).DIRECTORY_SEPARATOR.$sessionId.DIRECTORY_SEPARATOR.$id;
 			} else {
 				$targetPath = Yii::getPathOfAlias(Yii::app()->getRequest()->getParam('targetPathAlias', 'webroot'));
-				$replacement = array(
-						'{contentId}' => Yii::app()->getRequest()->getParam('contentId', ''),
-						'{nodeId}' => Yii::app()->getRequest()->getParam('nodeId', ''),
-						'{groupId}' => Yii::app()->getRequest()->getParam('groupId', ''),
-						'{tagId}' => Yii::app()->getRequest()->getParam('tagId', ''),
-				);
-				$targetPath = str_replace(array_keys($replacement), array_values($replacement), $targetPath);
+				$replacement = array();
+				if(preg_match_all('/{([^}]+)}/', Yii::app()->getRequest()->getParam('targetPathAlias', 'webroot'), $matches) > 0) {
+					if(isset($matches[1]) === true) {
+						foreach($matches[1] as $repKey) {
+							$replacement['{'.$repKey.'}'] = Yii::app()->getRequest()->getParam($repKey, '');
+						}
+						$targetPath = str_replace(array_keys($replacement), array_values($replacement), $targetPath);
+					}
+				}
 			}
 			$file = $targetPath.DIRECTORY_SEPARATOR.$fileName;
 			if(is_file($file) === true) {
@@ -170,17 +177,8 @@ class SwPreviewAction extends CAction {
 				$height = Yii::app()->getRequest()->getParam('height', $this->height);
 				$fit = CPropertyValue::ensureBoolean(Yii::app()->getRequest()->getParam('fit', $this->fit));
 
-				if(getimagesize($file) === false) {
-					$ext = strtolower(pathinfo($file,PATHINFO_EXTENSION));
-					//TODO:handle default image
-					$imageName = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$ext.'.png';
-					if(file_exists($imageName)) {
-						$image = SwCacheImage::create($imageName)->resize($width, $height)->setFit($fit);
-						$imageContentType = $image->getContentType();
-						$imageData = file_get_contents($image->getUrl(true));
-					}
-
-				} else {
+				$imageInfo = getimagesize($file);
+				if(($imageInfo !== false) && (in_array($imageInfo[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) === true)) {
 					if($tempFile === false) {
 						$image = SwCacheImage::create($file)->resize($width, $height)->setFit($fit);
 						$imageContentType = $image->getContentType();
@@ -190,9 +188,16 @@ class SwPreviewAction extends CAction {
 						$imageContentType = $image->getContentType();
 						$imageData = $image->liveRender();
 					}
+				} else {
+					$ext = strtolower(pathinfo($file,PATHINFO_EXTENSION));
+					//TODO:handle default image
+					$imageName = dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'icons'.DIRECTORY_SEPARATOR.$ext.'.png';
+					if(file_exists($imageName)) {
+						$image = SwCacheImage::create($imageName)->resize($width, $height)->setFit($fit);
+						$imageContentType = $image->getContentType();
+						$imageData = file_get_contents($image->getUrl(true));
+					}
 				}
-
-
 			}
 			header('Content-type: '.$imageContentType);
 			header('Content-Disposition: inline; filename="'.$fileName.'";');

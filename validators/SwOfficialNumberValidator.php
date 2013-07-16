@@ -41,6 +41,7 @@ class SwOfficialNumberValidator extends CValidator {
 		'rib' => 'rib',
 		'vat' => 'vat',
 		'insee' => 'modulo97',
+		'rcs' => 'rcs',
 	);
 
 	/**
@@ -206,7 +207,7 @@ class SwOfficialNumberValidator extends CValidator {
 		$check = $this->checkIso7812($siren);
 		if($check === true) {
 			$checkKey = (12 + 3 * ($siren % 97)) % 97;
-			$ckeck = ($key == $checkKey);
+			$check = ($key == $checkKey);
 		}
 		return $check;
 	}
@@ -256,6 +257,23 @@ class SwOfficialNumberValidator extends CValidator {
 			$vatChecker = false;
 		}
 		return $vatChecker;
+	}
+	
+	/**
+	 * Check if RCS number is correct using FR rules
+	 *
+	 * @param string $number RCS number
+	 *
+	 * @return boolean
+	 * @since  XXX
+	 */
+	protected function checkRcs($number) {
+		$check = false;
+		if(preg_match('/\w+\s?\w+\s?\d{9}/', $number)) {
+			$siren = substr($number, -9, 9);
+			$check = $this->checkIso7812($siren);
+		}
+		return $check;
 	}
 
 }
