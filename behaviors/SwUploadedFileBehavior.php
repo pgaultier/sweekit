@@ -1,4 +1,5 @@
 <?php
+use hubshop\models\ShopNode;
 /**
  * SwHandleUploadedFile.php
  *
@@ -53,6 +54,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 			$modelName = get_class($this->getOwnerModel());
 			$modelToResave = $modelName::model()->findByPk($pk);
 			$modelToResave->save();
+			$this->getOwnerModel()->setAttributes($modelToResave->getAttributes(), false);
 		}
 		$this->setOriginalValues();
 	}
@@ -246,7 +248,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 
 
 			$indexFiles = array();
-			
+
 
 			foreach ($currentFiles as $file) {
 				if(empty($file) === false) {
@@ -280,8 +282,8 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 
 				}
 			}
-			
-				
+
+
 			$filesToDelete = array_diff((($this->originalValues[$attribute] === null) ? array() : $this->originalValues[$attribute]), $indexFiles);
 			foreach ($filesToDelete as $file) {
 				//XXX: This line is used on creation of entity.
