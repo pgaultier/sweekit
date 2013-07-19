@@ -376,6 +376,7 @@ class SwUploadedFile extends CComponent {
 		if(is_array($data) === true) {
 			foreach ($data as $key => $value) {
 				if ($key === $this->_model) {
+
 					foreach ($value as $attribute => $attrValue) {
 						if ($attribute === $this->_attribute) {
 							if (is_array($attrValue) === true) {
@@ -389,8 +390,11 @@ class SwUploadedFile extends CComponent {
 							$cleanedData[$key][$attribute] = $attrValue;
 						}
 					}
-				} else if (is_array($value) === true) {
+
+				} elseif (is_array($value) === true) {
 					$cleanedData[$key] = $this->cleanUpPost($value);
+				} else {
+					$cleanedData[$key] = $value;
 				}
 			}
 		}
