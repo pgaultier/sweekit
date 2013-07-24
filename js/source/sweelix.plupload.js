@@ -15,6 +15,10 @@
 	function Sweeload() {
 		var uploader;
 		var self;
+		var initialised = false;
+		this.setInitialised = function (status) {
+			initialised = status;
+		}
 		function cutName(fileName){
 			var name = fileName;
 			if (fileName.length > 24) {
@@ -137,6 +141,7 @@
 	
 	function createHiddenField(up, json, file, hiddenId, config) {
 		if(json.status == true) {
+			jQuery('.sweeploadEmpty').remove();
 			if(up.getMultiSelection() == false) {
 				jQuery('#'+hiddenId+' input[type=hidden]').each(function(idx, el){
 					var fileId = jQuery(el).attr('id');
@@ -144,7 +149,6 @@
 					up.asyncDelete(up.getFile(fileId), jQuery(el).val());
 				});
 			}
-			jQuery('#sweeploadEmpty').remove();
 			jQuery('#'+hiddenId).append('<input type="hidden" id="h'+file.id+'" name="'+config.realName+'" value="'+json.fileName+'" />')
 		}
 	}		
@@ -189,6 +193,9 @@
 				}
 			} else if(typeof(config.ui) == 'object') {
 				eventsHandler = config.ui;
+				if(typeof(eventsHandler.setInitialised) == 'function') {
+					eventsHandler.setInitialised(false);
+				}
 			}
 
 			// extend the puloader to return needed elements
@@ -239,7 +246,7 @@
 			
 			
 			uploader.init();
-			$('#'+id).append('<div style="display:none;" id="'+hiddenId+'" ></div>');
+			$('#'+id).append('<div style="display:none;" id="'+hiddenId+'" ><input type="hidden" class="sweeploadEmpty" name="'+config.realName+'" value="" /></div>');
 			
 			$.each(eventsHandler, function(key, callback) {
 				// do not rebind post init
@@ -265,7 +272,7 @@
 						$('#h'+file.id).remove();
 					}
 					if($('#'+hiddenId+' input[type=hidden]').length == 0) {
-						$('#'+hiddenId).append('<input type="hidden" id="sweeploadEmpty" name="'+config.realName+'" value="" />');
+						$('#'+hiddenId).append('<input type="hidden" class="sweeploadEmpty" name="'+config.realName+'" value="" />');
 					}
 					
 				});
@@ -291,6 +298,9 @@
 				uploader.refresh(); // not sure if this is needed
 			}
 			
+			if((typeof(eventsHandler) == 'object') && (typeof(eventsHandler.setInitialised) == 'function')) {
+				eventsHandler.setInitialised(true);
+			}
 			// is it linked to the ui ? probably
 			if(!!config.auto) {
 				uploader.bind('FilesAdded', function(up, file) {
