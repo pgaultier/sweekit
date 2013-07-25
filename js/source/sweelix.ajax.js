@@ -75,10 +75,14 @@ log4javascript.JsonAppender = JsonAppender;
 	 */
 	$.fn.ajaxSubmitHandler = function (targetSelector) {
 		targetSelector = targetSelector || null; 
+		
+		//Default buttons
 		var button = {
 			'target' : 'input:submit, input:image, button:submit',
 			'clicked' : 'input[data-ajaxclick="true"], button[data-ajaxclick="true"]'
 		};
+		
+		//No delegated mode
 		if(targetSelector == null) {
 			$s.info('jQuery('+this.selector+').ajaxSubmitHandler()');
 			return this.each(function () {
@@ -142,12 +146,14 @@ log4javascript.JsonAppender = JsonAppender;
 					});
 				});
 			});
+		//Delegated mode
 		} else {
 			$s.info('jQuery('+this.selector+').ajaxSubmitHandler('+targetSelector+')');
+			
+			//Add delegate target to default buttons
 			var aButton = {
 				'target' : button.target.split(','),
 				'clicked' : button.clicked.split(','),
-				'form' : this.selector.split(',')
 			};
 			
 			var tmp = '';
@@ -166,19 +172,24 @@ log4javascript.JsonAppender = JsonAppender;
 			});
 			aButton.clicked = tmp;
 			
-			aButton.form = this.selector;
-			
 			return this.each(function (idx, el) {
-				
-				$(targetSelector).on('click', aButton.target, function(evt) {
+				//Detect and memorize click
+				$(this).on('click', aButton.target, function(evt) {
 					$(evt.target).attr("data-ajaxclick", "true");
 				})
 				
-				$(targetSelector).on('submit', function(evt) {
+				//Handel delegated ajax submit
+				$(this).on('submit', targetSelector, function(evt) {
 					evt.preventDefault();
+					
+					//Raise before ajax event
 					$(this).trigger('beforeAjax');
+					
+					//Get data
 					var data = $(evt.target).serializeArray();
-					var cButton = $(button.clicked);
+					
+					//Add button name/value to data
+					var cButton = $(aButton.clicked);
 					if(cButton.length > 0) {
 						var b = {
 							'name' : cButton.attr('name'),
@@ -201,10 +212,14 @@ log4javascript.JsonAppender = JsonAppender;
 						}
 						cButton.removeAttr("data-ajaxclick");
 					}
+					
+					//Define target url
 					var targetUrl = $(this).attr('action');
 					if(typeof(targetUrl) == 'undefined') {
 						targetUrl = $(location).attr('href');
 					}
+					
+					//Compute ajax call
 					$.ajax({
 						headers: { 
 							'Accept' : 'application/javascript;q=0.9,text/html;q=0.8,*/*;q=0.5'
