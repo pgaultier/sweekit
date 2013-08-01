@@ -52,7 +52,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 			$modelName = '';
 			$pk = $this->getOwnerModel()->getPrimaryKey();
 			$modelName = get_class($this->getOwnerModel());
-			$modelToResave = $modelName::model()->findByPk($pk);
+			$modelToResave = $modelName::model()->resetScope()->findByPk($pk);
 			$modelToResave->save();
 			$this->getOwnerModel()->setAttributes($modelToResave->getAttributes(), false);
 		}
