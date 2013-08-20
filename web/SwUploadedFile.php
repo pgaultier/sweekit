@@ -138,8 +138,8 @@ class SwUploadedFile extends CComponent {
 		$infos = array();
 		$infos['original'] = $attribute;
 		Sweeml::resolveNameID($model, $attribute, $infos);
-		if(method_exists('Sweeml', 'normalizeModelName') === true) {
-			$infos['class'] = Sweeml::normalizeModelName($model);
+		if(method_exists('Sweeml', 'modelName') === true) {
+			$infos['class'] = Sweeml::modelName($model);
 		} else {
 			$infos['class'] = get_class($model);
 		}
