@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -22,14 +22,14 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
  * @since     1.10.0
  */
 class SwMapBaseComponent extends CComponent {
-	public $componentName = 'sweekitmap';
+	public $componentName = 'map';
 	/**
 	 * Get current google map application component
 	 *

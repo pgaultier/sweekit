@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions
@@ -23,7 +23,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions
@@ -41,6 +41,10 @@ class SwDeleteAction extends CAction {
 		try {
 			$sessionId = Yii::app()->getSession()->getSessionId();
 			$fileName = Yii::app()->getRequest()->getParam('name', '');
+			if (strncmp($fileName, 'tmp://', 6) === 0) {
+				$fileName = str_replace('tmp://', '', $fileName);
+			}
+
 			$id = Yii::app()->getRequest()->getParam('id', 'unk');
 			$targetPath = Yii::getPathOfAlias(SwUploadedFile::$targetPath).DIRECTORY_SEPARATOR.$sessionId.DIRECTORY_SEPARATOR.$id;
 			$response = array('fileName' => $fileName, 'status' => false, 'fileSize' => null);

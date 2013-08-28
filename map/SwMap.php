@@ -7,13 +7,13 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
  */
 
-Yii::import('ext.sweekit.components.SwCurlRequest');
+Yii::import('ext.sweekit.curl.SwCurlRequest');
 
 /**
  * SwMap is an app component which allow configuration for google map engine
@@ -21,7 +21,7 @@ Yii::import('ext.sweekit.components.SwCurlRequest');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -164,7 +164,7 @@ class SwMap extends CApplicationComponent {
 				} else {
 					$serviceUrl .= $this->getOutputFormat();
 				}
-				$request = Yii::createComponent('ext.sweekit.components.SwCurlRequest', $serviceUrl);
+				$request = Yii::createComponent('ext.sweekit.curl.SwCurlRequest', $serviceUrl);
 				$request->setUrlParameters($parameters);
 
 				$this->_currentRequest[$requestHash] = $request->execute();

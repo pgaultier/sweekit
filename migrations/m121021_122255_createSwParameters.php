@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  migrations
  * @package   Sweeml.migrations
@@ -20,7 +20,7 @@
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components

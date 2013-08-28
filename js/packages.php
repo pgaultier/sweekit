@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  js
  * @package   Sweeml.js
@@ -48,27 +48,27 @@ return array(
 		),
 		'plupload.html5' => array(
 			'js' => array('plupload/plupload.html5.js'),
-			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'plupload.ui'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'sweepload'),
 		),
 		'plupload.html4' => array(
 			'js' => array('plupload/plupload.html4.js'),
-			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'plupload.ui'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'sweepload'),
 		),
 		'plupload.flash' => array(
 			'js' => array('plupload/plupload.flash.js'),
-			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'plupload.ui'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'sweepload'),
 		),
 		'plupload.browserplus' => array(
 			'js' => array('plupload/plupload.browserplus.js'),
-			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'plupload.ui'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'sweepload'),
 		),
 		'plupload.silverlight' => array(
 			'js' => array('plupload/plupload.silverlight.js'),
-			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'plupload.ui'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'sweepload'),
 		),
 		'plupload.gears' => array(
 			'js' => array('plupload/plupload.gears.js'),
-			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'plupload.ui'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'plupload', 'sweepload'),
 		),
 		'plupload' => array(
 			'js' => array('plupload/plupload.js'),
@@ -83,9 +83,13 @@ return array(
 			'css' => array('plupload/jquery.ui.plupload/css/jquery.ui.plupload.css'),
 			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax'),
 		),
-		'plupload.ui' => array(
+		'sweepload' => array(
 			'js' => array('sweelix.plupload.js'),
-			'css' => array('sweelix.plupload.css'),
 			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax'),
+		),
+		'sweepload.ui' => array(
+			'js' => array('sweelix.plupload.ui.js'),
+			'css' => array('sweelix.plupload.ui.css'),
+			'depends' => array('jquery', 'sweelix', 'debug', 'callback', 'ajax', 'sweepload'),
 		),
 	);

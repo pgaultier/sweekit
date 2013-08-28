@@ -7,11 +7,13 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
- * @category  components
- * @package   sweekit.components
+ * @category  mobile
+ * @package   sweekit.mobile
  */
+
+Yii::import('ext.sweekit.mobile.SwMobileNotifierInterface');
 
 /**
  * This SwC2dmNotifier allow users to send
@@ -20,10 +22,10 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
- * @category  components
- * @package   sweekit.components
+ * @category  mobile
+ * @package   sweekit.mobile
  *
  * @property string $certificatePath
  * @property string $temporaryCertificatePath

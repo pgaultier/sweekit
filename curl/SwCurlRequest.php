@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -36,7 +36,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -255,7 +255,7 @@ class SwCurlRequest extends CComponent {
 	public function execute() {
 		$response = $this->_preRun();
 		if($response !== null) {
-			$response = Yii::createComponent('ext.sweekit.components.SwCurlResponse', $response[0], $response[1], $response[2]);
+			$response = Yii::createComponent('ext.sweekit.curl.SwCurlResponse', $response[0], $response[1], $response[2]);
 		}
 		return $response;
 	}

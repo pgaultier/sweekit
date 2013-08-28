@@ -66,7 +66,7 @@ log4javascript.JsonAppender = JsonAppender;
 			log.removeAllAppenders()
 			config = sweelix.config(this.id);
 			if(config['appenders']) {
-				config['appenders'] = Array.isArray(config['appenders'])?config['appenders']:[config['appenders']];
+				config['appenders'] = (config['appenders'] instanceof Array)?config['appenders']:[config['appenders']];
 				for(var i in config['appenders']) {
 					log.addAppender(config['appenders'][i]);
 				}

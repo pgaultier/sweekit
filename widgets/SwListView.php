@@ -14,6 +14,10 @@ class SwListView extends CWidget {
 	 */
 	public $headerView;
 	/**
+	 * @var array html options for enclosing tag
+	 */
+	public $htmlOptions=array();
+	/**
 	 * @var string name for header view
 	 */
 	public $summaryView;
@@ -82,9 +86,21 @@ class SwListView extends CWidget {
 		if(strlen(trim($content))>0) {
 			$this->template = $content;
 		}
+		if(isset($this->htmlOptions['id']) === true) {
+			$this->setId($this->htmlOptions['id']);
+		} else {
+			$this->htmlOptions['id'] = $this->getId();
+		}
+
 		// $this->registerClientScript();
 		if(($this->dataProvider->itemCount>0) || ($this->hideOnEmpty === false)) {
+			if($this->tagName !==null) {
+				echo CHtml::openTag($this->tagName, $this->htmlOptions);
+			}
 			$this->renderContent();
+			if($this->tagName !==null) {
+				echo CHtml::closeTag($this->tagName);
+			}
 		}
 	}
 

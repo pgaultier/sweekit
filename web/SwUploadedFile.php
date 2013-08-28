@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   Sweeml.web
@@ -59,7 +59,7 @@ Yii::import('ext.sweekit.Sweeml');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   Sweeml.web
@@ -74,6 +74,8 @@ class SwUploadedFile extends CComponent {
 	protected $_tempName;
 	protected $_extensionName;
 	protected $_size;
+	protected $_model;
+	protected $_attribute;
 
 	/**
 	 * Define the path where files will be temporary saved
@@ -136,7 +138,11 @@ class SwUploadedFile extends CComponent {
 		$infos = array();
 		$infos['original'] = $attribute;
 		Sweeml::resolveNameID($model, $attribute, $infos);
-		$infos['class'] = get_class($model);
+		if(method_exists('Sweeml', 'modelName') === true) {
+			$infos['class'] = Sweeml::modelName($model);
+		} else {
+			$infos['class'] = get_class($model);
+		}
 		$infos['attribute'] = $attribute;
 		$infos['namelen'] = strlen($infos['name']);
 		$files = array();
@@ -216,6 +222,24 @@ class SwUploadedFile extends CComponent {
 		}
 	}
 	/**
+	 * Build correct path for current file
+	 *
+	 * @param string $targetFileUrl file url like : tmp://xxx or resource://xxx
+	 * @param string $id            id of current target file
+	 *
+	 * @return string
+	 * @since  2.0.0
+	 */
+	protected static function buildFilePath($targetFileUrl, $id=null) {
+		if(strncasecmp('tmp://', $targetFileUrl, 6) === 0) {
+			$targetFileUrl = str_replace('tmp://', self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR, $targetFileUrl);
+		} else {
+			$targetFileUrl = false;
+		}
+		return $targetFileUrl;
+	}
+
+	/**
 	 * Recursive method used to collect info data.
 	 * The original method cannot be used anymore because $_FILES is not used.
 	 *
@@ -233,22 +257,24 @@ class SwUploadedFile extends CComponent {
 					$id = Sweeml::getIdByName($testName);
 
 					foreach($value as $idx => $data) {
-						$myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$data;
+						// $myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$data;
+						$myFile = self::buildFilePath($data, $id);
 
-						if((file_exists($myFile)===true) && (is_file($myFile)==true)) {
+						if(($myFile !== false) && (file_exists($myFile)===true) && (is_file($myFile)==true)) {
 							$fileInfo = pathinfo($myFile);
 
-							self::$_files[$infos['class']][$infos['attribute']][$testName.'_'.$idx] = new SwUploadedFile($data, $myFile, $fileInfo['extension'], filesize($myFile));
+							self::$_files[$infos['class']][$infos['attribute']][$testName.'_'.$idx] = new SwUploadedFile($data, $myFile, $fileInfo['extension'], filesize($myFile), $infos['class'], $infos['attribute']);
 						}
 					}
 				} else {
 					$testName = $infos['class'].$prevKey.'['.$infos['attribute'].']';
 					$id = Sweeml::getIdByName($testName);
 					// single upload
-					$myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$value;
-					if((file_exists($myFile)===true) && (is_file($myFile)==true)) {
+					// $myFile = self::getTargetPath().DIRECTORY_SEPARATOR.$id.DIRECTORY_SEPARATOR.$value;
+					$myFile = self::buildFilePath($value, $id);
+					if(($myFile !== false) && (file_exists($myFile)===true) && (is_file($myFile)==true)) {
 						$fileInfo = pathinfo($myFile);
-						self::$_files[$infos['class']][$infos['attribute']][$testName] = new SwUploadedFile($value, $myFile, $fileInfo['extension'], filesize($myFile));
+						self::$_files[$infos['class']][$infos['attribute']][$testName] = new SwUploadedFile($value, $myFile, $fileInfo['extension'], filesize($myFile), $infos['class'], $infos['attribute']);
 					}
 				}
 			} elseif(is_array($value) == true) {
@@ -281,11 +307,13 @@ class SwUploadedFile extends CComponent {
 	 * @return SwUploadedFile
 	 * @since  1.1.0
 	 */
-	public function __construct($name,$tempName,$extension,$size) {
+	public function __construct($name,$tempName,$extension,$size, $model, $attribute) {
 		$this->_name=$name;
 		$this->_tempName=$tempName;
 		$this->_extensionName=$extension;
 		$this->_size=$size;
+		$this->_model = $model;
+		$this->_attribute = $attribute;
 	}
 
 	/**
@@ -313,12 +341,92 @@ class SwUploadedFile extends CComponent {
 		if($deleteTempFile) {
 			$result = copy($this->_tempName, $file);
 			unlink($this->_tempName);
+			if ($result === true) {
+				$data  = $this->cleanUpPost($_POST);
+				$_POST = $data;
+				$this->cleanUpFiles();
+			}
 			return $result;
 		}
-		else if(is_uploaded_file($this->_tempName))
-			return copy($this->_tempName, $file);
+		else if(is_uploaded_file($this->_tempName)) {
+			if (copy($this->_tempName, $file) === true) {
+				$data  = $this->cleanUpPost($_POST);
+				$_POST = $data;
+				$this->cleanUpFiles();
+				return true;
+			} else {
+				return false;
+			}
+		}
 		else
 			return false;
+	}
+
+	/**
+	 * This function remove the asyncfile attribute from post (To avoid double file rendering [datarendering + postrendering])
+	 * and return the filtered data
+	 *
+	 * @param array $data data to filter out
+	 *
+	 * @return array
+	 * @since  2.0.0
+	 */
+	private function cleanUpPost($data) {
+		$cleanedData = array();
+		if(is_array($data) === true) {
+			foreach ($data as $key => $value) {
+				if ($key === $this->_model) {
+
+					foreach ($value as $attribute => $attrValue) {
+						if ($attribute === $this->_attribute) {
+							if (is_array($attrValue) === true) {
+								foreach ($attrValue as $index => $fileName) {
+									if ($fileName !== $this->getName()) {
+										$cleanedData[$key][$attribute][] = $fileName;
+									}
+								}
+							}
+						} else {
+							$cleanedData[$key][$attribute] = $attrValue;
+						}
+					}
+
+				} elseif (is_array($value) === true) {
+					$cleanedData[$key] = $this->cleanUpPost($value);
+				} else {
+					$cleanedData[$key] = $value;
+				}
+			}
+		}
+		return $cleanedData;
+	}
+
+
+	/**
+	 * This function remove current file from the instance storage
+	 *
+	 * @return void
+	 * @since  2.0.0
+	 */
+	private function cleanUpFiles() {
+		$data = self::$_files;
+		if (isset($data[$this->_model]) === true && isset($data[$this->_model][$this->_attribute]) === true) {
+			foreach ($data[$this->_model][$this->_attribute] as $key => $file) {
+
+				if ($file === $this) {
+					unset($data[$this->_model][$this->_attribute][$key]);
+				}
+
+			}
+			if (empty($data[$this->_model][$this->_attribute]) === true) {
+				unset($data[$this->_model][$this->_attribute]);
+			}
+			if (empty($data[$this->_model]) === true) {
+				unset($data[$this->_model]);
+			}
+			self::$_files = $data;
+		}
+
 	}
 
 	/**
@@ -333,10 +441,19 @@ class SwUploadedFile extends CComponent {
 		}
 	}
 	/**
-	 * @return string the original name of the file being uploaded
+	 * Get current file name of the file being uploaded
+	 *
+	 * @param boolean true to remove the 'tmp://' part
+	 *
+	 * @return string
+	 * @since  2.0.0
 	 */
-	public function getName() {
-		return $this->_name;
+	public function getName($clean=false) {
+		if($clean === true) {
+			return str_replace('tmp://', '', $this->_name);
+		} else {
+			return $this->_name;
+		}
 	}
 
 	/**
@@ -362,5 +479,25 @@ class SwUploadedFile extends CComponent {
 	 */
 	public function getExtensionName() {
 		return $this->_extensionName;
+	}
+
+	/**
+	 * Return the associate model.
+	 *
+	 * @return string
+	 * @since  2.0.0
+	 */
+	public function getModel() {
+		return $this->_model;
+	}
+
+	/**
+	 * Return the associate attribute of the model.
+	 *
+	 * @return string
+	 * @since  2.0.0
+	 */
+	public function getAttribute() {
+		return $this->_attribute;
 	}
 }

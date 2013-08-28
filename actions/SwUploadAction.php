@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions
@@ -23,7 +23,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions
@@ -62,7 +62,7 @@ class SwUploadAction extends CAction {
 				}
 				$fileName = $fileNameInfo['filename'] . '_' . $count . '.' . $fileNameInfo['extension'];
 			}
-			$response = array('fileName' => $fileName, 'status' => true, 'fileSize' => null);
+			$response = array('fileName' => 'tmp://'.$fileName, 'status' => true, 'fileSize' => null);
 			// Look for the content type header
 			$contentType = null;
 			if (isset($_SERVER["HTTP_CONTENT_TYPE"])) {
