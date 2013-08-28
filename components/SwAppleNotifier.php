@@ -5,9 +5,9 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   sweekit.components
@@ -18,9 +18,9 @@
  * notification to iOs devices.
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   sweekit.components
@@ -51,7 +51,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @param string $certificatePath
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setCertificatePath($certificatePath) {
 		$this->_certificatePath = Yii::getPathOfAlias($certificatePath).DIRECTORY_SEPARATOR;
@@ -62,7 +62,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * returns a real path
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getCertificatePath() {
 		if($this->_certificatePath === null) {
@@ -82,7 +82,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @param string $certificatePath
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setTemporaryCertificatePath($certificatePath) {
 		$this->_temporaryCertificateFile = Yii::getPathOfAlias($certificatePath).DIRECTORY_SEPARATOR;
@@ -93,7 +93,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * returns a real path
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getTemporaryCertificatePath() {
 		if($this->_temporaryCertificateFile === null) {
@@ -143,7 +143,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * Create the bundle file if needed
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function findBundleFile() {
 		if($this->_bundleFile === null) {
@@ -170,7 +170,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @param string $bundleName filename for the created bundle
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function buildBundleFile($bundlePath, $bundleName) {
 		$data = null;
@@ -208,7 +208,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @param integer $expire    seconds, starting from now
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function prepareBinaryNotification($deviceId, $payload, $parameters) {
 		$payloadLength = strlen($payload);
@@ -251,7 +251,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * Send the notifications
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function notify() {
 		foreach($this->_messageQueue as $messageId => $binaryMessage) {
@@ -292,7 +292,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @see SwMobileNotifierInterface::getStatus()
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getStatus() {
 		return $this->_sentQueue;
@@ -306,7 +306,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * open a socket if needed
 	 *
 	 * @return resource
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getSocket() {
 		if($this->_socket === null) {
@@ -319,7 +319,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * Connect to apple socker
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function connect() {
 		if($this->_connected === false) {
@@ -347,7 +347,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * Close current socket
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function disconnect() {
 		if($this->_connected === true) {
@@ -362,7 +362,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * Find correct real path for CA file. only used when embbed CA file is active
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function findCaFile() {
 		if($this->_caFile === null) {
@@ -380,7 +380,7 @@ class SwAppleNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * fully installed on environment
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function embbedCaFile() {
 		if($this->isProduction === true) {

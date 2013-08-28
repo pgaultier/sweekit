@@ -2,15 +2,15 @@
 /**
  * PackageCommand.php
  *
- * PHP version 5.3+
+ * PHP version 5.2+
  *
  * Command file for packaging
  *
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
- * @copyright 2010-2012 Ibitux
- * @license   http://www.ibitux.com/license license
- * @version   XXX
- * @link      http://code.ibitux.net/projects/ibitux-gccds
+ * @copyright 2010-2013 Sweelix
+ * @license   http://www.sweelix.net/license license
+ * @version   1.11.0
+ * @link      http://www.sweelix.net
  * @category  commands
  * @package   application.commands
  */
@@ -20,10 +20,10 @@
  * correct package
  *
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
- * @copyright 2010-2012 Ibitux
- * @license   http://www.ibitux.com/license license
- * @version   XXX
- * @link      http://code.ibitux.net/projects/ibitux-gccds
+ * @copyright 2010-2013 Sweelix
+ * @license   http://www.sweelix.net/license license
+ * @version   1.11.0
+ * @link      http://www.sweelix.net
  * @category  commands
  * @package   application.commands
  *
@@ -64,7 +64,7 @@ class PackageCommand extends CConsoleCommand {
 	 * retrieve all files to parse
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getFiles() {
 		if($this->_files === null) {
@@ -89,7 +89,7 @@ class PackageCommand extends CConsoleCommand {
 	 * @param boolean $skipConfirm skip confirmation message
 	 *
 	 * @return integer
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function actionBumpVersion($version=null, $since=null, $app=null, $copyright=null, $license=null, $link=null, $php=null, $path=null, $forbiddenPath=null, $dryRun=false, $skipConfirm=false) {
 		try {
@@ -153,7 +153,7 @@ class PackageCommand extends CConsoleCommand {
 	 * @param boolean $dryRun fake run
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function documentFile($version, $since, $app, $copyright, $license, $link, $php, $dryRun) {
 		try {
@@ -203,7 +203,7 @@ class PackageCommand extends CConsoleCommand {
 	 * @param boolean $skipConfirm skip confirmation message
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function actionTrim($path=null, $forbiddenPath=null, $dryRun=false, $skipConfirm=false) {
 		try {
@@ -257,7 +257,7 @@ class PackageCommand extends CConsoleCommand {
 	 * @param boolean $dryRun fake run
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function cleanUpFiles($dryRun) {
 		try {
@@ -302,7 +302,7 @@ class PackageCommand extends CConsoleCommand {
 	 * @param boolean $skipConfirm skip confirmation message
 	 *
 	 * @return integer
-	 * @since  XXX
+	 * @since  1.11.0
 	*/
 	public function actionZip($version=null, $app=null, $path=null, $emptyPath=null, $forbiddenFiles=null, $dryRun=false, $skipConfirm=false) {
 		try {
@@ -398,7 +398,7 @@ class PackageCommand extends CConsoleCommand {
 	 * display help
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function actionIndex() {
 		try {
@@ -444,7 +444,7 @@ class PackageCommand extends CConsoleCommand {
 	 * @param string $initialDirectory initial directory
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function buildList($initialDirectory) {
 		try {
