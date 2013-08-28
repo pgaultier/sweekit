@@ -5,9 +5,9 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   sweekit.web
@@ -65,13 +65,13 @@
  * </code>
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   0.0.3(baratheon)
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   sweekit.web
- * @since     0.0.3(baratheon)
+ * @since     1.11.0
  *
  * @property integer $quality target quality
  * @property boolean $ratio   target ratio
@@ -493,7 +493,7 @@ class SwImage {
 	 * @throws Exception
 	 * @return string
 	 *
-	 * @since  0.0.3(baratheon)
+	 * @since  XXX
 	 */
 	public function getContentType() {
 		if($this->_imageType === null) {
@@ -523,7 +523,7 @@ class SwImage {
 	 *
 	 * @return string
 	 *
-	 * @since  0.0.3(baratheon)
+	 * @since  XXX
 	 */
 	public function liveRender() {
 		if($this->_resized === false) {

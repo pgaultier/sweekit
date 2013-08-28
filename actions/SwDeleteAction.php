@@ -7,9 +7,9 @@
  * Action
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions
@@ -21,9 +21,9 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  * This SwDeleteAction handle the xhr /swfupload process
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions

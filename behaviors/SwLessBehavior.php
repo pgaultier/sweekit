@@ -5,13 +5,13 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
- * @since     XXX
+ * @since     1.11.0
  */
 
 /**
@@ -58,13 +58,13 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
- * @since     XXX
+ * @since     1.11.0
  */
 class SwLessBehavior extends CBehavior {
 	const COMPILER_PATH='ext.sweekit.vendors.lessphp';
@@ -78,7 +78,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param CClientScript $owner the component that this behavior is to be attached to.
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function attach($owner) {
 		if($owner instanceof CClientScript) {
@@ -95,7 +95,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $cacheId id of cms cache
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setCacheId($cacheId) {
 		$this->_cacheId = $cacheId;
@@ -105,7 +105,7 @@ class SwLessBehavior extends CBehavior {
 	 * get current cache id
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getCacheId() {
 		return $this->_cacheId;
@@ -127,7 +127,7 @@ class SwLessBehavior extends CBehavior {
 	 * was set correctly
 	 *
 	 * @return CCache
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getCache() {
 		if(($this->_cache === null) && ($this->_cacheId !== null)) {
@@ -141,11 +141,15 @@ class SwLessBehavior extends CBehavior {
 	 * Published assets url
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getAssetsUrl() {
 		if($this->_assetsUrl === null) {
-			$this->_assetsUrl = Yii::app()->getAssetManager()->publish($this->getCacheDirectory(), false, -1, $this->getForceRefresh());
+			if(Yii::app()->getAssetManager()->linkAssets === true) {
+				$this->_assetsUrl = Yii::app()->getAssetManager()->publish($this->getCacheDirectory());
+			} else {
+				$this->_assetsUrl = Yii::app()->getAssetManager()->publish($this->getCacheDirectory(), false, -1, $this->getForceRefresh());
+			}
 		}
 		return $this->_assetsUrl;
 	}
@@ -156,7 +160,7 @@ class SwLessBehavior extends CBehavior {
 	 * should be upgrade
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function prepareLessAssets() {
 		if(($this->_preparedLessAssets === null) && ($this->getAssetsDirectories() !== null)) {
@@ -178,7 +182,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $media media that the generated CSS file should be applied to. If empty, it means all media types.
 	 *
 	 * @return CClientScript
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function registerLessFile($url,$media='') {
 		Yii::beginProfile('SwLessBehavior.registerLessFile','sweekit.profile');
@@ -212,7 +216,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $media media that the CSS code should be applied to. If empty, it means all media types.
 	 *
 	 * @return CClientScript
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function registerLess($id, $less, $media='') {
 		Yii::beginProfile('SwLessBehavior.registerLess','sweekit.profile');
@@ -243,7 +247,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $id snippet id
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function isLessRegistered($id) {
 		return isset($this->less[$id]);
@@ -255,7 +259,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $url file url
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function isLessFileRegistered($url) {
 		return isset($this->lessFiles[$url]);
@@ -266,7 +270,7 @@ class SwLessBehavior extends CBehavior {
 	 * Get current formatter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getFormatter() {
 		return $this->_formatter;
@@ -279,7 +283,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $formatter
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setFormatter($formatter) {
 		if(in_array($formatter, array('lessjs', 'compressed', 'classic')) === true) {
@@ -296,7 +300,7 @@ class SwLessBehavior extends CBehavior {
 	 * Get dynamic less variable to use
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getVariables() {
 		return $this->_variables;
@@ -308,7 +312,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param array $variables variables to expand
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setVariables($variables) {
 		$this->_variables = $variables;
@@ -326,7 +330,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $directory path alias to the less directory
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setDirectory($directory) {
 		$this->_lessDirectory = Yii::getPathOfAlias($directory);
@@ -339,7 +343,7 @@ class SwLessBehavior extends CBehavior {
 	 * Retrieve real less path
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getDirectory() {
 		return $this->_lessDirectory;
@@ -354,7 +358,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param array list of less companion directories
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setAssetsDirectories($assetsDirectories) {
 		$this->_assetsDirectories = $assetsDirectories;
@@ -365,7 +369,7 @@ class SwLessBehavior extends CBehavior {
 	 * must be published as companion assets
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getAssetsDirectories() {
 		return $this->_assetsDirectories;
@@ -379,7 +383,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param boolean $forceRefresh
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setForceRefresh($forceRefresh) {
 		$this->_forceRefresh = $forceRefresh;
@@ -389,10 +393,10 @@ class SwLessBehavior extends CBehavior {
 	 * Check if we have to force refresh on each request
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getForceRefresh() {
-		return $this->_forceRefresh;
+		return ($this->_forceRefresh === true);
 	}
 
 	private $_cacheDirectory;
@@ -402,7 +406,7 @@ class SwLessBehavior extends CBehavior {
 	 * This directory is used to pre-publish css files
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getCacheDirectory() {
 		if($this->_cacheDirectory === null) {
@@ -421,7 +425,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $less less code to compile
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function compile($less) {
 		return $this->getCompiler()->compile($less);
@@ -435,7 +439,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param string $cssFile  compiled css file
 	 *
 	 * @return mixed
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function compileFile($lessFile, $cssFile=null) {
 		$result = false;
@@ -452,7 +456,7 @@ class SwLessBehavior extends CBehavior {
 	 * Lazy load the less compiler
 	 *
 	 * @return lessc
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function getCompiler() {
 		if($this->_compiler === null) {
@@ -479,7 +483,7 @@ class SwLessBehavior extends CBehavior {
 	 * @param integer $cacheDuration @see CCache::get for more information
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setCacheDuration($cacheDuration) {
 		$this->_cacheDuration;
@@ -489,7 +493,7 @@ class SwLessBehavior extends CBehavior {
 	 * Get cache duration to use
 	 *
 	 * @return integer
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getCacheDuration() {
 		return $this->_cacheDuration;

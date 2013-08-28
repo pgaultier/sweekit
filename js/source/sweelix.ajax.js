@@ -75,8 +75,10 @@ log4javascript.JsonAppender = JsonAppender;
 	 */
 	$.fn.ajaxSubmitHandler = function (targetSelector) {
 		targetSelector = targetSelector || null; 
-		
-		//Default buttons
+		var replace = false
+		if(arguments.length == 2) {
+			replace = (!!arguments[1] );
+		}
 		var button = {
 			'target' : 'input:submit, input:image, button:submit',
 			'clicked' : 'input[data-ajaxclick="true"], button[data-ajaxclick="true"]'
@@ -133,15 +135,21 @@ log4javascript.JsonAppender = JsonAppender;
 						'success':function(data, status, xhr){
 						},
 						'complete':function(xhr, status, data) {
+							var element = this;
 							switch(xhr.getResponseHeader('Content-Type')) {
 								case 'application/javascript' :
 									break;
 								case 'text/html' :
 								default :
-									$(this).html(xhr.responseText);
+									if(replace == true) {
+										element = $(xhr.responseText);
+										$(this).replaceWith(element);
+									} else {
+										$(this).html(xhr.responseText);
+									}
 									break;
 							}
-							$(this).trigger('afterAjax');
+							$(element).trigger('afterAjax');
 						}
 					});
 				});
@@ -178,7 +186,10 @@ log4javascript.JsonAppender = JsonAppender;
 					$(evt.target).attr("data-ajaxclick", "true");
 				})
 				
+<<<<<<< HEAD
 				//Handel delegated ajax submit
+=======
+>>>>>>> devel
 				$(this).on('submit', targetSelector, function(evt) {
 					evt.preventDefault();
 					
@@ -231,15 +242,21 @@ log4javascript.JsonAppender = JsonAppender;
 						'success':function(data, status, xhr){
 						},
 						'complete':function(xhr, status, data) {
-							switch(xhr.getResponseHeader('Content-Type')) {
+							var element = this;
+							switch(xhr.getResponseHeader('Content-Type')) { 
 								case 'application/javascript' :
 									break;
 								case 'text/html' :
 								default :
-									$(this).html(xhr.responseText);
+									if(replace == true) {
+										element = $(xhr.responseText);
+										$(this).replaceWith(element);
+									} else {
+										$(this).html(xhr.responseText);
+									}
 									break;
 							}
-							$(this).trigger('afterAjax');
+							$(element).trigger('afterAjax');
 						}
 					});
 				});
