@@ -30,7 +30,7 @@
 		this.reconfigure = function() {
 			config = sweelix.config(this.id);
 			config['globalCblName'] = (!!config['globalCblName'])?config['globalCblName']:'swlx';
-			config['top'] = !!config['top'];
+			config['top'] = (typeof(config['top']) != 'undefined')?config['top']:true;
 			
 			sweelix.register('redirect', function(params){
 				if(typeof(params) == 'object'){
