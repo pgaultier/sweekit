@@ -7,7 +7,7 @@
 * @author    Philippe Gaultier <pgaultier@sweelix.net>
 * @copyright 2010-2013 Sweelix
 * @license   http://www.sweelix.net/license license
-* @version   XXX
+* @version   2.0.0
 * @link      http://www.sweelix.net
 * @category  validators
 * @package   sweekit.validators
@@ -18,13 +18,13 @@
  * of official numbers such as BBAN, IBAN, ...
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  validators
  * @package   sweekit.validators
- * @since     XXX
+ * @since     2.0.0
 */
 class SwOfficialNumberValidator extends CValidator {
 
@@ -63,7 +63,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $attribute attribute to validate
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function validateAttribute($object, $attribute) {
 
@@ -92,7 +92,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number number to validate
 	 *
 	 * @return integer
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function computeIso7812Modulus($number) {
 		$sumTable = array(
@@ -116,7 +116,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number number to validate
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkIso7812($number) {
 		$check = false;
@@ -132,7 +132,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number number to validate
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkIso13616($number) {
 		$check = false;
@@ -154,7 +154,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number number to validate
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkRib($number) {
 		$check = false;
@@ -180,7 +180,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number number to validate
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkModulo97($number) {
 		$check = false;
@@ -198,7 +198,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number vat number
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkFrVat($number) {
 		$check = false;
@@ -218,7 +218,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number vat number
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkBeVat($number) {
 		return $this->checkModulo97(substr($number, 2, 10));
@@ -230,7 +230,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number vat number
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkVat($number) {
 		$check = false;
@@ -249,7 +249,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $country country code
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function findVatValidator($country) {
 		$vatChecker = 'check'.ucfirst(strtolower($country)).'Vat';
@@ -265,7 +265,7 @@ class SwOfficialNumberValidator extends CValidator {
 	 * @param string $number RCS number
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function checkRcs($number) {
 		$check = false;

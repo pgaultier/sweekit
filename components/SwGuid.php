@@ -5,10 +5,10 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
- * @copyright 2010-2012 Ibitux
- * @license   http://www.ibitux.com/license license
- * @version   XXX
- * @link      http://code.ibitux.net/projects/
+ * @copyright 2010-2013 Sweelix
+ * @license   http://www.sweelix.net/license license
+ * @version   2.0.0
+ * @link      http://www.sweelix.net
  * @category  components
  * @package   application.components
  */
@@ -18,10 +18,10 @@
  * Guid generator
  *
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
- * @copyright 2010-2012 Ibitux
- * @license   http://www.ibitux.com/license license
- * @version   XXX
- * @link      http://code.ibitux.net/projects/
+ * @copyright 2010-2013 Sweelix
+ * @license   http://www.sweelix.net/license license
+ * @version   2.0.0
+ * @link      http://www.sweelix.net
  * @category  components
  * @package   application.components
  */
@@ -151,7 +151,7 @@ class SwGuid {
 	 * @param ustring $uuid guid to check
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public static function isValid($uuid) {
 		return preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'.

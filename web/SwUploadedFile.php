@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   Sweeml.web
@@ -59,7 +59,7 @@ Yii::import('ext.sweekit.Sweeml');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   Sweeml.web
@@ -228,7 +228,7 @@ class SwUploadedFile extends CComponent {
 	 * @param string $id            id of current target file
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected static function buildFilePath($targetFileUrl, $id=null) {
 		if(strncasecmp('tmp://', $targetFileUrl, 6) === 0) {
@@ -369,7 +369,7 @@ class SwUploadedFile extends CComponent {
 	 * @param array $data data to filter out
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	private function cleanUpPost($data) {
 		$cleanedData = array();
@@ -406,7 +406,7 @@ class SwUploadedFile extends CComponent {
 	 * This function remove current file from the instance storage
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	private function cleanUpFiles() {
 		$data = self::$_files;
@@ -446,7 +446,7 @@ class SwUploadedFile extends CComponent {
 	 * @param boolean true to remove the 'tmp://' part
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getName($clean=false) {
 		if($clean === true) {
@@ -485,7 +485,7 @@ class SwUploadedFile extends CComponent {
 	 * Return the associate model.
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getModel() {
 		return $this->_model;
@@ -495,7 +495,7 @@ class SwUploadedFile extends CComponent {
 	 * Return the associate attribute of the model.
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getAttribute() {
 		return $this->_attribute;

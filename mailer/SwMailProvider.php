@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mailer
  * @package   sweekit.mailer
@@ -33,11 +33,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mailer
  * @package   sweekit.mailer
- * @since     XXX
+ * @since     2.0.0
  */
  class SwMailProvider extends CApplicationComponent {
  	/**
@@ -56,7 +56,7 @@
  	 * @param array $connector connector configuration
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setConnector($connector) {
  		if($this->_initialized === true) {
@@ -69,7 +69,7 @@
  	 * Get current configuration
  	 *
  	 * @return array
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getConnector() {
  		return $this->_connector;
@@ -86,7 +86,7 @@
  	 * @param string $email email for reply to
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setReplyTo($email) {
  	 	if($this->_initialized === true) {
@@ -99,7 +99,7 @@
  	 * Retrieve current replyTo setting
  	 *
  	 * @return string
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	*/
  	public function getReplyTo() {
  		return $this->_replyTo;
@@ -116,7 +116,7 @@
  	 * @param string $email email sender
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	*/
  	public function setFromEmail($email) {
  		if($this->_initialized === true) {
@@ -131,7 +131,7 @@
  	 * @param string $name readable name
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setFromName($name) {
  		if($this->_initialized === true) {
@@ -144,7 +144,7 @@
  	 * Retrieve current from settings array('email' => $email, 'name' => $name)
  	 *
  	 * @return array
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	*/
  	public function getFrom() {
  		return $this->_from;
@@ -156,7 +156,7 @@
  	 * Produce a *new* configured Email
  	 *
  	 * @return SwMail
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getMailer() {
  		if($this->_mail === null) {
@@ -171,7 +171,7 @@
  	 * Init module with parameters @see CApplicationComponent::init()
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function init() {
  		$this->attachBehaviors($this->behaviors);
