@@ -63,6 +63,44 @@ Yii::import('ext.sweelix.sweekit.validators.SwFileValidator');
  */
 class Sweeml extends CHtml {
 	/**
+	 * Generates the data suitable for list-based HTML elements.
+	 * The generated data can be used in {@link dropDownList}, {@link listBox}, {@link checkBoxList},
+	 * {@link radioButtonList}, and their active-versions (such as {@link activeDropDownList}).
+	 * Note, this method does not HTML-encode the generated data. You may call {@link encodeArray} to
+	 * encode it if needed.
+	 * Please refer to the {@link value} method on how to specify value field, text field and group field.
+	 * @param CActiveDataProvider $models a list of model objects. This parameter
+	 * can also be an array of associative arrays (e.g. results of {@link CDbCommand::queryAll}).
+	 * @param string $valueField the attribute name for list option values
+	 * @param string $textField the attribute name for list option texts
+	 * @param string $groupField the attribute name for list option group names. If empty, no group will be generated.
+	 * @return array the list data that can be used in {@link dropDownList}, {@link listBox}, etc.
+	 */
+	public static function listDataFromActiveDataProvider($activeDataProvider,$valueField,$textField,$groupField='')
+	{
+		$listData=array();
+		if($groupField==='')
+		{
+			foreach($activeDataProvider->getData() as $model)
+			{
+				$value=self::value($model,$valueField);
+				$text=self::value($model,$textField);
+				$listData[$value]=$text;
+			}
+		}
+		else
+		{
+			foreach($activeDataProvider->getData() as $model)
+			{
+				$group=self::value($model,$groupField);
+				$value=self::value($model,$valueField);
+				$text=self::value($model,$textField);
+				$listData[$group][$value]=$text;
+			}
+		}
+		return $listData;
+	}
+	/**
 	 * Create an asynchronous file upload. This kind of
 	 * file upload allow the use of fully ajaxed forms
 	 * supported htmlOptions are :
@@ -74,27 +112,12 @@ class Sweeml extends CHtml {
 	 *  	'config' => array(
 	 *  		'runtimes' => 'html5, html4', // can be : html5, html4, flash, browserplus, gears, silverlight
 	 *  		'dropElement' => 'id_zone', // String with the ID of the element that you want to be able to drop files into this is only used by some runtimes that support it
-	 *  		'ui' => false, // display default ui system (override events, ...)
+	 *  		'ui' => false, // true to display default ui system (override events, ...) or object to handle events
+	 *  					   // js:new UploadManager() to handle all plupload events
+	 *  					   // one special event has been added :AsyncDelete is for callback when delete is asked
 	 *  		'multiSelection' => false, // allow multifile upload
 	 *  		'url' => '...', // default upload url for temporary upload
 	 *  		'urlDelete' => '...', // default delete url for temporary upload
-	 *  	),
-	 *  	'events' => array( // default plupload events, see http://www.plupload.com for more information
-	 *  		'beforeUpload' => 'js:xxx',
-	 *  		'chunkUploaded' => 'js:xxx',
-	 *  		'destroy' => 'js:xxx',
-	 *  		'error' => 'js:xxx',
-	 *  		'filesAdded' => 'js:xxx',
-	 *  		'filesRemoved' => 'js:xxx',
-	 *  		'fileUploaded' => 'js:xxx',
-	 *  		'init' => 'js:xxx',
-	 *  		'postInit' => 'js:xxx',
-	 *  		'queueChanged' => 'js:xxx',
-	 *  		'refresh' => 'js:xxx',
-	 *  		'stateChanged' => 'js:xxx',
-	 *  		'uploadComplete' => 'js:xxx',
-	 *  		'uploadFile' => 'js:xxx',
-	 *  		'uploadProgress' => 'js:xxx',
 	 *  	),
 	 * );
 	 * </code>
@@ -113,9 +136,9 @@ class Sweeml extends CHtml {
 
 		$htmlOptions['name'] = $name;
 		$htmlOptions['id']=self::getIdByName($name);
-		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
+		$config = self::prepareAsyncFileUpload($htmlOptions);
 
-		return self::renderAsyncFileUpload($value, $htmlOptions, $config, $attachedEvents);
+		return self::renderAsyncFileUpload($value, $htmlOptions, $config);
 	}
 
 	/**
@@ -146,6 +169,8 @@ class Sweeml extends CHtml {
 				}
 			}
 		}
+		// override data store to allow js to be aware of the attribute
+		$htmlOptions['config']['eventHandlerConfig']['store'] = $attribute;
 		if(count($filters) > 0) {
 			if(isset($htmlOptions['config']['filters']) === true) {
 				$htmlOptions['config']['filters'] = CMap::mergeArray($filters, $htmlOptions['config']['filters']);
@@ -153,17 +178,35 @@ class Sweeml extends CHtml {
 				$htmlOptions['config']['filters'] = $filters;
 			}
 		}
-		if(isset($htmlOptions['value']) === true) {
-			$value  = $htmlOptions['value'];
-			unset($htmlOptions['value']);
-		} else {
-			$value = null;
+
+		Yii::import('ext.sweekit.web.SwUploadedFile');
+
+		$value = SwUploadedFile::getInstances($model, $attribute);
+		$fileList = $model->$attribute;
+		if((is_array($fileList) === false) && (empty($fileList) === false)) {
+			$fileList = array($fileList);
+		} elseif(is_array($fileList) === false) {
+			$fileList = null;
 		}
-		list($config, $attachedEvents) = self::prepareAsyncFileUpload($htmlOptions);
+
+		if($fileList !== null) {
+			$resourcePath = Yii::getPathOfAlias(isset($htmlOptions['resourcesPath'])?$htmlOptions['resourcesPath']:'webroot');
+			if(isset($htmlOptions['resourcesPath']) === true) { unset($htmlOptions['resourcesPath']); }
+			foreach($fileList as $element) {
+				if((strncasecmp('tmp://', $element, 6) !== 0) && (empty($element) === false)) {
+					$realFile = $resourcePath.DIRECTORY_SEPARATOR.$element;
+					if(file_exists($realFile) === true) {
+						$fileInfo = pathinfo($realFile);
+						$value[] = new SwUploadedFile($fileInfo['basename'], $realFile, $fileInfo['extension'], filesize($realFile), $model, $attribute);
+					}
+				}
+			}
+		}
+		$config = self::prepareAsyncFileUpload($htmlOptions);
 
 		if($model->hasErrors($attribute))
 			self::addErrorCss($htmlOptions);
-		return self::renderAsyncFileUpload($value, $htmlOptions, $config, $attachedEvents);
+		return self::renderAsyncFileUpload($value, $htmlOptions, $config);
 	}
 
 	/**
@@ -177,14 +220,13 @@ class Sweeml extends CHtml {
 	 * @return string
 	 * @since  1.1.0
 	 */
-	protected static function renderAsyncFileUpload($values, $htmlOptions, $config, $attachedEvents) {
+	protected static function renderAsyncFileUpload($values, $htmlOptions, $config) {
 		if(is_array($values) == true) {
 			$uploadedFiles = null;
 			foreach($values as $addedFile) {
 				if($addedFile instanceof SwUploadedFile) {
 					$uploadedFiles[] = array('fileName' => $addedFile->getName(), 'fileSize' => $addedFile->getSize(), 'status' => true);
 				}
-
 			}
 			if($uploadedFiles !== null) {
 				$config['uploadedFiles'] = $uploadedFiles;
@@ -209,9 +251,10 @@ class Sweeml extends CHtml {
 			$content = Yii::t('sweelix', 'Browse ...');
 		}
 
-		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
-
+		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).');';
 		unset($htmlOptions['uploadOptions']);
+		unset($htmlOptions['value']);
+
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
 		if(Yii::app()->getRequest()->isAjaxRequest === false) {
 			Yii::app()->clientScript->registerScript($htmlOptions['id'], $js);
@@ -236,11 +279,27 @@ class Sweeml extends CHtml {
 			'dropText' => Yii::t('sweelix', 'Drop files here'),
 			'ui' => false,
 			'multiSelection' => false,
-			'url' => self::normalizeUrl(array('asyncUpload', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId())),
-			'urlDelete' => self::normalizeUrl(array('asyncDelete', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId())),
+			'url' => array('asyncUpload', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()),
+			'urlDelete' => array('asyncDelete', 'id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()),
+			'urlPreview' => null,
 		);
 		if(isset($htmlOptions['config']) == true) {
+			if(isset($htmlOptions['config']['urlPreview']) && is_array($htmlOptions['config']['urlPreview']) === true) {
+				$htmlOptions['config']['urlPreview'] = array_merge($htmlOptions['config']['urlPreview'], array('id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()));
+			}
+			if(isset($htmlOptions['config']['urlDelete']) && is_array($htmlOptions['config']['urlDelete']) === true) {
+				$htmlOptions['config']['urlDelete'] = array_merge($htmlOptions['config']['urlDelete'], array('id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()));
+			}
+			if(isset($htmlOptions['config']['url']) && is_array($htmlOptions['config']['url']) === true) {
+				$htmlOptions['config']['url'] = array_merge($htmlOptions['config']['url'], array('id'=>$htmlOptions['id'], 'key' => Yii::app()->getSession()->getSessionId()));
+			}
+
 			$config = CMap::mergeArray($config, $htmlOptions['config']);
+			foreach(array('url', 'urlDelete', 'urlPreview') as $rawUrl) {
+				if(isset($config[$rawUrl]) === true) {
+					$config[$rawUrl] = self::normalizeUrl($config[$rawUrl]);
+				}
+			}
 			unset($htmlOptions['config']);
 		}
 		$config['realName'] = $htmlOptions['name'];
@@ -259,28 +318,16 @@ class Sweeml extends CHtml {
 					$config['silverlightXapUrl'] = Yii::app()->getClientScript()->getSweelixAssetUrl().'/plupload/plupload.silverlight.xap';
 				}
 			}
-			if($config['ui'] == true) {
-				Yii::app()->getClientScript()->registerSweelixScript('plupload.ui');
+			Yii::app()->getClientScript()->registerSweelixScript('sweepload');
+			if($config['ui'] === true) {
+				Yii::app()->getClientScript()->registerSweelixScript('sweepload.ui');
 			}
 		}
-		$attachedEvents = null;
-		if(isset($htmlOptions['events']) == true) {
-			$events = $htmlOptions['events'];
-			unset($htmlOptions['events']);
-			$knownEvents = array('beforeUpload', 'chunkUploaded', 'destroy',
-			 'error', 'filesAdded', 'filesRemoved', 'fileUploaded', 'init',
-			 'postInit', 'queueChanged', 'refresh', 'stateChanged', 'uploadComplete',
-			 'uploadFile', 'uploadProgress');
-			foreach($events as $name => $func) {
-				if(in_array($name, $knownEvents) == true) {
-					$attachedEvents[ucfirst($name)] = $func;
-				}
-			}
-		}
-		return array($config, $attachedEvents);
+		return $config;
 	}
 
 	private static $_ajaxedFormCount = 0;
+
 	/**
 	 * Render everything to ajax one specific form
 	 *

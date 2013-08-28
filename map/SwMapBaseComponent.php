@@ -29,7 +29,7 @@
  * @since     1.10.0
  */
 class SwMapBaseComponent extends CComponent {
-	public $componentName = 'sweekitmap';
+	public $componentName = 'map';
 	/**
 	 * Get current google map application component
 	 *

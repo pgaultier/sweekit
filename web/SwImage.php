@@ -110,7 +110,7 @@ class SwImage {
 	 *
 	 * @var string mode
 	 */
-	public $cachingMode='performance';
+	public $cachingMode;
 	/**
 	 * @var string mask image if needed
 	 */
@@ -163,6 +163,27 @@ class SwImage {
 	 * @var boolean ratio, default is true (keep aspect ratio)
 	 */
 	private $_ratio=true;
+	/**
+	 * @var boolean fit, default is false (do not crop image)
+	 */
+	private $_fit=false;
+	/**
+	 * @var integer x offset (used when image should fit)
+	 */
+	private $_fitOffsetX=0;
+	/**
+	 * @var integer y offset (used when image should fit)
+	 */
+	private $_fitOffsetY=0;
+	/**
+	 * @var integer x offset (used to move image around)
+	 */
+	private $_offsetX=0;
+	/**
+	 * @var integer y offset (used to move image around)
+	 */
+	private $_offsetY=0;
+
 	/**
 	 * @var boolean check if image has been precalculated
 	 */
@@ -238,6 +259,9 @@ class SwImage {
 			$extend = '';
 			if($this->_ratio === false) {
 				$extend = '-stretched';
+			}
+			if($this->_fit === true) {
+				$extend = '-scale';
 			}
 			if($this->_maskFileName !== null) {
 				$maskData = pathinfo($this->_maskFileName);
@@ -319,6 +343,46 @@ class SwImage {
 	}
 
 	/**
+	 * Fit setter.
+	 *
+	 * @param boolean $value fit value should be true or false
+	 *
+	 * @return SwImage
+	 * @since  XXX
+	 */
+	public function setFit($value) {
+		if(($value === false) || ($value === true)) {
+			$this->_fit = $value;
+		}
+		$this->_resized = false;
+		return $this;
+	}
+
+	/**
+	 * Define offset X of the image
+	 *
+	 * @param integer $value
+	 * @return SwImage
+	 */
+	public function setOffsetX($value) {
+		$this->_offsetX = intval($value);
+		$this->_resized = false;
+		return $this;
+	}
+
+	/**
+	 * Define offset Y of the image
+	 *
+	 * @param integer $value
+	 * @return SwImage
+	 */
+	public function setOffsetY($value) {
+		$this->_offsetY = intval($value);
+		$this->_resized = false;
+		return $this;
+	}
+
+	/**
 	 * Define the mask we will use during
 	 * image resizing. Beware, transparency parameter is not used
 	 * when merging png masks (transparency is already in the mask).
@@ -348,7 +412,7 @@ class SwImage {
 	 * @param integer $width  target width
 	 * @param integer $height target height
 	 *
-	 * @return string
+	 * @return SwImage
 	 * @since  1.0.0
 	 */
 	public function resize($width, $height) {
@@ -424,6 +488,51 @@ class SwImage {
 	}
 
 	/**
+	 * Retrieve content type of current image.
+	 *
+	 * @throws Exception
+	 * @return string
+	 *
+	 * @since  XXX
+	 */
+	public function getContentType() {
+		if($this->_imageType === null) {
+			list($this->_originalWidth, $this->_originalHeight, $this->_imageType) = getimagesize($this->_fileImage);
+		}
+		$contentType = 'application/octet-stream';
+		switch($this->_imageType) {
+			case IMAGETYPE_PNG:
+				$contentType = 'image/png';
+				break;
+			case IMAGETYPE_GIF:
+				$contentType = 'image/gif';
+				break;
+			case IMAGETYPE_JPEG:
+				$contentType = 'image/jpeg';
+				break;
+			default:
+				throw new Exception('imagetype unknown');
+				break;
+		}
+		return $contentType;
+	}
+
+	/**
+	 * Render the image directly withou using local files.
+	 * Usefull for previewing images
+	 *
+	 * @return string
+	 *
+	 * @since  XXX
+	 */
+	public function liveRender() {
+		if($this->_resized === false) {
+			$this->resize($this->_targetWidth, $this->_targetHeight);
+		}
+		return $this->resample(true);
+	}
+
+	/**
 	 * Save computed image to specific place
 	 *
 	 * @param string $targetFile full pathname to save the file
@@ -471,27 +580,45 @@ class SwImage {
 	}
 
 	/**
-	 * Resample the image using GD
+	 * Resample the image using GD, if the parameters $return is set to
+	 * true, the bytes are returned instead of saving them to a specific
+	 * file
 	 *
 	 * @throws Exception
 	 *
-	 * @return void
+	 * @param $return boolean true to return the data instead of writing it
+	 *
+	 * @return mixed
 	 * @since  1.0.0
 	 */
-	private function resample() {
+	private function resample($return = false) {
 		$this->computeSize();
 		$originalImage = $this->loadImage($this->_fileImage, $this->_imageType);
-		$targetImage = imagecreatetruecolor($this->_finalWidth, $this->_finalHeight);
+		if($this->_fit === false) {
+			$targetImage = imagecreatetruecolor($this->_finalWidth, $this->_finalHeight);
+		} else {
+			$targetImage = imagecreatetruecolor($this->_targetWidth, $this->_targetHeight);
+		}
 		if($this->_imageType === IMAGETYPE_PNG) {
 			imagealphablending($targetImage, false);
 			imagesavealpha($targetImage, true);
 		}
-		imagecopyresampled($targetImage, $originalImage, 0, 0, 0, 0, $this->_finalWidth, $this->_finalHeight, $this->_originalWidth, $this->_originalHeight);
+		if($this->_fit === false) {
+			imagecopyresampled($targetImage, $originalImage, 0, 0, 0, 0, $this->_finalWidth, $this->_finalHeight, $this->_originalWidth, $this->_originalHeight);
+		} else {
+			imagecopyresampled($targetImage, $originalImage, ($this->_targetWidth - $this->_finalWidth)/2+$this->_offsetX,  ($this->_targetHeight - $this->_finalHeight)/2+$this->_offsetY, 0, 0, $this->_finalWidth, $this->_finalHeight, $this->_originalWidth, $this->_originalHeight);
+
+		}
 		if($this->_maskFileName !== null) {
 			list($maskWidth, $maskHeight, $maskType) = getimagesize($this->_maskFileName);
 			$maskImage = $this->loadImage($this->_maskFileName, $maskType);
-			$destX = $this->_finalWidth - $maskWidth;
-			$destY = $this->_finalHeight - $maskHeight;
+			if($this->_fit === false) {
+				$destX = $this->_finalWidth - $maskWidth;
+				$destY = $this->_finalHeight - $maskHeight;
+			} else {
+				$destX = $this->_targetWidth - $maskWidth;
+				$destY = $this->_targetHeight - $maskHeight;
+			}
 			if($maskType === IMAGETYPE_PNG) {
         		// remove the alpha blending
         		imagealphablending($targetImage, false);
@@ -505,21 +632,42 @@ class SwImage {
 			}
 
 		}
+		$cachedName = ($return === true)?null:$this->getCachedName(true);
+		$rawData = null;
 		switch($this->_imageType) {
 			case IMAGETYPE_PNG:
 				$imageQuality = (int) ($this->_quality/10);
-				imagepng($targetImage, $this->getCachedName(true), (($imageQuality<10)?$imageQuality:9) );
+				if($return === true) {
+					ob_start();
+				}
+				imagepng($targetImage, $cachedName, (($imageQuality<10)?$imageQuality:9) );
+				if($return === true) {
+					$rawData = ob_get_clean();
+				}
 				break;
 			case IMAGETYPE_GIF:
-				imagegif( $targetImage, $this->getCachedName(true) );
+				if($return === true) {
+					ob_start();
+				}
+				imagegif( $targetImage, $cachedName );
+				if($return === true) {
+					$rawData = ob_get_clean();
+				}
 				break;
 			case IMAGETYPE_JPEG:
-				imagejpeg( $targetImage, $this->getCachedName(true), $this->_quality );
+				if($return === true) {
+					ob_start();
+				}
+				imagejpeg( $targetImage, $cachedName, $this->_quality );
+				if($return === true) {
+					$rawData = ob_get_clean();
+				}
 				break;
 			default:
 				throw new Exception('imagetype unknown');
 				break;
 		}
+		return $rawData;
 	}
 
 	/**
@@ -535,7 +683,7 @@ class SwImage {
 			$this->_finalWidth = $this->_targetWidth;
 			$this->_finalHeight = $this->_targetHeight;
 			// $this->_targetSize = array( $targetWidth, $targetHeight );
-		} else {
+		} elseif($this->_fit === false) {
 			$xRatio = (float) ($this->_targetWidth / $this->_originalWidth);
 			$yRatio = (float) ($this->_targetHeight / $this->_originalHeight);
 			if(($xRatio > 0.0) && ($yRatio > 0.0)) {
@@ -546,6 +694,16 @@ class SwImage {
 				} else {
 					$ratio = max($xRatio, $yRatio);
 				}
+			}
+			$this->_finalWidth = round($ratio * $this->_originalWidth);
+			$this->_finalHeight = round($ratio * $this->_originalHeight);
+		} else {
+			$xRatio = (float) ($this->_targetWidth / $this->_originalWidth);
+			$yRatio = (float) ($this->_targetHeight / $this->_originalHeight);
+			if(($xRatio === 0.0) && ($yRatio === 0.0)) {
+				$ratio = 1;
+			} else {
+				$ratio = max($xRatio, $yRatio);
 			}
 			$this->_finalWidth = round($ratio * $this->_originalWidth);
 			$this->_finalHeight = round($ratio * $this->_originalHeight);

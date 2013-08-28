@@ -62,7 +62,7 @@ class SwUploadAction extends CAction {
 				}
 				$fileName = $fileNameInfo['filename'] . '_' . $count . '.' . $fileNameInfo['extension'];
 			}
-			$response = array('fileName' => $fileName, 'status' => true, 'fileSize' => null);
+			$response = array('fileName' => 'tmp://'.$fileName, 'status' => true, 'fileSize' => null);
 			// Look for the content type header
 			$contentType = null;
 			if (isset($_SERVER["HTTP_CONTENT_TYPE"])) {

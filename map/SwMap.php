@@ -13,7 +13,7 @@
  * @package   Sweeml.map
  */
 
-Yii::import('ext.sweekit.components.SwCurlRequest');
+Yii::import('ext.sweekit.curl.SwCurlRequest');
 
 /**
  * SwMap is an app component which allow configuration for google map engine
@@ -164,7 +164,7 @@ class SwMap extends CApplicationComponent {
 				} else {
 					$serviceUrl .= $this->getOutputFormat();
 				}
-				$request = Yii::createComponent('ext.sweekit.components.SwCurlRequest', $serviceUrl);
+				$request = Yii::createComponent('ext.sweekit.curl.SwCurlRequest', $serviceUrl);
 				$request->setUrlParameters($parameters);
 
 				$this->_currentRequest[$requestHash] = $request->execute();
