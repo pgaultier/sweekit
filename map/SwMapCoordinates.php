@@ -7,9 +7,9 @@
  * Google map coordinates
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -22,9 +22,9 @@ Yii::import('ext.sweekit.map.SwMapBaseComponent');
  * google map coordinates
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map

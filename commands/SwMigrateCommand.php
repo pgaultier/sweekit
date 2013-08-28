@@ -7,9 +7,9 @@
  * Extend migrate command to allow multiples sources
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  commands
  * @package   Sweeml.commands
@@ -22,13 +22,13 @@ Yii::import('system.cli.commands.MigrateCommand');
  * migration process
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  commands
  * @package   Sweeml.commands
- * @since     XXX
+ * @since     1.11.0
  */
 class SwMigrateCommand extends  MigrateCommand {
 	/**
@@ -41,7 +41,7 @@ class SwMigrateCommand extends  MigrateCommand {
 	 * @see MigrateCommand::beforeAction()
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function beforeAction($action, $params) {
 		if($this->extendedMigrationPath !== null) {
@@ -66,7 +66,7 @@ class SwMigrateCommand extends  MigrateCommand {
 	 * @see MigrateCommand::getNewMigrations()
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function getNewMigrations() {
 		$applied=array();
@@ -109,7 +109,7 @@ class SwMigrateCommand extends  MigrateCommand {
 	 * @see MigrateCommand::instantiateMigration()
 	 *
 	 * @return CDbMigration
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function instantiateMigration($class) {
 		$file=$this->migrationPath.DIRECTORY_SEPARATOR.$class.'.php';

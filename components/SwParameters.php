@@ -5,9 +5,9 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -26,9 +26,9 @@
  * </code>
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
@@ -63,7 +63,7 @@ class SwParameters extends CApplicationComponent implements ArrayAccess {
 	 * @see CApplicationComponent::init()
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function init() {
 		parent::init();
@@ -76,7 +76,7 @@ class SwParameters extends CApplicationComponent implements ArrayAccess {
 	 * @see ArrayAccess::offsetExists()
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function offsetExists($offset){
 		$result = $this->_parameters;
@@ -103,7 +103,7 @@ class SwParameters extends CApplicationComponent implements ArrayAccess {
 	 * @see ArrayAccess::offsetGet()
 	 *
 	 * @return mixed
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function offsetGet($offset) {
 		$result = $this->_parameters;
@@ -130,7 +130,7 @@ class SwParameters extends CApplicationComponent implements ArrayAccess {
 	 * @see ArrayAccess::offsetSet()
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function offsetSet($offset, $value) {
 		throw new CException('Parameters are read-only');
@@ -141,7 +141,7 @@ class SwParameters extends CApplicationComponent implements ArrayAccess {
 	 * @see ArrayAccess::offsetUnset()
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function offsetUnset($offset) {
 		throw new CException('Parameters are read-only');
@@ -152,7 +152,7 @@ class SwParameters extends CApplicationComponent implements ArrayAccess {
 	 * with classic params
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function fetchParameters() {
 		$dbConnection = Yii::app()->getComponent($this->connectionID);
@@ -190,7 +190,7 @@ class SwParameters extends CApplicationComponent implements ArrayAccess {
 	 * Load parameters from cache if available
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function loadParameters() {
 		if($this->cacheID!==false && ($cache=Yii::app()->getComponent($this->cacheID))!==null) {

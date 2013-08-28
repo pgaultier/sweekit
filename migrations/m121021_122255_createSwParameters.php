@@ -2,15 +2,15 @@
 /**
  * m121021_122255_createSwParameters.php
  *
- * PHP version 5.3+
+ * PHP version 5.2+
  *
  * Migration
  *
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
- * @copyright 2010-2012 Ibitux
- * @license   http://www.ibitux.com/license license
- * @version   XXX
- * @link      http://code.ibitux.net/projects/ibitux-gccds
+ * @copyright 2010-2013 Sweelix
+ * @license   http://www.sweelix.net/license license
+ * @version   1.11.0
+ * @link      http://www.sweelix.net
  * @category  migrations
  * @package   Sweeml.migrations
  */
@@ -18,10 +18,10 @@
  * This class create the Parameter table
  *
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
- * @copyright 2010-2012 Ibitux
- * @license   http://www.ibitux.com/license license
- * @version   XXX
- * @link      http://code.ibitux.net/projects/ibitux-gccds
+ * @copyright 2010-2013 Sweelix
+ * @license   http://www.sweelix.net/license license
+ * @version   1.11.0
+ * @link      http://www.sweelix.net
  * @category  components
  * @package   Sweeml.components
  */

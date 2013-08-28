@@ -5,9 +5,9 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   sweekit.web
@@ -20,13 +20,13 @@ Yii::import('ext.sweekit.web.SwImage');
  * Yii into one class to inherit Yii config
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   sweekit.web
- * @since     XXX
+ * @since     1.11.0
  */
 class SwCacheImage extends SwImage {
 	/**

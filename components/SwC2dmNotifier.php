@@ -5,9 +5,9 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   sweekit.components
@@ -18,9 +18,9 @@
  * notification to Android devices througs C2DM platform.
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  components
  * @package   sweekit.components
@@ -52,7 +52,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @param string $certificatePath
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setCertificatePath($certificatePath) {
 		$this->_certificatePath = Yii::getPathOfAlias($certificatePath).DIRECTORY_SEPARATOR;
@@ -63,7 +63,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * returns a real path
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getCertificatePath() {
 		if($this->_certificatePath === null) {
@@ -83,7 +83,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @param string $certificatePath
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function setTemporaryCertificatePath($certificatePath) {
 		$this->_temporaryCertificateFile = Yii::getPathOfAlias($certificatePath).DIRECTORY_SEPARATOR;
@@ -94,7 +94,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * returns a real path
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getTemporaryCertificatePath() {
 		if($this->_temporaryCertificateFile === null) {
@@ -154,7 +154,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * Send the notifications
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function notify() {
 		foreach($this->_messageQueue as $messageId => $payload) {
@@ -260,7 +260,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * @see SwMobileNotifierInterface::getStatus()
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	public function getStatus() {
 		return $this->_sentQueue;
@@ -273,7 +273,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * Find correct real path for CA file. only used when embbed CA file is active
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function findCaFile() {
 		if($this->_caFile === null) {
@@ -291,7 +291,7 @@ class SwC2dmNotifier extends CComponent implements SwMobileNotifierInterface {
 	 * fully installed on environment
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  1.11.0
 	 */
 	protected function embbedCaFile() {
 		$tempCaFile = $this->getTemporaryCertificatePath().'c2dm_thawte_ca.pem';
