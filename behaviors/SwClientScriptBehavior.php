@@ -5,9 +5,9 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -50,9 +50,9 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   Sweeml.behaviors
@@ -100,12 +100,13 @@ class SwClientScriptBehavior extends CBehavior {
 	/**
 	 * Register sweelix script
 	 *
-	 * @param string $name name of the package we want to register
+	 * @param string  $name      name of the package we want to register
+	 * @param boolean $importCss do not load packaged css
 	 *
 	 * @return CClientScript
 	 * @since  1.1.0
 	 */
-	public function registerSweelixScript($name) {
+	public function registerSweelixScript($name, $importCss=true) {
 		if(isset($this->sweelixScript[$name]))
 			return $this->getOwner();
 		if($this->sweelixPackages===null)
@@ -127,7 +128,7 @@ class SwClientScriptBehavior extends CBehavior {
 					$this->getOwner()->registerScriptFile($this->getSweelixAssetUrl().'/'.$js);
 				}
 			}
-			if(isset($package['css']) == true) {
+			if(($importCss === true) && (isset($package['css']) == true)) {
 				foreach($package['css'] as $css) {
 					$this->getOwner()->registerCssFile($this->getSweelixAssetUrl().'/'.$css);
 				}
@@ -137,7 +138,48 @@ class SwClientScriptBehavior extends CBehavior {
 			}
 			$this->sweelixScript[$name]=$package;
 			if($this->_init === false) {
-				$this->getOwner()->registerScript('sweelixInit', 'jQuery.sweelix.init('.CJavaScript::encode($this->_config).');', CClientScript::POS_READY);
+				if(isset($this->_config['debug']) === true) {
+					if(isset($this->_config['debug']['mode']) === true) {
+						if(is_string($this->_config['debug']['mode']) === true) {
+							$this->_config['debug']['mode'] = array($this->_config['debug']['mode']);
+						}
+						$appenders = array();
+						foreach($this->_config['debug']['mode'] as $debugMode => $parameters) {
+							if((is_integer($debugMode) === true) && (is_string($parameters) === true)) {
+								$debugMode = $parameters;
+								$parameters = null;
+							}
+							$debugMode = strtolower($debugMode);
+							if($parameters !== null) {
+								$parameters = CJavaScript::encode($parameters);
+							} else {
+								$parameters = '';
+							}
+
+							switch($debugMode) {
+								case 'popup' :
+									$appenders[] = 'js:new log4javascript.PopUpAppender('.$parameters.')';
+									break;
+								case 'browser' :
+									$appenders[] = 'js:new log4javascript.BrowserConsoleAppender('.$parameters.')';
+									break;
+								case 'inpage' :
+									$appenders[] = 'js:new log4javascript.InPageAppender('.$parameters.')';
+									break;
+								case 'alert' :
+									$appenders[] = 'js:new log4javascript.AlertAppender('.$parameters.')';
+									break;
+							}
+						}
+						unset($this->_config['debug']['mode']);
+						if(count($appenders)>0) {
+							$this->_config['debug']['appenders'] = 'js:'.CJavaScript::encode($appenders);
+						}
+
+					}
+				}
+				// $this->getOwner()->registerScript('sweelixInit', 'var sweelixConfig = '.CJavaScript::encode($this->_config).';', CClientScript::POS_HEAD);
+				$this->getOwner()->registerScript('sweelixInit', 'sweelix.configure('.CJavaScript::encode($this->_config).');', CClientScript::POS_HEAD);
 				$this->_init=true;
 			}
 		}

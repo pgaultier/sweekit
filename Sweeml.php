@@ -5,15 +5,15 @@
  * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
  */
 
-Yii::import('ext.sweekit.validators.SwFileValidator');
+Yii::import('ext.sweelix.sweekit.validators.SwFileValidator');
 
 /**
  * This Sweeml class override CHtml class to
@@ -53,9 +53,9 @@ Yii::import('ext.sweekit.validators.SwFileValidator');
  *
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  extensions
  * @package   Sweeml
@@ -133,9 +133,9 @@ class Sweeml extends CHtml {
 		self::resolveNameID($model,$attribute,$htmlOptions);
 		$filters = array();
 		foreach($model->getValidators($attribute) as $validator) {
-			if($validator instanceof SwFileValidator) {
+			if($validator instanceof CFileValidator) {
 				if(is_string($validator->types) === true) {
-					$filters[] = array('extensions' => $validator->types);
+					$filters[] = array('extensions' => str_replace(' ', '',$validator->types));
 				}elseif(is_array($validator->types) === true) {
 					$filters[] = array('extensions' => implode(',',$validator->types));
 				}
@@ -209,16 +209,9 @@ class Sweeml extends CHtml {
 			$content = Yii::t('sweelix', 'Browse ...');
 		}
 
-		$method = 'asyncUpload';
-		if (isset($htmlOptions['method'])){
-			if ($htmlOptions['method']=='JqueryUI') {
-				$method = 'asyncUploadJqueryUI';
-				$tag = 'div';
-				$htmlOptions['type']='div';
-			}
-		}
+		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').asyncUpload('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
 
-		$js = 'jQuery(\'#'.$htmlOptions['id'].'\').'.$method.'('.CJavaScript::encode($config).', '.CJavaScript::encode($attachedEvents).');';
+		unset($htmlOptions['uploadOptions']);
 		$htmlTag = self::tag($tag, $htmlOptions, $content);
 		if(Yii::app()->getRequest()->isAjaxRequest === false) {
 			Yii::app()->clientScript->registerScript($htmlOptions['id'], $js);
@@ -345,6 +338,19 @@ class Sweeml extends CHtml {
 	}
 
 	/**
+	 * Generate a notice open script using raiseevents
+	 *
+	 * @param array  $noticeOptions options to pass to notice as described in documentation
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public static function raiseShowNotice($noticeOptions=array()) {
+		Yii::app()->getClientScript()->registerSweelixScript('notice');
+		return self::raiseEvent('showNotice', $noticeOptions);
+	}
+
+	/**
 	 * Raise redirect js event
 	 *
 	 * @param array   $url   url in yii format
@@ -399,6 +405,19 @@ class Sweeml extends CHtml {
 	}
 
 	/**
+	 * Generate a notice open script to set in link (url)
+	 * using raiseevents
+	 *
+	 * @param array  $noticeOptions options to pass to notice as described in documentation
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public static function raiseShowNoticeUrl($noticeOptions=array()) {
+		return 'javascript:'.self::raiseShowNotice($noticeOptions);
+	}
+
+	/**
 	 * Generate a raise event script.
 	 *
 	 * @param string $eventName  name of the event to raise
@@ -411,9 +430,9 @@ class Sweeml extends CHtml {
 	public static function raiseEvent($eventName, $parameters=array(), $context=null) {
 		Yii::app()->getClientScript()->registerSweelixScript('callback');
 		if($context === null) {
-			return 'jQuery.sweelix.raise(\''.$eventName.'\', '.CJavaScript::encode($parameters).');';
+			return 'sweelix.raise(\''.$eventName.'\', '.CJavaScript::encode($parameters).');';
 		} else {
-			return 'jQuery.sweelix.raiseNamed(\''.$context.'\', \''.$eventName.'\', '.CJavaScript::encode($parameters).');';
+			return 'sweelix.raiseNamed(\''.$context.'\', \''.$eventName.'\', '.CJavaScript::encode($parameters).');';
 		}
 	}
 
@@ -494,9 +513,9 @@ class Sweeml extends CHtml {
 	public static function registerEventScript($eventName, $action, $context=null) {
 		Yii::app()->getClientScript()->registerSweelixScript('callback');
 		if($context === null) {
-			return 'jQuery.sweelix.register(\''.$eventName.'\', '.CJavaScript::encode($action).');';
+			return 'sweelix.register(\''.$eventName.'\', '.CJavaScript::encode($action).');';
 		} else {
-			return 'jQuery.sweelix.register(\''.$context.'\', \''.$eventName.'\', '.CJavaScript::encode($action).');';
+			return 'sweelix.register(\''.$context.'\', \''.$eventName.'\', '.CJavaScript::encode($action).');';
 		}
 	}
 	/**
@@ -512,9 +531,9 @@ class Sweeml extends CHtml {
 	public static function registerEvent($eventName, $action, $context=null) {
 		$js = self::registerEventScript($eventName, $action, $context);
 		if($context === null) {
-			Yii::app()->getClientScript()->registerScript($eventName, $js, CClientScript::POS_HEAD);
+			Yii::app()->getClientScript()->registerScript($eventName, $js, CClientScript::POS_READY);
 		} else {
-			Yii::app()->getClientScript()->registerScript($context.'-'.$eventName, $js, CClientScript::POS_HEAD);
+			Yii::app()->getClientScript()->registerScript($context.'-'.$eventName, $js, CClientScript::POS_READY);
 		}
 	}
 }

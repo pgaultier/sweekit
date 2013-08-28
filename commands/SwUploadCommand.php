@@ -1,41 +1,43 @@
 <?php
 /**
  * SwUploadCommand.php
- * 
+ *
  * PHP version 5.2+
- * 
+ *
  * Command file to cleanup xhr swf uploaded files
- * 
+ *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  commands
  * @package   Sweeml.commands
- */	
+ */
+
 Yii::import('ext.sweekit.web.SwUploadedFile');
+
 /**
- * This command browse the xhr/swf upload file and remove 
- * old files 
- * 
+ * This command browse the xhr/swf upload file and remove
+ * old files
+ *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.10.0
+ * @version   1.11.0
  * @link      http://www.sweelix.net
  * @category  commands
  * @package   Sweeml.commands
- */	
+ */
 class SwUploadCommand extends CConsoleCommand {
 	public $delay=10;
 	private $_checkDate;
 	/**
 	 * Check files and remove old files
 	 * @see CConsoleCommand::run()
-	 * 
+	 *
 	 * @param $args mixed unused yet, only for compat purpose
-	 * 
+	 *
 	 * @return void
 	 * @since  1.1.0
 	 */
@@ -49,12 +51,12 @@ class SwUploadCommand extends CConsoleCommand {
 			throw $e;
     	}
     }
-    
+
     /**
      * Browse directories in order to clean up files
-     * 
+     *
      * @param string $path temporary path
-     * 
+     *
      * @return integer
      * @since  1.1.0
      */
@@ -63,7 +65,7 @@ class SwUploadCommand extends CConsoleCommand {
 		$nbFiles = 0;
 		foreach($res as $newPath) {
 			if(($newPath != '.') && ($newPath != '..')) {
-				$newPath = $path.DIRECTORY_SEPARATOR.$newPath; 
+				$newPath = $path.DIRECTORY_SEPARATOR.$newPath;
 				if(is_dir($newPath) == true) {
 					$nbInsideFiles = $this->_checkDirectoriesRecursive($newPath);
 					$nbFiles += $nbInsideFiles;
