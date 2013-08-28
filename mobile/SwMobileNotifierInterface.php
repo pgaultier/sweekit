@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mobile
  * @package   sweekit.mobile
@@ -19,7 +19,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mobile
  * @package   sweekit.mobile
@@ -36,7 +36,7 @@ interface SwMobileNotifierInterface {
 	 * @param array $parameters an array of extended parameters
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function prepare($deviceId, $payload, $parameters=null);
 

@@ -7,9 +7,9 @@
  * Action
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions
@@ -23,13 +23,13 @@ Yii::import('ext.sweekit.web.SwCacheImage');
  * This SwPreviewAction handle the xhr / swfupload process for preview
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  actions
  * @package   Sweeml.actions
- * @since     XXX
+ * @since     2.0.0
  */
 class SwPreviewAction extends CAction {
 	public $width = 100;
@@ -40,7 +40,7 @@ class SwPreviewAction extends CAction {
 	 * Run the action and perform the preview process
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function run($fileName, $mode=null) {
 		Yii::trace(__CLASS__.'::'.__FUNCTION__.'()', 'Sweeml.actions');
@@ -62,7 +62,7 @@ class SwPreviewAction extends CAction {
 	 * @param string $fileName filename
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function generateJson($fileName) {
 		Yii::trace(__CLASS__.'::'.__FUNCTION__.'()', 'Sweeml.actions');
@@ -147,7 +147,7 @@ class SwPreviewAction extends CAction {
 	 * @param string $fileName filename
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function generateImage($fileName) {
 		Yii::trace(__CLASS__.'::'.__FUNCTION__.'()', 'Sweeml.actions');

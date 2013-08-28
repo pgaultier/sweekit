@@ -3,9 +3,9 @@
  * CLinkPager class file.
 *
 * @author Qiang Xue <qiang.xue@gmail.com>
-* @link http://www.yiiframework.com/
-* @copyright Copyright &copy; 2008-2011 Yii Software LLC
-* @license http://www.yiiframework.com/license/
+* @link http://www.sweelix.net
+* @copyright 2010-2013 Sweelix
+* @license http://www.sweelix.net/license license
 */
 
 /**

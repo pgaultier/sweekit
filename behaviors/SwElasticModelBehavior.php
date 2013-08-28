@@ -9,7 +9,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   sweekit.behaviors
@@ -27,7 +27,7 @@
  * 	 * @see CModel::setAttributes()
  * 	 *
  * 	 * @return void
- * 	 * @since  XXX
+ * 	 * @since  2.0.0
  * 	 * /
  * 	public function setAttributes($values, $safeOnly=true) {
  * 		if(($this->asa('elasticProperties') !== null) && ($this->asa('elasticProperties')->getEnabled() === true)) {
@@ -44,7 +44,7 @@
  * 	 * @see CActiveRecord::getAttributes()
  * 	 *
  * 	 * @return array
- * 	 * @since  XXX
+ * 	 * @since  2.0.0
  * 	 * /
  * 	public function getAttributes($names=true) {
  * 		$attributes = parent::getAttributes($names);
@@ -60,11 +60,11 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   sweekit.behaviors
- * @since     XXX
+ * @since     2.0.0
  */
  class SwElasticModelBehavior extends CModel implements IBehavior {
 
@@ -79,7 +79,7 @@
  	 * @param string $attribute elastic storage attribute name
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setElasticStorage($attribute) {
 		$this->_elasticStorage = $attribute;
@@ -89,7 +89,7 @@
  	 * Get defined elastic attibute
  	 *
  	 * @return string
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getElasticStorage() {
  		return $this->_elasticStorage;
@@ -101,7 +101,7 @@
  	 * @see CModel::getScenario()
  	 *
  	 * @return string
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getScenario() {
  		return $this->getOwner()->getScenario();
@@ -113,7 +113,7 @@
  	 * @see CModel::setScenario()
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setScenario($value) {
  		throw new CException('Scenario cannot be set directly in elastic model');
@@ -131,7 +131,7 @@
  	 * @param array $config elastic model configuration
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setTemplateConfig($config) {
  		if(is_callable($config) === true) {
@@ -156,7 +156,7 @@
  	 * Get current template config file
  	 *
  	 * @return array
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getTemplateConfig() {
 		if($this->_template === null) {
@@ -178,7 +178,7 @@
  	 * @param array  $arrayCell index array
  	 *
  	 * @return mixed
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function prop($property, $arrayCell = null) {
  		$prop = null;
@@ -200,7 +200,7 @@
  	 * @param array $matches matches from preg_replace
  	 *
  	 * @return string
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	protected function expandImages($matches) {
  		$nbMatches = preg_match_all('/([a-z-]+)\="([^"]+)"/', $matches[1], $imgInfos);
@@ -238,7 +238,7 @@
  	 * @param string $property  property name to test
  	 *
  	 * @return boolean
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function propHasValue($property) {
  		$hasProp = ((in_array($property, $this->_elasticAttributeNames) === true) && (isset($this->_elasticAttributes[$property]) === true) && (empty($this->_elasticAttributes[$property]) === false));
@@ -271,7 +271,7 @@
  	 * @see CModel::rules()
  	 *
  	 * @return array
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
 	public function rules() {
 		return $this->_elasticRules;
@@ -281,7 +281,7 @@
 	 * List of the attributes names
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function attributeNames() {
 		return $this->_elasticAttributeNames;
@@ -293,7 +293,7 @@
 	 * @param string $name attribute name
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function hasAttribute($name) {
 		return (in_array($name, $this->_elasticAttributeNames) === true);
@@ -339,7 +339,7 @@
 	 * @param string $name the attribute name
 	 *
 	 * @return mixed
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getAttribute($name) {
 		if(property_exists($this,$name) === true)
@@ -357,7 +357,7 @@
 	 * @param mixed  $value the attribute value.
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setAttribute($name,$value) {
 		if(property_exists($this,$name) === true) {
@@ -377,7 +377,7 @@
 	 * @see CModel::setAttributes()
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setAttributes($values, $safeOnly=true) {
 		$filteredValues = array();
@@ -397,7 +397,7 @@
 	 * @param array $values current attributes values
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function filterOutElasticAttributes($values) {
 		$filteredValues = array();
@@ -433,7 +433,7 @@
 	 * @param mixed  $value property value
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function __set($name,$value) {
 		if($this->setAttribute($name,$value)===false) {
@@ -449,7 +449,7 @@
 	 * @param string $name the property name or the event name
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function __isset($name) {
 		if(isset($this->_elasticAttributes[$name]) === true)
@@ -489,7 +489,7 @@
  	 * )
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function configure() {
  		if($this->_configured === false) {
@@ -569,7 +569,7 @@
  	 * @param array $pathParameters path parameters to expand
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setPathParameters($pathParameters) {
  		$this->_pathParameters = $pathParameters;
@@ -589,7 +589,7 @@
  	 * @param CEvent $event event
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function storeElasticAttributes($event) {
 		$this->beforeSave();
@@ -603,7 +603,7 @@
  	 * @param CEvent $event event to pass
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function loadElasticAttributesWithEvent($event) {
  		$this->loadElasticAttributes();
@@ -616,7 +616,7 @@
  	 * @param CEvent $event event
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function loadElasticAttributes() {
  		$values = CJSON::decode($this->getOwner()->{$this->getElasticStorage()});
@@ -636,7 +636,7 @@
  	 * @param CEvent $event event
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function validateElasticAttributes($event) {
 		$this->validate();
@@ -653,7 +653,7 @@
  	 * @see CModel::getAttributes()
  	 *
  	 * @return array
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getAttributes($names=null) {
  		if(is_array($names) === true) {

@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map
@@ -21,7 +21,7 @@ Yii::import('ext.sweekit.curl.SwCurlRequest');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  map
  * @package   Sweeml.map

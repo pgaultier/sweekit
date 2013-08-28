@@ -3,15 +3,15 @@ use hubshop\models\ShopNode;
 /**
  * SwHandleUploadedFile.php
  *
- * PHP version 5.3+
+ * PHP version 5.2+
  *
  *
  *
  * @author    Philippe Gaultier <pgaultier@ibitux.com>
- * @copyright 2010-2013 Ibitux
- * @license   http://www.ibitux.com/license license
- * @version   XXX
- * @link      http://code.ibitux.net/projects/
+ * @copyright 2010-2013 Sweelix
+ * @license   http://www.sweelix.net/license license
+ * @version   2.0.0
+ * @link      http://www.sweelix.net
  * @category
  * @package   application.
  */
@@ -26,7 +26,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 	 * @see CBehavior::events()
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function events() {
 		return array(
@@ -80,7 +80,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  	 * Get raw parameters
  	 *
  	 * @return array
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getPathParameters() {
  		return $this->_pathParameters;
@@ -91,7 +91,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  	 * @param array $pathParameters
  	 *
  	 * @return void
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function setPathParameters($pathParameters) {
  		if(is_array($pathParameters) === true) {
@@ -106,7 +106,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  	 * convert raw path parameter to usable one (attributes name to real value)
  	 *
  	 * @return array
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 */
  	public function getExpandedPathParameters() {
  		if($this->_expandedPathParameters === null) {
@@ -138,7 +138,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 	 * @param array $attributesConfig
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setAttributesForFile($attributesConfig) {
 		if(is_string($attributesConfig) === true) {
@@ -167,7 +167,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 	 * Get attributes configured as file handlers
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getAttributesForFile() {
 		return $this->_attributesForFile;
@@ -178,7 +178,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 	/**
 	 * define original values to perform the difference
 	 *
-	 * @since  XXX
+	 * @since  2.0.0
 	 * @return void
 	 */
 	public function setOriginalValues() {
@@ -201,7 +201,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 	/**
 	 * Get files originally defined
 	 *
-	 * @since  XXX
+	 * @since  2.0.0
 	 * @return array
 	 */
 	public function getOriginalValues() {
@@ -211,7 +211,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
 	/**
 	 * Save files and populate model attributes
 	 *
-	 * @since  XXX
+	 * @since  2.0.0
 	 * @return void
 	 */
  	public function saveFiles() {
@@ -308,7 +308,7 @@ Yii::import('ext.sweekit.web.SwUploadedFile');
  	/**
  	 * Delete files when they are not needed anymore
  	 *
- 	 * @since  XXX
+ 	 * @since  2.0.0
  	 * @return void
  	 */
  	public function deleteFiles() {

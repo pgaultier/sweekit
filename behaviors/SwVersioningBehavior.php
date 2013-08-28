@@ -2,16 +2,16 @@
 /**
  * SwVersioningBehavior.php
  *
- * PHP version 5.3+
+ * PHP version 5.2+
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   sweekit.behaviors
- * @since     XXX
+ * @since     2.0.0
  */
 
 /**
@@ -19,13 +19,13 @@
  * Add versioning support to active records
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  behaviors
  * @package   sweekit.behaviors
- * @since     XXX
+ * @since     2.0.0
  *
  * @property string  $tableName     versioning table name
  * @property string  $versionField  field used to store version
@@ -51,7 +51,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $tableName
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setTableName($tableName) {
 		$this->_tableName = $tableName;
@@ -61,7 +61,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get versioning table name
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getTableName() {
 		if($this->_tableName === null) {
@@ -81,7 +81,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $field version field name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setVersionField($field) {
 		$this->_versionField = $field;
@@ -91,7 +91,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get name of version field
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getVersionField() {
 		if($this->_versionField === null) {
@@ -111,7 +111,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $field author field name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setAuthorField($field) {
 		$this->_authorField = $field;
@@ -121,7 +121,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get name of author field
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getAuthorField() {
 		if($this->_authorField === null) {
@@ -141,7 +141,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $field date field name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setDateField($field) {
 		$this->_dateField = $field;
@@ -151,7 +151,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get name of date field
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getDateField() {
 		if($this->_dateField === null) {
@@ -171,7 +171,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $field comment field name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setCommentField($field) {
 		$this->_commentField = $field;
@@ -181,7 +181,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get name of comment field
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getCommentField() {
 		if($this->_commentField === null) {
@@ -202,7 +202,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param boolean cascade mode
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setCascadeDelete($cascade) {
 		$this->_cascadeDelete = $cascade;
@@ -213,7 +213,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * record is deleted. Default to false
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getCascadeDelete() {
 		if($this->_cascadeDelete === null) {
@@ -232,7 +232,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * in sql request
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getPrimaryKeyCondition() {
 		if($this->_primaryKeyCondition === null) {
@@ -262,7 +262,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Retrieve current version info from database
 	 *
 	 * @retunr void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function prepareVersionInfo() {
 		list($condition, $params) = $this->getPrimaryKeyCondition();
@@ -289,7 +289,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $author author name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setAuthor($author) {
 		$this->_author = $author;
@@ -299,7 +299,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get author name
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getAuthor() {
 		if($this->_author === null) {
@@ -319,7 +319,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $comment comment
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setComment($comment) {
 		$this->_comment = $comment;
@@ -329,7 +329,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get comment
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getComment() {
 		if($this->_comment === null) {
@@ -349,7 +349,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param string $date date of record creation
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setDate($date) {
 		$this->_date = $date;
@@ -359,7 +359,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get date of record creation
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getDate() {
 		if($this->_date === null) {
@@ -379,7 +379,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @param integer $data date of record creation
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setVersion($version) {
 		$this->_version = $version;
@@ -389,7 +389,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * Get date of record version
 	 *
 	 * @return integer
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getVersion() {
 		if($this->_version === null) {
@@ -405,7 +405,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @see CActiveRecordBehavior::afterSave()
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function afterSave($event) {
 		$connection = $this->getOwner()->getDbConnection();
@@ -431,7 +431,7 @@ class SwVersioningBehavior extends CActiveRecordBehavior {
 	 * @see CActiveRecordBehavior::afterDelete()
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function afterDelete($event) {
 		if($this->getCascadeDelete() === true) {

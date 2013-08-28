@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mobile
  * @package   Sweeml.mobile
@@ -25,7 +25,7 @@ Yii::import('ext.sweekit.mobile.SwMobileNotifierInterface');
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mobile
  * @package   Sweeml.mobile
@@ -69,7 +69,7 @@ class SwMobileNotifier extends CApplicationComponent implements SwMobileNotifier
 	 * @param array $parameters an array of extended parameters
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function prepare($deviceId, $payload, $parameters=null) {
 		for($i=0; $i< count($this->_notifiers); $i++) {
@@ -81,7 +81,7 @@ class SwMobileNotifier extends CApplicationComponent implements SwMobileNotifier
 	 * Send the notifications
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function notify() {
 		for($i=0; $i< count($this->_notifiers); $i++) {
@@ -95,7 +95,7 @@ class SwMobileNotifier extends CApplicationComponent implements SwMobileNotifier
 	 * @see SwMobileNotifierInterface::getStatus()
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getStatus() {
 		$status = array();

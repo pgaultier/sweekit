@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   sweekit.web
@@ -67,7 +67,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   1.11.0
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  web
  * @package   sweekit.web
@@ -348,7 +348,7 @@ class SwImage {
 	 * @param boolean $value fit value should be true or false
 	 *
 	 * @return SwImage
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setFit($value) {
 		if(($value === false) || ($value === true)) {
@@ -493,7 +493,7 @@ class SwImage {
 	 * @throws Exception
 	 * @return string
 	 *
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getContentType() {
 		if($this->_imageType === null) {
@@ -523,7 +523,7 @@ class SwImage {
 	 *
 	 * @return string
 	 *
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function liveRender() {
 		if($this->_resized === false) {

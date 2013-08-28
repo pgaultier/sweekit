@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mailer
  * @package   sweekit.mailer
@@ -29,13 +29,13 @@ Yii::import('ext.sweekit.mailer.SwMailer');
  *
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mailer
  * @package   sweekit.mailer
- * @since     XXX
+ * @since     2.0.0
  */
 class SwCritsendMailer extends SwMailer {
 
@@ -50,7 +50,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $encoding encoding used to send emails
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setEncoding($encoding) {
 		$this->_encoding = $encoding;
@@ -60,7 +60,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Encoding getter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getEncoding() {
 		return $this->_encoding;
@@ -77,7 +77,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $replyTo email to reply to
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setReplyTo($replyTo) {
 		$this->_replyTo = array(
@@ -90,7 +90,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Replyto getter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getReplyTo() {
 		return $this->_replyTo;
@@ -108,7 +108,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $name  readable name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setFrom($email, $name=null) {
 		$this->_from = array(
@@ -123,7 +123,7 @@ class SwCritsendMailer extends SwMailer {
 	 * From getter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getFrom() {
 		return $this->_from;
@@ -140,7 +140,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $apiUsername apie username used to send emails
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setApiUsername($apiUsername) {
 		$this->_apiUsername = $apiUsername;
@@ -150,7 +150,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Api Username getter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getApiUsername() {
 		return $this->_apiUsername;
@@ -167,7 +167,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $apiPassword api password used to send emails
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setApiPassword($apiPassword) {
 		$this->_apiPassword = $apiPassword;
@@ -177,7 +177,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Api Username getter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getApiPassword() {
 		return $this->_apiPassword;
@@ -194,7 +194,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $wsdl wsdl resource name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setWsdl($wsdl) {
 		$this->_wsdl = $wsdl;
@@ -204,7 +204,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Wsdl getter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getWsdl() {
 		return $this->_wsdl;
@@ -227,7 +227,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param array $hosts define hos in array form : array('hostname' => array('default' => bool, 'fast' => bool))
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	*/
 	public function setHosts($hosts) {
 		$this->_hosts = $hosts;
@@ -241,7 +241,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Hosts getter
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function getHosts() {
 		if($this->_shuffled === false) {
@@ -264,7 +264,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param array  $users    users must be an array of array : array(array('email' => 'user@email.com', 'name' => 'User name'), ...)
 	 *
 	 * @return boolean;
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function sendCampaign($campaign, $users) {
 		$result = false;
@@ -295,7 +295,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $name     target user name
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function send($campaign, $email, $name=null) {
 		return $this->sendCampaign($campaign, array(array('email' => $email)));
@@ -313,7 +313,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $textualBody text used for the email
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function setContent($subject, $htmlBody=null, $textualBody=null) {
 		$this->_preparedContent = array(
@@ -329,7 +329,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $tag
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function createTag($tag) {
 		return $this->getSoapClient()->createTag($this->generateAuthenticationToken(), $tag);
@@ -341,7 +341,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $tag
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function deleteTag($tag) {
 		return $this->getSoapClient()->deleteTag($this->generateAuthenticationToken(), $tag);
@@ -353,7 +353,7 @@ class SwCritsendMailer extends SwMailer {
 	 * @param string $tag
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	public function isTag($tag) {
 		return $this->getSoapClient()->isTag($this->generateAuthenticationToken(), $tag);
@@ -363,7 +363,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Generate authentication token, needed to perform call
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function generateAuthenticationToken() {
 		$timestamp = date('c');
@@ -383,7 +383,7 @@ class SwCritsendMailer extends SwMailer {
 	 * Prepare soapclient
 	 *
 	 * @return SoapClient
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	protected function getSoapClient() {
 		try {

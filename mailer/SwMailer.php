@@ -7,7 +7,7 @@
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mailer
  * @package   sweekit.mailer
@@ -18,13 +18,13 @@
  * methods
  *
  * @author    Philippe Gaultier <pgaultier@sweelix.net>
- * @copyright 2010-2012 Sweelix
+ * @copyright 2010-2013 Sweelix
  * @license   http://www.sweelix.net/license license
- * @version   XXX
+ * @version   2.0.0
  * @link      http://www.sweelix.net
  * @category  mailer
  * @package   sweekit.mailer
- * @since     XXX
+ * @since     2.0.0
  */
 abstract class SwMailer extends CComponent {
 
@@ -35,7 +35,7 @@ abstract class SwMailer extends CComponent {
 	 * @param array  $users    users must be an array of array : array(array('email' => 'user@email.com', 'name' => 'User name'), ...)
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	abstract public function sendCampaign($campaign, $users);
 
@@ -47,7 +47,7 @@ abstract class SwMailer extends CComponent {
 	 * @param string $name     target user name
 	 *
 	 * @return boolean
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	abstract public function send($campaign, $email, $name=null);
 
@@ -59,7 +59,7 @@ abstract class SwMailer extends CComponent {
 	 * @param string $textualBody text used for the email
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	abstract public function setContent($subject, $htmlBody=null, $textualBody=null);
 
@@ -69,7 +69,7 @@ abstract class SwMailer extends CComponent {
 	 * @param string $email email for reply to
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	abstract public function setReplyTo($email);
 
@@ -77,7 +77,7 @@ abstract class SwMailer extends CComponent {
 	 * Retrieve current replyTo setting
 	 *
 	 * @return string
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	abstract public function getReplyTo();
 
@@ -88,7 +88,7 @@ abstract class SwMailer extends CComponent {
 	 * @param string $name  readable name
 	 *
 	 * @return void
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	abstract public function setFrom($email, $name=null);
 
@@ -96,7 +96,7 @@ abstract class SwMailer extends CComponent {
 	 * Retrieve current from settings array('email' => $email, 'name' => $name)
 	 *
 	 * @return array
-	 * @since  XXX
+	 * @since  2.0.0
 	 */
 	abstract public function getFrom();
  }
