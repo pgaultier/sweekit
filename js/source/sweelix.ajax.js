@@ -186,10 +186,7 @@ log4javascript.JsonAppender = JsonAppender;
 					$(evt.target).attr("data-ajaxclick", "true");
 				})
 				
-<<<<<<< HEAD
 				//Handel delegated ajax submit
-=======
->>>>>>> devel
 				$(this).on('submit', targetSelector, function(evt) {
 					evt.preventDefault();
 					
