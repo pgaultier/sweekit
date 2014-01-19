@@ -6,7 +6,7 @@ licenses.
 3rd party tools used in the toolkit are 
 
 * http://www.shadowbox-js.com - Shadowbox, dual license http://www.shadowbox-js.com/LICENSE
-* http://www.plupload.com/ - PLupload, dual license http://www.plupload.com/license.php
+* http://www.plupload.com - PLupload, dual license http://www.plupload.com/license.php
 
 
 This toolkit was written to ease javascript access during our developments.
@@ -44,19 +44,19 @@ Adding the notifier component to the application
 
 ````php
 	/* configuration array */
-	mobileNotification' => array(
-		'class' => 'ext.sweekit.actions.SwMobileNotifier',
-		'mode' => 'production', // can be development to use the sandbox
-		'apnsCertificateFile' => 'my_apple_certificate_for_push.pem',
+	'mobileNotification' => array(
+		'class' => 'ext.sweekit.mobile.SwMobileNotifier',
+		'mode'  => 'production', // can be development to use the sandbox
+		'apnsCertificateFile' 		=> 'my_apple_certificate_for_push.pem',
 		'apnsCertificatePassphrase' => 'my_apple_certificate_passphrase', // comment out if there is no passphrase
-		'apnsEmbeddedCaFile'=>true, // embed entrust ca file if needed (ssl errors, ...)
-		'c2dmUsername' => 'my_gmail_push_account@gmail.com',
-		'c2dmPassword' => 'my_gmail_push_account_password',
+		'apnsEmbeddedCaFile'		=> true, // embed entrust ca file if needed (ssl errors, ...)
+		'c2dmUsername' 				=> 'my_gmail_push_account@gmail.com',
+		'c2dmPassword' 				=> 'my_gmail_push_account_password',
 		'c2dmApplicationIdentifier' => 'my_gmail_push_app_identifier',
 	),
 ````
 
-You are now able to push messages to mobile devices
+You are now able to push messages to mobile devices.
 
 #### Sample for Android
 
@@ -84,7 +84,7 @@ $res = Yii::app()->getComponent('mobileNotification')->sendApnsMessage(
 Apple added a function to check if device should still receive notification.
 
 This method should be called using a cron system in order to purge old pushId from
-your database to avoid sending useless notifications
+your database to avoid sending useless notifications.
 
 ````php
 $res = Yii::app()->getComponent('mobileNotification')->readApnsFeedback();
@@ -111,7 +111,7 @@ Using the callback system you can :
 Register an event in the widget using Sweeml
 
 ````php
-    <?php Sweeml::registerEvent('updateCart', "function(data){jQuery('#cart.nb').html(data+' products');}"); ?>
+    <?php Sweeml::registerEvent('updateCart', "js:function(data){jQuery('#cart').html(data + ' products');}"); ?>
     <div id="cart">0 product</div>
 ````
 
@@ -122,28 +122,29 @@ Whereever the cart is updated you can raise an event.
         function refreshCart() {
             // perform ajax call to refresh info
             jQuery.ajax({
-                url : 'http://targeturl',
+                url 	: 'http://targeturl',
                 success : function(nbOfProducts) {
                     // nbOfProducts is an integer with the number of products in cart
-                    <?php echo Sweeml::raiseEvent('updateCart', nbOfProducts); ?>
+                    sweelix.raise('updateCart', nbOfProducts);
                 }
             });
         }
     </script>
-    <a href="#" onclick="refreshCart()">refresh cart</a>
+    <a href="#" onclick="refreshCart();">Refresh cart</a>
 ````
 
 ### Multi file upload
 
-The basic model 
+The basic model :
 
 ````php
     <?php 
     class MyFile extends CFormModel {
         public $thefile;
+        /**
+	 	 * @return array validation rules for model attributes.
+	 	 */
         public function rules() {
-            // NOTE: you should only define rules for those attributes that
-            // will receive user inputs.
             return array(
                 array('thefile', 'SwFileValidator', 'maxFiles' => 2, 'allowEmpty' => true),
             );
@@ -151,7 +152,7 @@ The basic model
     }
 ````
 
-The controller
+The controller :
 
 ````php
     <?php 
@@ -188,26 +189,27 @@ The controller
     }
 ````
 
-The view
+The view :
 
 ````php
-    <?php echo Sweeml::activeAsyncFileUpload($file, 'thefile',array(
+    <?php echo Sweeml::activeAsyncFileUpload($file, 'thefile', array(
         'config' => array(
-            'runtimes' => 'html5, flash',
-            'auto' => true,
-            'ui' => true,
-            'maxFileSize' => '512mb',
+            'runtimes'       => 'html5, flash',
+            'auto'           => true,
+            'ui'             => true,
+            'maxFileSize'    => '512mb',
             'multiSelection' => true,
         ),
-        'events'=>array(
-            'beforeUpload' => 'js:function(up, file){ 
-                $(\'#submitButton\').attr(\'disabled\', \'disabled\'); 
-            }',
-            'uploadComplete' => 'js:function(up, files){
-                $(\'#submitButton\').removeAttr(\'disabled\'); 
-            }',
+        'events' => array(
+            'beforeUpload'   => "js:function(up, file) { 
+                \$('#submitButton').attr('disabled', 'disabled'); 
+            }",
+            'uploadComplete' => "js:function(up, files){
+                \$('#submitButton').removeAttr('disabled'); 
+            }",
         )
-    )); ?>
+    ));
+    ?>
     
     <?php echo Sweeml::htmlButton('submit', array('type' => 'submit', 'id' => 'submitButton')); ?>
 ````
